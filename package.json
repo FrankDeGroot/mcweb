@@ -1,0 +1,25 @@
+{
+  "name": "web",
+  "version": "0.0.1",
+  "description": "Rudimentary web interface for minecraft server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "https://github.com/FrankDeGroot",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "polka": "^0.5.2",
+    "sirv": "^0.4.2"
+  },
+  "nodemonConfig": {
+    "watch": [
+      ".",
+      "public"
+    ],
+    "ext": "css,html,js,json"
+  }
+}

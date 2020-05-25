@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Minecraft Management Console</title>
+		<script src="//unpkg.com/mithril/mithril.js"></script>
+	</head>
+	<body>
+		<h1>Minecraft Management Console</h1>
+		<label>Versions:</label>
+		<div id="versions"></div>
+		<label>Worlds:</label>
+		<div id="worlds"></div>
+		<script>
+			'use strict'
+
+			function versionsView() {
+				var versions = []
+				var current = ""
+				return {
+					oninit: async () => {
+						versions = await m.request({
+							url: '/api/versions'
+						})
+						current = await m.request({
+							url: '/api/versions/current'
+						})
+					},
+					view: () => m('select', versions.map(version => m('option', version === current ? { selected: 'selected' } : {}, version)))
+				}
+			}
+			m.mount(document.getElementById('versions'), versionsView())
+
+			function worldsView() {
+				var worlds = []
+				var current = ""
+				return {
+					oninit: async () => {
+						worlds = await m.request({
+							url: '/api/versions/current/worlds'
+						})
+						current = await m.request({
+							url: '/api/versions/current/worlds/current'
+						})
+					},
+					view: () => m('select', worlds.map(world => m('option', world === current ? { selected: 'selected' } : {}, world)))
+				}
+			}
+			m.mount(document.getElementById('worlds'), worldsView())
+		</script>
+	</body>
+</html>

@@ -1,3 +1,6 @@
+# Sensitie config
+.config.js
+ 
 # Logs
 logs
 *.log
