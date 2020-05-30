@@ -12,6 +12,7 @@
     "nodemon": "^2.0.4"
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
     "polka": "^0.5.2",
     "sirv": "^0.4.2"
   },

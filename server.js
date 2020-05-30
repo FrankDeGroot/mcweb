@@ -63,12 +63,14 @@ async function hasFile(path, file) {
 (async () => {
 	const { pemPath, port } = require('./.config')
 	const { createServer } = require(pemPath ? 'https': 'http')
+	const { json } = require('body-parser')
 	const options = pemPath ? {
 		key: await readFile(pemPath + '/privkey.pem'),
 		cert: await readFile(pemPath + '/cert.pem')
 	} : {}
 	createServer(options, require('polka')()
 		.use(require('sirv')('public'))
+		.use(json())
 		.use('api', async (req, res, next) => {
 			function send(status, body) {
 				res.writeHead(status, {'Content-Type': 'application/json'})
@@ -82,6 +84,9 @@ async function hasFile(path, file) {
 				send(500, {})
 			}
 		})
+		.put('api', (req, res) => {
+			console.log(req.body)
+		})
 		.get('api/versions', (req, res) => {
 			res.body = versions()
 		})
@@ -94,7 +99,8 @@ async function hasFile(path, file) {
 		.get('api/versions/:version/worlds/current', (req, res) => {
 			res.body = currentWorld(req.params.version)
 		})
-		.handler).listen(port || pemPath ? 443 : 80, () => {
+		.handler
+	).listen(port || (pemPath ? 443 : 80), () => {
 			console.log('Server running')
 	})
 })()

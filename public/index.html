@@ -12,42 +12,89 @@
 		<div id="versions"></div>
 		<label>Worlds:</label>
 		<div id="worlds"></div>
+		<div id="submitter"></div>
 		<script>
 			'use strict'
 
-			function versionsView() {
+			const submitter = (() => {
+				var version;
+				var world;
+				return {
+					setVersion: newVersion => version = newVersion,
+					setWorld: newWorld => world = newWorld,
+					view: () => m('button', {
+						onclick: async e => {
+							try {
+								await m.request({
+									method: 'PUT',
+									url: '/api',
+									body: {
+										version: version,
+										world: world
+									}
+								})
+								window.alert('version: ' + version + ', world: ' + world)
+							} catch(e) {
+								window.alert(e)
+							}
+						}
+					}, 'Change')
+				}
+			})()
+			m.mount(document.getElementById('submitter'), submitter)
+
+			const worlds = ((version, onchange) => {
+				var worlds = []
+				var current = ""
+				var selected = ""
+
+				async function load() {
+					worlds = await m.request({
+						url: '/api/versions/' + version + '/worlds'
+					})
+					onchange(selected = current = await m.request({
+						url: '/api/versions/' + version + '/worlds/current'
+					}))
+				}
+				return {
+					oninit: load,
+					setVersion: (newVersion) => {
+						version = newVersion
+						load()
+					},
+					view: () => m('select', {
+						onchange: e => {
+							onchange(selected = e.target.value)
+						}
+					}, worlds.map(world => m('option', world === selected ? { selected: 'selected' } : {}, world)))
+				}
+			})('current', submitter.setWorld)
+			m.mount(document.getElementById('worlds'), worlds)
+
+			const versions = (onchange => {
 				var versions = []
 				var current = ""
+				var selected = ""
 				return {
 					oninit: async () => {
 						versions = await m.request({
 							url: '/api/versions'
 						})
-						current = await m.request({
+						onchange(selected = current = await m.request({
 							url: '/api/versions/current'
-						})
+						}))
 					},
-					view: () => m('select', versions.map(version => m('option', version === current ? { selected: 'selected' } : {}, version)))
+					view: () => m('select', {
+						onchange: e => {
+							onchange(selected = e.target.value)
+						}
+					}, versions.map(version => m('option', version === selected ? { selected: 'selected' } : {}, version)))
 				}
-			}
-			m.mount(document.getElementById('versions'), versionsView())
-
-			function worldsView() {
-				var worlds = []
-				var current = ""
-				return {
-					oninit: async () => {
-						worlds = await m.request({
-							url: '/api/versions/current/worlds'
-						})
-						current = await m.request({
-							url: '/api/versions/current/worlds/current'
-						})
-					},
-					view: () => m('select', worlds.map(world => m('option', world === current ? { selected: 'selected' } : {}, world)))
-				}
-			}
-			m.mount(document.getElementById('worlds'), worldsView())
+			})(version => {
+				worlds.setVersion(version)
+				submitter.setVersion(version)
+			})
+			m.mount(document.getElementById('versions'), versions)
 		</script>
 	</body>
 </html>
