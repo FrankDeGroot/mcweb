@@ -1,66 +1,46 @@
 const fs = require('fs')
-const { join } = require('path')
 const { promisify } = require('util')
 
-const rcon = require('./rcon')
-
-const readdir = promisify(fs.readdir)
 const readlink = promisify(fs.readlink)
-const lstat = promisify(fs.lstat)
 
-const serverDir = '../server'
-const currentVersionName = 'current'
-const currentWorldName = 'world'
+const { join } = require('path')
 
-exports.versions = async () => {
-	return directoryFilter(serverDir, isVersion)
-}
+const { log } = require('./log')
+const {
+	currentVersionPath,
+	currentWorldPath,
+	directoryFilter,
+	isVersion,
+	isWorld,
+	serverDir,
+	setVersion,
+	setWorld,
+	versionPath
+} = require('./mcfs')
+const { start, stop } = require('./mcservice')
+const { say } = require('./rcon')
 
-exports.currentVersion = async () => {
-	return readlink(versionPath(currentVersionName))
-}
+exports.versions = async () => directoryFilter(serverDir, isVersion)
 
-exports.worlds = async version => {
-	return directoryFilter(versionPath(version), isWorld)
-}
+exports.currentVersion = async () => readlink(currentVersionPath)
 
-exports.currentWorld = async version => {
-	return readlink(join(versionPath(version), currentWorldName))
-}
+exports.worlds = async version => directoryFilter(versionPath(version), isWorld)
+
+exports.currentWorld = async version => readlink(currentWorldPath(version))
 
 exports.change = async (version, world) => {
-	rcon.say(`Switching to ${version} with ${world}, see you there!`)
+	await say(`Switching to ${version} with ${world} in 2 s, see you there!`)
+	await sleep(2000)
+	log('stopping mc')
+	await stop()
+	await sleep(4000)
+	await setVersion(version)
+	await setWorld(version, world)
+	log('starting mc')
+	await start()
 }
 
-async function access(path) {
-	return new Promise((resolve, reject) => fs.access(path, err => !err ? resolve(true) : err.code === 'ENOENT' ? resolve(false): reject(err)))
+function sleep(millis) {
+	return new Promise(resolve => setTimeout(resolve, millis))
 }
-
-function versionPath(version) {
-	return join(serverDir, version)
-}
-
-async function directoryFilter(path, filter) {
-	const dirs = await readdir(path)
-	const filtered = await Promise.all(dirs
-		.map(async name => {
-			const filtered = await filter(join(path, name))  
-			return filtered ? name: null
-		}))
-	return filtered 
-		.filter(name => name)
-}
-
-async function isVersion(path) {
-	return hasFile(path, 'server.jar')
-}
-
-async function isWorld(path) {
-	return hasFile(path, 'level.dat')
-}
-
-async function hasFile(path, file) {
-	return (await lstat(path)).isDirectory() && (await access(join(path, file)))
-}
-
 

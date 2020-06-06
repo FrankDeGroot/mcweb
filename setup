@@ -2,9 +2,16 @@
 
 sudo add-apt-repository ppa:certbot/certbot
 sudo apt-get update
-sudo apt-get install -y certbot
-
+sudo apt-get install -y node npm nginx certbot pyton-certbot-nginx
 sudo certbot certonly --standalone
-
-sudo apt-get install -y node npm
-
+sudo cat server { \
+	listen 80; \
+	listen [::]:80; \
+	server_name example.com; \
+	location / { \
+		proxy_pass http://localhost:8080/; \
+	} \
+} > /etc/nginx/conf.d/mc.conf
+sudo certbot --nginx 
+sudo nginx -t
+sudo nginx -s reload

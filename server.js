@@ -1,19 +1,9 @@
 #!/usr/bin/node
 
-(async () => {
-	const fs = require('fs')
-	const { promisify } = require('util')
-	const readFile = promisify(fs.readFile)
+function handler() {
 	const mc = require('./mc')
-	const { pemPath, port } = require('./.config')
-	const { createServer } = require(pemPath ? 'https': 'http')
 	const { json } = require('body-parser')
-	const options = pemPath ? {
-		key: await readFile(pemPath + '/privkey.pem'),
-		cert: await readFile(pemPath + '/cert.pem')
-	} : {}
-	createServer(options, require('polka')()
-		.use(require('sirv')('public'))
+	return require('polka')()
 		.use(json())
 		.use('api', async (req, res, next) => {
 			function send(status, body) {
@@ -30,7 +20,10 @@
 		})
 		.put('api', (req, res) => {
 			const { version, world } = req.body
-			mc.change(version, world)
+			res.body = (async () => {
+				await mc.change(version, world)
+				return { done: 'true' }
+			})()
 		})
 		.get('api/versions', (req, res) => {
 			res.body = mc.versions()
@@ -45,7 +38,10 @@
 			res.body = mc.currentWorld(req.params.version)
 		})
 		.handler
-	).listen(port || (pemPath ? 443 : 80), () => {
+}
+
+(async () => {
+	require('http').createServer(handler()).listen(1024, () => {
 			console.log('Server running')
 	})
 })()
