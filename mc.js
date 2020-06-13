@@ -19,6 +19,9 @@ const {
 } = require('./mcfs')
 const { start, stop } = require('./mcservice')
 const { say } = require('./rcon')
+const { sleep } = require('./sleep')
+
+let changing = false
 
 exports.versions = async () => directoryFilter(serverDir, isVersion)
 
@@ -28,19 +31,28 @@ exports.worlds = async version => directoryFilter(versionPath(version), isWorld)
 
 exports.currentWorld = async version => readlink(currentWorldPath(version))
 
-exports.change = async (version, world) => {
-	await say(`Switching to ${version} with ${world} in 2 s, see you there!`)
-	await sleep(2000)
-	log('stopping mc')
-	await stop()
-	await sleep(4000)
-	await setVersion(version)
-	await setWorld(version, world)
-	log('starting mc')
-	await start()
-}
+const alreadyChangingErrorCode = 'ALREADYCHANGING'
+exports.alreadyChangingError = alreadyChangingErrorCode 
 
-function sleep(millis) {
-	return new Promise(resolve => setTimeout(resolve, millis))
+exports.change = async (version, world) => {
+	if (changing) {
+		throw { code: alreadyChangingErrorCode }
+	}
+	try {
+		changing = true
+		await say(`Switching to ${version} with ${world} in 2 s, see you there!`)
+		await sleep(2000)
+		log('stopping mc')
+		await stop()
+		await setVersion(version)
+		await setWorld(version, world)
+		log('starting mc')
+		await start()
+		await say(`Welcome back!`)
+		changing = false
+	} catch(err) {
+		changing = false
+		throw err
+	}
 }
 

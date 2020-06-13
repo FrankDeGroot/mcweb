@@ -6,12 +6,12 @@ const { join } = require('path')
 const { serverDir } = require('./mcfs')
 
 exports.readServerProperties = async () => {
-	const propertiesFiles = await readFile(join(serverDir, 'common', 'server.properties'), 'utf8')
-	return propertiesFiles.split(/[\r\n]+/)
+	const serverProperties = await readFile(join(serverDir, 'common', 'server.properties'), 'utf8')
+	return serverProperties.split(/[\r\n]+/)
 		.filter(line => line && !line.startsWith('#'))
 		.reduce((acc, line) => {
-			const [ key, value ] = line.split(/=/)
-			acc[key] = value
+			const [ key, ...value ] = line.split(/=/)
+			acc[key] = value.join('=')
 			return acc 
 		}, {})
 }

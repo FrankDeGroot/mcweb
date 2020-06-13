@@ -1,6 +1,6 @@
-# Sensitie config
-.config.js
- 
+# vi
+.*.swp
+
 # Logs
 logs
 *.log
