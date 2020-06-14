@@ -55,8 +55,9 @@ function handler() {
 }
 
 (async () => {
-	require('http').createServer(handler()).listen(1024, () => {
-			console.log('Server running')
+	require('http').createServer(handler()).listen(1024, err => {
+			if (err) throw err;
+			log('Server running')
 	})
 })()
 

@@ -1,0 +1,12 @@
+[Unit]
+Description=mcw
+
+[Service]
+SuccessExitStatus=0 1
+Restart=on-failure
+WorkingDirectory=/home/mc/web/
+ExecStart=/home/mc/web/node_modules/nodemon/bin/nodemon.js
+
+[Install]
+WantedBy=default.target
+
