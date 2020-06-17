@@ -1,6 +1,7 @@
 #!/usr/bin/node
 
 const { json } = require('body-parser')
+const io = require('socket.io')
 const {
 	versions,
 	currentVersion,
@@ -24,20 +25,9 @@ function handler() {
 				next()
 				send(res, 200, await res.body)
 			} catch(err) {
-				if (err.code === alreadyChangingErrorCode) {
-					send(res, 400, { message: 'Already changing' })
-				} else {
-					log(err)
-					send(res, 500, { message: 'Internal Server Error' })
-				}
+				log(err)
+				send(res, 500, { message: 'Internal Server Error' })
 			}
-		})
-		.put('api', (req, res) => {
-			const { version, world } = req.body
-			res.body = (async () => {
-				await change(version, world)
-				return { done: 'true' }
-			})()
 		})
 		.get('api/versions', (req, res) => {
 			res.body = versions()
@@ -54,10 +44,23 @@ function handler() {
 		.handler
 }
 
-(async () => {
-	require('http').createServer(handler()).listen(1024, err => {
-			if (err) throw err;
-			log('Server running')
+const server = require('http').createServer(handler())
+
+io(server).on('connection', socket => {
+	socket.emit('message', 'Connected')
+	socket.on('change', async changeParameters => {
+		const { version, world } = changeParameters
+		socket.emit('changing')
+		await change(version, world, message => {
+//			log('emitting', message)
+			socket.emit('message', message)
+		})
+		socket.emit('changed')
 	})
-})()
+})
+
+server.listen(1024, err => {
+		if (err) throw err;
+		log('Server running')
+})
 

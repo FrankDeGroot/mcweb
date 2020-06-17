@@ -33,16 +33,17 @@ exports.say = async message => {
 	await readServerProperties()
 	let tries = 0
 	let done = false
+	log('Saying', message)
 	do {
 		tries++
 		try {
-			log('Saying', message, 'attempt', tries)
+//			log('Saying', message, 'attempt', tries)
 			await send('say ' + message)
 			done = true
 			log('Said', message)
 		} catch(err) {
 			if (err.code === 'ECONNREFUSED') {
-				log('Failed saying', message, 'attempt', tries)
+//				log('Failed saying', message, 'attempt', tries)
 				await sleep(1000)
 			} else {
 				throw err

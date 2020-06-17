@@ -7,14 +7,18 @@
     "start": "node server.js"
   },
   "author": "https://github.com/FrankDeGroot",
+  "repository": "https://github.com/FrankDeGroot/mcweb",
   "license": "MIT",
   "devDependencies": {
     "nodemon": "^2.0.4"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "bufferutil": "^4.0.1",
     "polka": "^0.5.2",
-    "rcon": "^1.0.3"
+    "rcon": "^1.0.3",
+    "socket.io": "^2.3.0",
+    "utf-8-validate": "^5.0.2"
   },
   "nodemonConfig": {
     "watch": [

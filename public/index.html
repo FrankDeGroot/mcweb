@@ -3,10 +3,10 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Minecraft Management Console</title>
+		<title>Minecraft Web Console</title>
 	</head>
 	<body>
-		<h1>Minecraft Management Console</h1>
+		<h1>Minecraft Web Console</h1>
 		<div>
 			<label>Versions:</label>
 			<span id="versions"></span>
@@ -16,93 +16,9 @@
 			<span id="worlds"></span>
 		</div>
 		<div id="submitter"></div>
+		<div id="messages"></div>
 		<script src="//unpkg.com/mithril/mithril.min.js"></script>
-		<script>
-			'use strict'
-
-			const submitter = (() => {
-				var version;
-				var world;
-				return {
-					setVersion: newVersion => version = newVersion,
-					setWorld: newWorld => world = newWorld,
-					view: () => m('button', {
-						onclick: async e => {
-							try {
-								const res = await m.request({
-									method: 'PUT',
-									url: '/api',
-									body: {
-										version: version,
-										world: world
-									}
-								})
-								window.alert(JSON.stringify(res))
-							} catch(e) {
-								window.alert(JSON.stringify(e))
-							}
-						}
-					}, 'Change')
-				}
-			})()
-			m.mount(document.getElementById('submitter'), submitter)
-
-			const worlds = ((version, onchange) => {
-				var worlds = []
-				var current = ""
-				var selected = ""
-
-				async function load() {
-					try {
-						worlds = await m.request({
-							url: '/api/versions/' + version + '/worlds'
-						})
-						onchange(selected = current = await m.request({
-							url: '/api/versions/' + version + '/worlds/current'
-						}))
-					} catch(e) {
-						window.alert(e)
-					}
-				}
-				return {
-					oninit: load,
-					setVersion: (newVersion) => {
-						version = newVersion
-						load()
-					},
-					view: () => m('select', {
-						onchange: e => {
-							onchange(selected = e.target.value)
-						}
-					}, worlds.map(world => m('option', world === selected ? { selected: 'selected' } : {}, world)))
-				}
-			})('current', submitter.setWorld)
-			m.mount(document.getElementById('worlds'), worlds)
-
-			const versions = (onchange => {
-				var versions = []
-				var current = ""
-				var selected = ""
-				return {
-					oninit: async () => {
-						versions = await m.request({
-							url: '/api/versions'
-						})
-						onchange(selected = current = await m.request({
-							url: '/api/versions/current'
-						}))
-					},
-					view: () => m('select', {
-						onchange: e => {
-							onchange(selected = e.target.value)
-						}
-					}, versions.map(version => m('option', version === selected ? { selected: 'selected' } : {}, version)))
-				}
-			})(version => {
-				worlds.setVersion(version)
-				submitter.setVersion(version)
-			})
-			m.mount(document.getElementById('versions'), versions)
-		</script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+		<script src="main.js" type="module"></script>
 	</body>
 </html>
