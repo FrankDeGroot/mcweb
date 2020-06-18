@@ -15,7 +15,7 @@ export function Versions(onchange) {
 				url: '/api/versions/current'
 			}))
 		},
-		view: () => select(e => onchange(selected = e.target.value), versions, selected)
+		view: () => select('Versions', value => onchange(selected = value), versions, selected)
 	}
 }
 

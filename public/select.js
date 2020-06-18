@@ -1,7 +1,19 @@
 'use strict'
 
-export function select(onchange, list, selected) {
-	return m('select', {
-		onchange: onchange
-	}, list.map(item => m('option', item === selected ? { selected: 'selected' } : {}, item)))
+export function select(title, onchange, list, selected) {
+	return m(polythene.List, {
+		header: m('em', title),
+		tiles: list.map(title => m(polythene.ListTile, {
+			title,
+			selected: selected === title,
+			className: "themed-list-tile",
+			events: {
+				onclick: () => onchange(title)
+			},
+			rounded: true,
+			compact: true,
+			hoverable: true,
+			insetH: true,
+		}))
+	})
 }

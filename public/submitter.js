@@ -15,10 +15,13 @@ export function Submitter(onsubmit) {
 			enabled = false
 			m.redraw()
 		},
-		view: () => m('button', {
-			onclick: e => onsubmit(version, world),
+		view: () => m(polythene.Button, {
+			label: 'Change',
+			events: {
+				onclick: e => onsubmit(version, world)
+			},
 			disabled: enabled ? undefined : 'disabled'
-		}, 'Change')
+		})
 	}
 }
 

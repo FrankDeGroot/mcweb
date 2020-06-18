@@ -25,6 +25,6 @@ export function Worlds(version, onchange) {
 			version = newVersion
 			load()
 		},
-		view: () => select(e => onchange(selected = e.target.value), worlds, selected)
+		view: () => select('Worlds', value => onchange(selected = value), worlds, selected)
 	}
 }

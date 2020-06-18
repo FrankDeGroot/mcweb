@@ -47,7 +47,7 @@ function handler() {
 const server = require('http').createServer(handler())
 
 io(server).on('connection', socket => {
-	socket.emit('message', 'Connected')
+//	socket.emit('message', 'Connected')
 	socket.on('change', async changeParameters => {
 		const { version, world } = changeParameters
 		socket.emit('changing')
