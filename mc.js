@@ -1,10 +1,3 @@
-const fs = require('fs')
-const { promisify } = require('util')
-
-const readlink = promisify(fs.readlink)
-
-const { join } = require('path')
-
 const { log } = require('./log')
 const {
 	currentVersionPath,
@@ -12,6 +5,7 @@ const {
 	directoryFilter,
 	isVersion,
 	isWorld,
+	readCurrent,
 	serverDir,
 	setVersion,
 	setWorld,
@@ -20,23 +14,21 @@ const {
 const { start, stop } = require('./mcservice')
 const { say } = require('./rcon')
 const { sleep } = require('./sleep')
+const { badRequest } = require('./error.js')
 
 let changing = false
 
 exports.versions = async () => directoryFilter(serverDir, isVersion)
 
-exports.currentVersion = async () => readlink(currentVersionPath)
+exports.currentVersion = async () => readCurrent(currentVersionPath)
 
 exports.worlds = async version => directoryFilter(versionPath(version), isWorld)
 
-exports.currentWorld = async version => readlink(currentWorldPath(version))
-
-const alreadyChangingErrorCode = 'ALREADYCHANGING'
-exports.alreadyChangingError = alreadyChangingErrorCode 
+exports.currentWorld = async version => readCurrent(currentWorldPath(version))
 
 exports.change = async (version, world, onchange) => {
 	if (changing) {
-		throw { code: alreadyChangingErrorCode }
+		throw { code: badRequest, message: 'Already changing version/world' }
 	}
 	try {
 		changing = true
