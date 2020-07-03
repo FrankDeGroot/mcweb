@@ -23,5 +23,8 @@
       "."
     ],
     "ext": "js,json"
+  },
+  "devDependencies": {
+    "jest": "^26.1.0"
   }
 }

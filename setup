@@ -1,8 +1,9 @@
 #!/bin/sh
 
 sudo add-apt-repository ppa:certbot/certbot
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt-get update
-sudo apt-get install -y node npm nginx certbot pyton-certbot-nginx
+sudo apt-get install -y nodejs npm nginx certbot python-certbot-nginx
 sudo certbot certonly --standalone
 sudo cat server { \
     server_name $fqdn; \
