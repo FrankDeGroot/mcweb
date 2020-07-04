@@ -1,13 +1,8 @@
 const fs = require('fs')
+const { constants } = fs
+const { access, lstat, readdir, readlink, symlink, unlink } = fs.promises
 const { join } = require('path')
-const { promisify } = require('util')
 const { notFound } = require('./error.js')
-
-const readdir = promisify(fs.readdir)
-const lstat = promisify(fs.lstat)
-const unlink = promisify(fs.unlink)
-const symlink = promisify(fs.symlink)
-const readlink = promisify(fs.readlink)
 
 const serverDir = join('..', 'server')
 const currentVersionName = 'current'
@@ -75,12 +70,15 @@ function versionPath(version) {
 }
 
 async function hasFile(path, file) {
-	return (await lstat(path)).isDirectory() && (await access(join(path, file)))
+	return (await lstat(path)).isDirectory() && (await exists(join(path, file)))
 }
 
-async function access(path) {
-	return new Promise((resolve, reject) =>
-		fs.access(path, err => !err ?
-			resolve(true) : err.code === 'ENOENT' ? resolve(false): reject(err)))
+async function exists(path) {
+	try {
+		await access(path, constants.R_OK)
+		return true
+	} catch(err) {
+		return err.code === 'ENOENT'
+	}
 }
 

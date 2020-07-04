@@ -18,13 +18,13 @@
     "socket.io": "^2.3.0",
     "utf-8-validate": "^5.0.2"
   },
+  "devDependencies": {
+    "jest": "^26.1.0"
+  },
   "nodemonConfig": {
     "watch": [
       "."
     ],
     "ext": "js,json"
-  },
-  "devDependencies": {
-    "jest": "^26.1.0"
   }
 }
