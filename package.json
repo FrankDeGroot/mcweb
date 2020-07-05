@@ -4,7 +4,8 @@
   "description": "Rudimentary web interface for minecraft server",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "jest"
   },
   "author": "https://github.com/FrankDeGroot",
   "repository": "https://github.com/FrankDeGroot/mcweb",
