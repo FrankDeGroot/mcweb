@@ -1,3 +1,5 @@
+'use strict'
+
 const fs = require('fs')
 const { constants } = fs
 const { access, lstat, readdir, readlink, symlink, unlink } = fs.promises

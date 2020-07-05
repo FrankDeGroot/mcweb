@@ -1,3 +1,5 @@
+'use strict'
+
 const Rcon = require('rcon')
 const { log } = require('./log')
 const { sleep } = require('./sleep')

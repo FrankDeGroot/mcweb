@@ -1,5 +1,6 @@
-const { spawn } = require('child_process')
+'use strict'
 
+const { spawn } = require('child_process')
 const { log } = require('./log')
 
 exports.start = async () => mcctl('start')

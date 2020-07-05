@@ -1,3 +1,5 @@
+'use strict'
+
 const { symlink, unlink } = require('fs').promises
 const { log } = require('./log')
 const {

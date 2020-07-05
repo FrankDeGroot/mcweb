@@ -1,3 +1,5 @@
+'use strict'
+
 jest.mock('fs')
 
 describe('readServerProperties', () => {
