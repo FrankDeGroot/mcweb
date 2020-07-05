@@ -1,32 +1,29 @@
+const { symlink, unlink } = require('fs').promises
 const { log } = require('./log')
 const {
 	currentVersionPath,
 	currentWorldPath,
-	directoryFilter,
-	isVersion,
-	isWorld,
-	readCurrent,
-	serverDir,
-	setVersion,
-	setWorld,
-	versionPath
-} = require('./mcfs')
+	serverPath,
+	versionPath,
+} = require('./mcpaths')
+const {
+	currentVersion,
+	currentWorld,
+} = require('./mcget')
 const { start, stop } = require('./mcservice')
-const { say } = require('./rcon')
+const { say } = require('./mcrcon')
 const { sleep } = require('./sleep')
-const { badRequest } = require('./error.js')
+const { badRequest } = require('./error')
 
 let changing = false
 
-exports.versions = async () => directoryFilter(serverDir, isVersion)
-
-exports.currentVersion = async () => readCurrent(currentVersionPath)
-
-exports.worlds = async version => directoryFilter(versionPath(version), isWorld)
-
-exports.currentWorld = async version => readCurrent(currentWorldPath(version))
-
 exports.change = async (version, world, onchange) => {
+	const nowVersion = await currentVersion()
+	const nowWorld = await currentWorld(version)
+	if (version === nowVersion && world === nowWorld) {
+		onchange('Already current')
+		return
+	}
 	if (changing) {
 		throw { code: badRequest, message: 'Already changing version/world' }
 	}
@@ -52,5 +49,16 @@ exports.change = async (version, world, onchange) => {
 		changing = false
 		throw err
 	}
+}
+
+async function setVersion(version) {
+	await unlink(currentVersionPath)
+	await symlink(version, currentVersionPath)
+}
+
+async function setWorld(version, world) {
+	const path = currentWorldPath(version)
+	await unlink(path)
+	await symlink(world, path)
 }
 

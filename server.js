@@ -1,17 +1,18 @@
 #!/usr/bin/node
 
-const { json } = require('body-parser')
 const io = require('socket.io')
 const {
 	versions,
 	currentVersion,
 	worlds,
 	currentWorld,
+} = require('./mcget')
+const {
 	alreadyChangingErrorCode,
-	change
-} = require('./mc')
+	change,
+} = require('./mcset')
 const { log } = require('./log')
-const { badRequest, notFound } = require('./error.js')
+const { badRequest, notFound } = require('./error')
 
 function send(res, status, body) {
 	res.writeHead(status, {'Content-Type': 'application/json'})
@@ -20,7 +21,6 @@ function send(res, status, body) {
 
 function handler() {
 	return require('polka')()
-		.use(json())
 		.use('api', async (req, res, next) => {
 			try {
 				next()
