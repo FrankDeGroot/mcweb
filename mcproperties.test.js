@@ -7,7 +7,7 @@ describe('readServerProperties', () => {
 		require('fs')._readFile = (path, encoding) => {
 			expect(path).toBe('../server/common/server.properties')
 			expect(encoding).toBe('utf8')
-			return new Promise((resolve, reject) => resolve('property1=value\nproperty2=value=value'))
+			return new Promise((resolve, reject) => resolve('#notaproperty\nproperty1=value\nproperty2=value=value'))
 		}
 	})
   test('', async () => {
