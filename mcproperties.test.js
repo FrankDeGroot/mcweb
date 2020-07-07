@@ -2,19 +2,15 @@
 
 jest.mock('fs')
 
-describe('readServerProperties', () => {
-	beforeEach(() => {
-		require('fs')._readFile = (path, encoding) => {
-			expect(path).toBe('../server/common/server.properties')
-			expect(encoding).toBe('utf8')
-			return new Promise((resolve, reject) => resolve('#notaproperty\nproperty1=value\nproperty2=value=value'))
-		}
-	})
-  test('', async () => {
-		const { readServerProperties } = require('./mcproperties')
-  	expect(await readServerProperties()).toStrictEqual({
-  		property1: 'value',
-  		property2: 'value=value'
-  	})
+const { readFile } = require('fs').promises
+const { readServerProperties } = require('./mcproperties')
+
+test('readServerProperties', async () => {
+	readFile.mockResolvedValue('#notaproperty\nproperty1=value\nproperty2=value=value')
+  expect(await readServerProperties()).toStrictEqual({
+  	property1: 'value',
+  	property2: 'value=value'
   })
+	expect(readFile.mock.calls[0][0]).toBe('../server/common/server.properties')
+	expect(readFile.mock.calls[0][1]).toBe('utf8')
 })

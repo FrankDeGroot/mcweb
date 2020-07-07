@@ -1,7 +1,9 @@
 const fs = jest.genMockFromModule('fs')
 fs.promises = {
-	readFile: function() {
-		return fs._readFile.apply(null, arguments)
-	}
+	access: jest.fn(),
+	lstat: jest.fn(),
+	readdir: jest.fn(),
+	readFile: jest.fn(),
+	readlink: jest.fn(),
 }
 module.exports = fs

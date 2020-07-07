@@ -1,9 +1,6 @@
 'use strict'
 
-const fs = require('fs')
-const { constants } = fs
-const { access, lstat, readdir, readlink, symlink, unlink } = fs.promises
-const { join } = require('path')
+const { access, readlink } = require('fs').promises
 const { notFound } = require('./error')
 const {
 	currentVersionPath,
@@ -12,13 +9,10 @@ const {
 	versionPath
 } = require('./mcpaths')
 
-exports.versions = async () => directoryFilter(serverPath, isVersion)
-
 exports.currentVersion = async () => readCurrent(currentVersionPath)
-
-exports.worlds = async version => directoryFilter(versionPath(version), isWorld)
-
 exports.currentWorld = async version => readCurrent(currentWorldPath(version))
+exports.versions = async () => directoryFilter(serverPath, isVersion)
+exports.worlds = async version => directoryFilter(versionPath(version), isWorld)
 
 async function directoryFilter(path, filter) {
 	try {
