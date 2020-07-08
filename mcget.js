@@ -1,6 +1,9 @@
 'use strict'
 
-const { access, readlink } = require('fs').promises
+const fs = require('fs')
+const { constants } = fs
+const { access, lstat, readdir, readlink } = fs.promises
+const { join } = require('path')
 const { notFound } = require('./error')
 const {
 	currentVersionPath,
@@ -16,14 +19,14 @@ exports.worlds = async version => directoryFilter(versionPath(version), isWorld)
 
 async function directoryFilter(path, filter) {
 	try {
-	const dirs = await readdir(path)
-	const filtered = await Promise.all(dirs
-		.map(async name => {
-			const filtered = await filter(join(path, name))  
-			return filtered ? name: null
-		}))
-	return filtered 
-		.filter(name => name)
+		const names = await readdir(path)
+		const filtered = await Promise.all(names
+			.map(async name => {
+				const filtered = await filter(join(path, name))  
+				return filtered ? name: null
+			}))
+		return filtered 
+			.filter(name => name)
 	} catch(err) {
 		if (err.code === 'ENOENT') {
 			throw { code: notFound, message: 'Unknown path' }
