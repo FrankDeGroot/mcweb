@@ -26,6 +26,7 @@ mount('versions', versions)
 
 socket
 	.on('message', message => messages.add(message))
+	.on('throw', message => messages.add('Error: ' + message))
 	.on('changing', () => submitter.disable())
 	.on('changed', () => submitter.enable())
 	.on('current', response => {

@@ -13,32 +13,49 @@ const {
 	change,
 } = require('./mcset')
 const { log } = require('./log')
-const { badRequest, notFound } = require('./error')
+const {
+	badRequest,
+	notFound,
+	isCustom,
+} = require('./error')
+
+async function emit(socket, name, buildMessage) {
+	try {
+		const message = await buildMessage();
+		socket.emit(name, message)
+	} catch(err) {
+		const message = isCustom(err.code) ? err.message : 'An internal error occurred'
+		log(err)
+		socket.emit('throw', message)
+	}
+}
 
 const server = require('http').createServer()
 
 io(server).on('connection', socket => socket
-		.on('worlds', async version => {
-			socket.emit('worlds', {
+		.on('worlds', async version =>
+			emit(socket, 'worlds', async () => ({
 				worlds: await worlds(version),
 				current: {
 					world: await currentWorld(version)
 				}
-			})
-		})
-		.on('current', async () => {
-			const versionCurrent = await currentVersion()
-			socket.emit('current', {
-				versions: await versions(),
-				current: {
-					version: versionCurrent,
-					worlds: await worlds(versionCurrent),
+			}))
+		)
+		.on('current', async () =>
+			emit(socket, 'current', async () => {
+				const versionCurrent = await currentVersion()
+				return {
+					versions: await versions(),
 					current: {
-						world: await currentWorld(versionCurrent)
+						version: versionCurrent,
+						worlds: await worlds(versionCurrent),
+						current: {
+							world: await currentWorld(versionCurrent)
+						}
 					}
 				}
 			})
-		})
+		)
 		.on('change', async changeParameters => {
 			const { version, world } = changeParameters
 			socket.emit('changing')
