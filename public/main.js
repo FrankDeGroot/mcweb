@@ -1,5 +1,7 @@
 'use strict'
 
+const socket = io()
+
 import { Messages } from './messages.js'
 const messages = new Messages()
 mount('messages', messages)
@@ -17,16 +19,24 @@ mount('worlds', worlds)
 
 import { Versions } from './versions.js'
 const versions = new Versions(version => {
-	worlds.setVersion(version)
+	socket.emit('worlds', version)
 	submitter.setVersion(version)
 })
 mount('versions', versions)
 
-const socket = io()
 socket
 	.on('message', message => messages.add(message))
 	.on('changing', () => submitter.disable())
 	.on('changed', () => submitter.enable())
+	.on('current', response => {
+		versions.load(response)
+		worlds.load(response.current)
+	})
+	.on('worlds', response => {
+		worlds.load(response)
+	})
+
+socket.emit('current')
 
 function mount(id, component) {
 	m.mount(document.getElementById(id), component)

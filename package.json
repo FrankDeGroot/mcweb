@@ -13,7 +13,6 @@
   "dependencies": {
     "bufferutil": "^4.0.1",
     "nodemon": "^2.0.4",
-    "polka": "^0.5.2",
     "rcon": "^1.0.3",
     "socket.io": "^2.3.0",
     "utf-8-validate": "^5.0.2"

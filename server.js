@@ -15,49 +15,39 @@ const {
 const { log } = require('./log')
 const { badRequest, notFound } = require('./error')
 
-function send(res, status, body) {
-	res.writeHead(status, {'Content-Type': 'application/json'})
-	res.end(JSON.stringify(body))
-}
+const server = require('http').createServer()
 
-function handler() {
-	return require('polka')()
-		.use('api', async (req, res, next) => {
-			try {
-				next()
-				send(res, 200, await res.body)
-			} catch(err) {
-				if (err.code === badRequest) {
-					send(res, 400, { message: err.message })
-				} else if (err.code === notFound ) {
-					send(res, 404, { message: err.message })
-				} else {
-					log(err)
-					send(res, 500, { message: 'Internal Server Error' })
+io(server).on('connection', socket => socket
+		.on('worlds', async version => {
+			socket.emit('worlds', {
+				worlds: await worlds(version),
+				current: {
+					world: await currentWorld(version)
 				}
-			}
+			})
 		})
-		.get('api/versions', (req, res) => res.body = versions())
-		.get('api/versions/current', (req, res) => res.body = currentVersion())
-		.get('api/versions/:version/worlds', (req, res) => res.body = worlds(req.params.version))
-		.get('api/versions/:version/worlds/current', (req, res) => res.body = currentWorld(req.params.version))
-		.handler
-}
-
-const server = require('http').createServer(handler())
-
-io(server).on('connection', socket => {
-//	socket.emit('message', 'Connected')
-	socket.on('change', async changeParameters => {
-		const { version, world } = changeParameters
-		socket.emit('changing')
-		await change(version, world, message => {
-//			log('emitting', message)
-			socket.emit('message', message)
+		.on('current', async () => {
+			const versionCurrent = await currentVersion()
+			socket.emit('current', {
+				versions: await versions(),
+				current: {
+					version: versionCurrent,
+					worlds: await worlds(versionCurrent),
+					current: {
+						world: await currentWorld(versionCurrent)
+					}
+				}
+			})
 		})
-		socket.emit('changed')
-	})
-})
+		.on('change', async changeParameters => {
+			const { version, world } = changeParameters
+			socket.emit('changing')
+			await change(version, world, message => {
+				socket.emit('message', message)
+			})
+			socket.emit('changed')
+		})
+)
 
 server.listen(1024, err => {
 		if (err) throw err;

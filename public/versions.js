@@ -7,13 +7,10 @@ export function Versions(onchange) {
 	var current = ""
 	var selected = ""
 	return {
-		oninit: async () => {
-			versions = await m.request({
-				url: '/api/versions'
-			})
-			onchange(selected = current = await m.request({
-				url: '/api/versions/current'
-			}))
+		load: async data => {
+			versions = data.versions
+			onchange(selected = current = data.current.version)
+			m.redraw()
 		},
 		view: () => select('Versions', value => onchange(selected = value), versions, selected)
 	}
