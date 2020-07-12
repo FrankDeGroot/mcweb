@@ -2,16 +2,13 @@
 
 import { select } from './select.js'
 
-export function Worlds(version, onchange) {
-	var worlds = []
-	var current = ""
-	var selected = ""
+export function Worlds() {
 	return {
-		load: async data => {
-			worlds = data.worlds
-			onchange(selected = current = data.current.world)
-			m.redraw()
-		},
-		view: () => select('Worlds', value => onchange(selected = value), worlds, selected)
+		view: vnode => select(
+			'Worlds',
+			value => vnode.attrs.onchange(vnode.attrs.model.world = value),
+			vnode.attrs.model.worlds,
+			vnode.attrs.model.world
+		)
 	}
 }

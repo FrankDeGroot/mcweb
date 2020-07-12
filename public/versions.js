@@ -2,17 +2,14 @@
 
 import { select } from './select.js'
 
-export function Versions(onchange) {
-	var versions = []
-	var current = ""
-	var selected = ""
+export function Versions() {
 	return {
-		load: async data => {
-			versions = data.versions
-			onchange(selected = current = data.current.version)
-			m.redraw()
-		},
-		view: () => select('Versions', value => onchange(selected = value), versions, selected)
+		view: vnode => select(
+			'Versions',
+			value => vnode.attrs.onchange(vnode.attrs.model.version = value),
+			vnode.attrs.model.versions,
+			vnode.attrs.model.version
+		)
 	}
 }
 

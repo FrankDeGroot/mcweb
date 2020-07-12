@@ -1,44 +1,67 @@
 'use strict'
 
-const socket = io()
-
 import { Messages } from './messages.js'
-const messages = new Messages()
-mount('messages', messages)
-
 import { Submitter } from './submitter.js'
-const submitter = new Submitter((version, world) => socket.emit('change', {
-	version,
-	world
-}))
-mount('submitter', submitter)
-
-import { Worlds } from './worlds.js'
-const worlds = new Worlds('current', submitter.setWorld)
-mount('worlds', worlds)
-
 import { Versions } from './versions.js'
-const versions = new Versions(version => {
-	socket.emit('worlds', version)
-	submitter.setVersion(version)
-})
-mount('versions', versions)
+import { Worlds } from './worlds.js'
 
-socket
-	.on('message', message => messages.add(message))
-	.on('throw', message => messages.add('Error: ' + message))
-	.on('changing', () => submitter.disable())
-	.on('changed', () => submitter.enable())
-	.on('current', response => {
-		versions.load(response)
-		worlds.load(response.current)
-	})
-	.on('worlds', response => {
-		worlds.load(response)
-	})
+function Main() {
+	const model = {
+		messages: [],
+		versions: [],
+		worlds: [],
+		version: "",
+		world: "",
+		changing: false,
+	}
 
-socket.emit('current')
+	function redraw(f) {
+		f()
+		m.redraw()
+	}
 
-function mount(id, component) {
-	m.mount(document.getElementById(id), component)
+	const socket = io()
+	socket.emit('current')
+	socket
+		.on('message', message => redraw(() => model.messages.push(message)))
+		.on('throw', message => redraw(() => model.messages.push('Error: ' + message)))
+		.on('changing', () => redraw(() => model.changing = true))
+		.on('changed', () => redraw(() => model.changing = false))
+		.on('current', response => {
+			model.versions = response.versions
+			model.worlds = response.current.worlds
+			model.version = response.current.version
+			model.world = response.current.current.world
+			m.redraw()
+		})
+		.on('worlds', response => {
+			model.worlds = response.worlds
+			model.world = response.current.world
+			m.redraw()
+		})
+
+	return {
+		view: vnode => m('div', [
+			m(Versions, {
+				onchange: version => {
+					socket.emit('worlds', version)
+				},
+				model
+			}),
+			m(Worlds, {
+				onchange: () => undefined,
+				model
+			}),
+			m(Submitter, {
+				onsubmit: () => socket.emit('change', {
+					version: model.version,
+					world: model.world
+				}),
+				model: model
+			}),
+			m(Messages, { model }),
+		])
+	}
 }
+m.mount(document.getElementById('main'), Main)
+

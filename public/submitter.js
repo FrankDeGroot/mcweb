@@ -1,26 +1,13 @@
 'use strict'
 
-export function Submitter(onsubmit) {
-	var version
-	var world
-	var enabled = true
+export function Submitter() {
 	return {
-		setVersion: newVersion => version = newVersion,
-		setWorld: newWorld => world = newWorld,
-		enable: () => {
-			enabled = true
-			m.redraw()
-		},
-		disable: () => {
-			enabled = false
-			m.redraw()
-		},
-		view: () => m(polythene.Button, {
+		view: vnode => m(polythene.Button, {
 			label: 'Change',
 			events: {
-				onclick: e => onsubmit(version, world)
+				onclick: e => vnode.attrs.onsubmit()
 			},
-			disabled: enabled ? undefined : 'disabled'
+			disabled: vnode.attrs.model.changing ? 'disabled' : undefined
 		})
 	}
 }
