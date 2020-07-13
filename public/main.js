@@ -15,14 +15,12 @@ function Main() {
 		changing: false,
 	}
 
-	function redraw(f) {
-		f()
+	function redraw(handler) {
+		handler()
 		m.redraw()
 	}
 
 	const socket = io()
-	socket.emit('current')
-	socket
 		.on('message', message => redraw(() => model.messages.push(message)))
 		.on('throw', message => redraw(() => model.messages.push('Error: ' + message)))
 		.on('changing', () => redraw(() => model.changing = true))
@@ -39,9 +37,10 @@ function Main() {
 			model.world = response.current.world
 			m.redraw()
 		})
+		.emit('current')
 
 	return {
-		view: vnode => m('div', [
+		view: vnode => [
 			m(Versions, {
 				onchange: version => {
 					socket.emit('worlds', version)
@@ -49,7 +48,6 @@ function Main() {
 				model
 			}),
 			m(Worlds, {
-				onchange: () => undefined,
 				model
 			}),
 			m(Submitter, {
@@ -60,7 +58,7 @@ function Main() {
 				model: model
 			}),
 			m(Messages, { model }),
-		])
+		]
 	}
 }
 m.mount(document.getElementById('main'), Main)

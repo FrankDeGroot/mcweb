@@ -2,7 +2,7 @@
 
 export function select(title, onchange, list, selected) {
 	return m(polythene.List, {
-		header: m('em', title),
+		header: { title },
 		tiles: list.map(title => m(polythene.ListTile, {
 			title,
 			selected: selected === title,
