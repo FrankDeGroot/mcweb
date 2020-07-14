@@ -36,23 +36,17 @@ io(server).on('connection', socket => socket
 		.on('worlds', async version =>
 			emit(socket, 'worlds', async () => ({
 				worlds: await worlds(version),
-				current: {
-					world: await currentWorld(version)
-				}
+				world: await currentWorld(version)
 			}))
 		)
 		.on('current', async () =>
 			emit(socket, 'current', async () => {
-				const versionCurrent = await currentVersion()
+				const version = await currentVersion()
 				return {
 					versions: await versions(),
-					current: {
-						version: versionCurrent,
-						worlds: await worlds(versionCurrent),
-						current: {
-							world: await currentWorld(versionCurrent)
-						}
-					}
+					version: version,
+					worlds: await worlds(version),
+					world: await currentWorld(version)
 				}
 			})
 		)

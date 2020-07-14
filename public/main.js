@@ -21,20 +21,26 @@ function Main() {
 	}
 
 	const socket = io()
-		.on('message', message => redraw(() => model.messages.push(message)))
+		.on('message', message => {
+			model.messages.push(message)
+			if (model.messages.lengh > 3) {
+				model.messages.shift()
+			}
+			m.redraw()
+		})
 		.on('throw', message => redraw(() => model.messages.push('Error: ' + message)))
 		.on('changing', () => redraw(() => model.changing = true))
 		.on('changed', () => redraw(() => model.changing = false))
 		.on('current', response => {
 			model.versions = response.versions
-			model.worlds = response.current.worlds
-			model.version = response.current.version
-			model.world = response.current.current.world
+			model.version = response.version
+			model.worlds = response.worlds
+			model.world = response.world
 			m.redraw()
 		})
 		.on('worlds', response => {
 			model.worlds = response.worlds
-			model.world = response.current.world
+			model.world = response.world
 			m.redraw()
 		})
 		.emit('current')
@@ -55,7 +61,7 @@ function Main() {
 					version: model.version,
 					world: model.world
 				}),
-				model: model
+				model
 			}),
 			m(Messages, { model }),
 		]
