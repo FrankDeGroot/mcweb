@@ -61,7 +61,7 @@ io(server).on('connection', socket => socket
 )
 
 server.listen(1024, err => {
-		if (err) throw err;
-		log('Server running')
+	if (err) throw err;
+	log('Server running')
 })
 
