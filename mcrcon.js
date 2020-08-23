@@ -1,6 +1,7 @@
 'use strict'
 
 const Rcon = require('rcon')
+const { serverFailure } = require('./error')
 const { log } = require('./log')
 const { sleep } = require('./sleep')
 
@@ -53,7 +54,7 @@ exports.say = async message => {
 		}
 	} while (!done && tries < 120)
 	if (!done) {
-		throw { code: 'SERVERFAILURE', message: 'Server Failed to restart' }
+		throw { code: serverFailure, message: 'Server failed to restart' }
 	}
 }
 
