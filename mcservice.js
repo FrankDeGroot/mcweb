@@ -1,7 +1,7 @@
 'use strict'
 
 const { spawn } = require('child_process')
-const { log } = require('./log')
+const { error, info } = require('./log')
 
 exports.start = async () => mcctl('start')
 
@@ -11,20 +11,20 @@ function mcctl(action) {
 	return new Promise((resolve, reject) => {
 		const systemctl = spawn('systemctl', [ '--user', action, 'mc' ])
 			.on('close', code => {
-			  log(`systemctl ${action} exited with code ${code}`)
+			  info(`systemctl ${action} exited with code ${code}`)
 				code ? reject(code) : resolve(code)
 			})
 			.on('error', err => {
-				console.error(`error: ${action} ${err}`)
+				error(`error: ${action} ${err}`)
 				reject(err)
 			})
 		
 		systemctl.stdout.on('data', data => {
-			log(`stdout: ${action} ${data}`)
+			info(`stdout: ${action} ${data}`)
 		})
 		
 		systemctl.stderr.on('data', data => {
-			console.error(`stderr: ${action} ${data}`)
+			error(`stderr: ${action} ${data}`)
 		})
 	})
 }

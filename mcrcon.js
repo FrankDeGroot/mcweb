@@ -2,7 +2,7 @@
 
 const Rcon = require('rcon')
 const { serverFailure } = require('./error')
-const { log } = require('./log')
+const { info, trace } = require('./log')
 const { sleep } = require('./sleep')
 
 let serverProperties = null
@@ -24,7 +24,7 @@ function send(message) {
 			.on('error', err => reject(err))
 			.on('response', response => {
 				if (response) {
-					log('rcon response', response)
+					info('rcon response', response)
 				}
 				con.disconnect()
 			})
@@ -36,17 +36,17 @@ exports.say = async message => {
 	await readServerProperties()
 	let tries = 0
 	let done = false
-	log('Saying', message)
+	info('Saying', message)
 	do {
 		tries++
 		try {
-//			log('Saying', message, 'attempt', tries)
+			trace('Saying', message, 'attempt', tries)
 			await send('say ' + message)
 			done = true
-			log('Said', message)
+			info('Said', message)
 		} catch(err) {
 			if (err.code === 'ECONNREFUSED') {
-//				log('Failed saying', message, 'attempt', tries)
+				trace('Failed saying', message, 'attempt', tries)
 				await sleep(1000)
 			} else {
 				throw err
@@ -57,4 +57,3 @@ exports.say = async message => {
 		throw { code: serverFailure, message: 'Server failed to restart' }
 	}
 }
-

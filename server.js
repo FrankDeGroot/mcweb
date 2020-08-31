@@ -12,12 +12,14 @@ const {
 	alreadyChangingErrorCode,
 	change,
 } = require('./mcset')
-const { log } = require('./log')
+const { info, level, log } = require('./log')
 const {
 	badRequest,
 	notFound,
 	isCustom,
 } = require('./error')
+
+level('info')
 
 async function emit(socket, name, buildMessage) {
 	try {
@@ -25,7 +27,7 @@ async function emit(socket, name, buildMessage) {
 		socket.emit(name, message)
 	} catch(err) {
 		const message = isCustom(err.code) ? err.message : 'An internal error occurred'
-		log(err)
+		log(isCustom(err.code) ? 'info': 'error', err)
 		socket.emit('throw', message)
 	}
 }
@@ -62,6 +64,6 @@ io(server).on('connection', socket => socket
 
 server.listen(1024, err => {
 	if (err) throw err;
-	log('Server running')
+	info('Server running')
 })
 

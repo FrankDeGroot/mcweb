@@ -1,7 +1,7 @@
 'use strict'
 
 const { symlink, unlink } = require('fs').promises
-const { log } = require('./log')
+const { info } = require('./log')
 const {
 	currentVersionPath,
 	currentWorldPath,
@@ -35,13 +35,13 @@ exports.change = async (version, world, onchange) => {
 		await say(`Switching to ${version} with ${world} in 2 s, see you there!`)
 		await sleep(2000)
 		onchange('Stopping Minecraft')
-		log('stopping mc')
+		info('stopping mc')
 		await stop()
 		onchange('Reconfiguring')
 		await setVersion(version)
 		await setWorld(version, world)
 		onchange('Starting Minecraft')
-		log('starting mc')
+		info('starting mc')
 		await start()
 		onchange('Waiting for Minecraft')
 		await say(`Welcome back!`)
