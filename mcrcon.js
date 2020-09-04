@@ -9,7 +9,7 @@ let serverProperties = null
 
 async function readServerProperties() {
 	if (!serverProperties) {
-		serverProperties = await require('./mcproperties.js').readServerProperties()
+		serverProperties = await require('./mcproperties').readServerProperties()
 	}
 }
 

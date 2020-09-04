@@ -1,3 +1,5 @@
+'use strict'
+
 const fs = jest.genMockFromModule('fs')
 fs.promises = {
 	access: jest.fn(),
