@@ -40,6 +40,7 @@ describe('say', () => {
 				return con
 			})
 		con.connect.mockReset()
+		con.send.mockReset()
 		info.mockReset()
 		trace.mockReset()
 		sleep.mockReset()
@@ -63,5 +64,39 @@ describe('say', () => {
 		expect(con.disconnect).toHaveBeenCalled()
 
 		expect(info).toHaveBeenCalledWith('rcon response', 'response')
+	})
+	it('should retry when not sent successfully first', async () => {
+		con.connect
+			.mockImplementationOnce(() => {
+				handlers.error({ code: 'ECONNREFUSED' })
+			})
+			.mockImplementationOnce(() => {
+				handlers.auth()
+				handlers.response('response')
+				handlers.end()
+			})
+
+		await say('hello')
+	})
+	it('should reject when not sent successfully repeatedly', async () => {
+		con.connect.mockImplementation(() => {
+			handlers.error({ code: 'ECONNREFUSED' })
+		})
+
+		await expect(() => say('hello')).rejects.toEqual({ code: 'SERVERFAILURE', message: 'Server failed to restart' });
+
+		expect(con.connect.mock.calls.length).toBe(120)
+		expect(sleep.mock.calls.length).toBe(120)
+	})
+	it('should reject immediately when another error occurs', async () => {
+		const ERR = {}
+		con.connect.mockImplementation(() => {
+			handlers.error(ERR)
+		})
+
+		await expect(() => say('hello')).rejects.toEqual(ERR)
+
+		expect(con.connect.mock.calls.length).toBe(1)
+		expect(sleep.mock.calls.length).toBe(0)
 	})
 })
