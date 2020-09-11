@@ -9,7 +9,6 @@ const {
 	currentWorld,
 } = require('./mcget')
 const {
-	alreadyChangingErrorCode,
 	change,
 } = require('./mcset')
 const { info, level, log } = require('./log')
