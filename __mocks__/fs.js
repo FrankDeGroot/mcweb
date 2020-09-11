@@ -7,5 +7,7 @@ fs.promises = {
 	readdir: jest.fn(),
 	readFile: jest.fn(),
 	readlink: jest.fn(),
+	symlink: jest.fn(),
+	unlink: jest.fn(),
 }
 module.exports = fs

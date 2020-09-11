@@ -44,7 +44,7 @@ exports.change = async (version, world, onchange) => {
 		info('starting mc')
 		await start()
 		onchange('Waiting for Minecraft')
-		await say(`Welcome back!`)
+		await say('Welcome back!')
 		onchange('Done!')
 		changing = false
 	} catch(err) {
