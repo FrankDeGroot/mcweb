@@ -4,6 +4,7 @@ import { Messages } from './messages.js'
 import { Submitter } from './submitter.js'
 import { Versions } from './versions.js'
 import { Worlds } from './worlds.js'
+import { Updater } from './updater.js'
 
 function Main() {
 	const model = {
@@ -31,6 +32,8 @@ function Main() {
 		.on('throw', message => redraw(() => model.messages.push('Error: ' + message)))
 		.on('changing', () => redraw(() => model.changing = true))
 		.on('changed', () => redraw(() => model.changing = false))
+		.on('updating', () => redraw(() => model.changing = true))
+		.on('updated', () => redraw(() => model.changing = false))
 		.on('current', response => {
 			model.versions = response.versions
 			model.version = response.version
@@ -61,6 +64,10 @@ function Main() {
 					version: model.version,
 					world: model.world
 				}),
+				model
+			}),
+			m(Updater, {
+				onupdateversion: version => socket.emit('update', { version }),
 				model
 			}),
 			m(Messages, { model }),

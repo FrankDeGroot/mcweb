@@ -1,5 +1,12 @@
 'use strict'
 
+const { log } = require('./log')
+const {
+	badRequest,
+	notFound,
+	isCustom,
+} = require('./error')
+
 const {
 	versions,
 	currentVersion,
@@ -9,12 +16,9 @@ const {
 const {
 	change,
 } = require('./mcset')
-const { log } = require('./log')
 const {
-	badRequest,
-	notFound,
-	isCustom,
-} = require('./error')
+	update
+} = require('./update')
 
 exports.setup = socket => socket
 		.on('worlds', async version =>
@@ -35,21 +39,40 @@ exports.setup = socket => socket
 			})
 		)
 		.on('change', async changeParameters => {
-			const { version, world } = changeParameters
-			socket.emit('changing')
-			await change(version, world, message => {
-				socket.emit('message', message)
+			progressive(socket, 'changing', 'changed', async () => {
+				const { version, world } = changeParameters
+				await change(version, world, message => socket.emit('message', message))
 			})
-			socket.emit('changed')
 		})
+		.on('update', async updateParameters => {
+			progressive(socket, 'updating', 'updated', async () => {
+				const { version } = updateParameters
+				await update(version, message => socket.emit('message', message))
+			})
+		})
+
+async function progressive(socket, doing, done, action) {
+	socket.emit(doing)
+	try {
+		await action()
+	} catch(err) {
+		catchErr(socket, err)
+	} finally {
+		socket.emit(done)
+	}
+}
 
 async function emit(socket, name, buildMessage) {
 	try {
 		socket.emit(name, await buildMessage())
 	} catch(err) {
+		catchErr(socket, err)
+	}
+}
+
+async function catchErr(socket, err) {
 		const message = isCustom(err.code) ? err.message : 'An internal error occurred'
 		log(isCustom(err.code) ? 'info': 'error', err)
 		socket.emit('throw', message)
-	}
 }
 
