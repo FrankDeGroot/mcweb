@@ -7,7 +7,7 @@ export function Submitter() {
 			events: {
 				onclick: e => vnode.attrs.onsubmit()
 			},
-			disabled: vnode.attrs.model.changing ? 'disabled' : undefined
+			disabled: vnode.attrs.model.busy ? 'disabled' : undefined
 		})
 	}
 }

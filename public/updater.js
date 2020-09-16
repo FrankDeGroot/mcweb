@@ -8,12 +8,14 @@ export function Updater() {
 				events: {
 					onclick: e => vnode.attrs.onupdateversion('release'),
 				},
+				disabled: vnode.attrs.model.busy ? 'disabled' : undefined
 			}),
 			m(polythene.Button, {
 				label: 'Update Snapshot',
 				events: {
 					onclick: e => vnode.attrs.onupdateversion('snapshot'),
 				},
+				disabled: vnode.attrs.model.busy ? 'disabled' : undefined
 			}),
 		])
 	}

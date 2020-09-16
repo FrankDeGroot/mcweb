@@ -13,7 +13,7 @@ function Main() {
 		worlds: [],
 		version: "",
 		world: "",
-		changing: false,
+		busy: false,
 	}
 
 	function redraw(handler) {
@@ -30,10 +30,10 @@ function Main() {
 			m.redraw()
 		})
 		.on('throw', message => redraw(() => model.messages.push('Error: ' + message)))
-		.on('changing', () => redraw(() => model.changing = true))
-		.on('changed', () => redraw(() => model.changing = false))
-		.on('updating', () => redraw(() => model.changing = true))
-		.on('updated', () => redraw(() => model.changing = false))
+		.on('changing', () => redraw(() => model.busy = true))
+		.on('changed', () => redraw(() => model.busy = false))
+		.on('updating', () => redraw(() => model.busy = true))
+		.on('updated', () => redraw(() => model.busy = false))
 		.on('current', response => {
 			model.versions = response.versions
 			model.version = response.version
