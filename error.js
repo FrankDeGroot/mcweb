@@ -1,6 +1,13 @@
 'use strict'
 
-exports.badRequest = 'BADREQUEST'
-exports.notFound = 'NOTFOUND'
-exports.serverFailure = 'SERVERFAILURE'
-exports.isCustom = code => code === 'BADREQUEST' || code === 'NOTFOUND' || code === 'SERVERFAILURE'
+const errors = {
+	badRequest: 'BADREQUEST',
+	notFound: 'NOTFOUND',
+	serverFailure: 'SERVERFAILURE',
+	downloadFailed: 'DOWNLOADFAILED',
+}
+
+for (const error in errors) {
+	exports[error] = errors[error]
+}
+exports.isCustom = err => errors[err]

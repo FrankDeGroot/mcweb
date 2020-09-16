@@ -11,6 +11,7 @@ const { start, stop } = require('./mcservice')
 const { say } = require('./mcrcon')
 const { sleep } = require('./sleep')
 const { currentVersion } = require('./mcget')
+const { downloadFailed } = require('./error')
 
 exports.update = async (version, onchange) => {
 	info('updating', version)
@@ -34,7 +35,7 @@ exports.update = async (version, onchange) => {
 	const pathLatestServer = join(versionPath(version), `server.${latest}.jar`)
 	await pipe(await getStream(serverUrl), createWriteStream(pathLatestServer))
 	if (serverSha1 !== await getSha1(pathLatestServer)) {
-		throw { code: 'DOWNLOADFAILED', message: `Latest ${version} ${latest} download sha1 does not match` }	
+		throw { code: downloadFailed, message: `Latest ${version} ${latest} download sha1 does not match` }	
 	}
 	await restartIfCurrent(version, latest, async () => {
 		onchange('Replacing server')
@@ -90,7 +91,7 @@ async function getStream(url) {
 			if (res.statusCode === 200) {
 				resolve(res)
 			} else {
-				reject({ code: 'GETFAILURE', message: `Server returned ${res.statusCode}.`})
+				reject({ code: downloadFailed, message: `GET ${url} returned ${res.statusCode}.`})
 			}
 		})
 	})
@@ -106,7 +107,6 @@ async function pipe(from, to) {
 }
 
 async function getSha1(path) {
-	info(path)
 	return new Promise((resolve, reject) => {
 		const hash = crypto.createHash('sha1')
 		createReadStream(path)

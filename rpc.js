@@ -2,8 +2,6 @@
 
 const { log } = require('./log')
 const {
-	badRequest,
-	notFound,
 	isCustom,
 } = require('./error')
 
@@ -17,7 +15,7 @@ const {
 	change,
 } = require('./mcset')
 const {
-	update
+	update,
 } = require('./update')
 
 exports.setup = socket => socket
