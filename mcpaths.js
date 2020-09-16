@@ -11,4 +11,3 @@ exports.currentVersionPath = versionPath(currentVersionName)
 exports.currentWorldPath = version => join(versionPath(version), currentWorldName)
 exports.serverPath = serverPath
 exports.versionPath = versionPath
-
