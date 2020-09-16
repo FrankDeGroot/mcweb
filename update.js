@@ -1,7 +1,7 @@
 'use strict'
 
-const https = require('https')
-const crypto = require('crypto')
+const { get } = require('https')
+const { createHash } = require('crypto')
 const { createReadStream, createWriteStream } = require('fs')
 const { rename } = require('fs').promises
 const { join } = require('path')
@@ -66,13 +66,13 @@ async function restartIfCurrent (version, latest, action, onchange) {
 }
 
 async function getJson (url) {
-  const buffer = await get(url)
+  const buffer = await getString(url)
   return JSON.parse(buffer.toString())
 }
 
-async function get (url) {
+async function getString (url) {
   return new Promise((resolve, reject) => {
-    https.get(url, res => {
+    get(url, res => {
       const chunks = []
       res
         .on('data', chunk => {
@@ -86,7 +86,7 @@ async function get (url) {
 
 async function getStream (url) {
   return new Promise((resolve, reject) => {
-    https.get(url, res => {
+    get(url, res => {
       if (res.statusCode === 200) {
         resolve(res)
       } else {
@@ -107,7 +107,7 @@ async function pipe (from, to) {
 
 async function getSha1 (path) {
   return new Promise((resolve, reject) => {
-    const hash = crypto.createHash('sha1')
+    const hash = createHash('sha1')
     createReadStream(path)
       .pipe(hash)
       .on('finish', () => resolve(hash.digest('hex')))
