@@ -22,13 +22,13 @@ const {
 
 exports.setup = socket => socket
 		.on('worlds', async version =>
-			emit(socket, 'worlds', async () => ({
+			safeEmit(socket, 'worlds', async () => ({
 				worlds: await worlds(version),
 				world: await currentWorld(version)
 			}))
 		)
 		.on('current', async () =>
-			emit(socket, 'current', async () => {
+			safeEmit(socket, 'current', async () => {
 				const version = await currentVersion()
 				return {
 					versions: await versions(),
@@ -62,7 +62,7 @@ async function progressive(socket, doing, done, action) {
 	}
 }
 
-async function emit(socket, name, buildMessage) {
+async function safeEmit(socket, name, buildMessage) {
 	try {
 		socket.emit(name, await buildMessage())
 	} catch(err) {

@@ -2,7 +2,8 @@
 
 const https = require('https')
 const crypto = require('crypto')
-const { rename, writeFile } = require('fs').promises
+const { createReadStream, createWriteStream } = require('fs')
+const { rename } = require('fs').promises
 const { join } = require('path')
 const { info } = require('./log')
 const { versionPath } = require('./mcpaths')
@@ -19,21 +20,28 @@ exports.update = async (version, onchange) => {
 	const versionInfoUrl = history.versions.find(entry => entry.id === latest).url
 	const versionInfo = await getJson(versionInfoUrl)
 	const serverInfo = versionInfo.downloads.server
-	const serverUrl = serverInfo.url
 	const serverSha1 = serverInfo.sha1
+
+	const pathCurrentServer = join(versionPath(version), 'server.jar')
+	if (serverSha1 === await(getSha1(pathCurrentServer))) {
+		onchange(`Current ${version} is already ${latest}`)
+		return
+	}
+
+	const serverUrl = serverInfo.url
 	onchange(`Downloading ${version} ${latest} at ${serverUrl}`)
 	info(`downloading ${version} ${latest} at ${serverUrl}`)
-	const serverJar = await get(serverUrl)
-	if (serverSha1 !== crypto.createHash('sha1').update(serverJar).digest('hex')) {
+	const pathLatestServer = join(versionPath(version), `server.${latest}.jar`)
+	await pipe(await getStream(serverUrl), createWriteStream(pathLatestServer))
+	if (serverSha1 !== await getSha1(pathLatestServer)) {
 		throw { code: 'DOWNLOADFAILED', message: `Latest ${version} ${latest} download sha1 does not match` }	
 	}
-	const serverLatestPath = join(versionPath(version), `server.${latest}.jar`)
-	await writeFile(serverLatestPath, serverJar)
 	await restartIfCurrent(version, latest, async () => {
 		onchange('Replacing server')
 		info('replacing server.jar')
-		await rename(serverLatestPath, join(versionPath(version), 'server.jar'))
+		await rename(pathLatestServer, pathCurrentServer)
 	}, onchange)
+	onchange('done')
 }
 
 async function restartIfCurrent(version, latest, action, onchange) {
@@ -52,7 +60,6 @@ async function restartIfCurrent(version, latest, action, onchange) {
 		onchange('Waiting for Minecraft')
 		info('waiting for mc')
 		await say('Welcome back!')
-		onchange('done')
 	} else {
 		await action()
 	}
@@ -74,5 +81,37 @@ async function get(url) {
 				.on('end', () => resolve(Buffer.concat(chunks)))
 				.on('error', body => reject(err))
 		})
+	})
+}
+
+async function getStream(url) {
+	return new Promise((resolve, reject) => {
+		https.get(url, res => {
+			if (res.statusCode === 200) {
+				resolve(res)
+			} else {
+				reject({ code: 'GETFAILURE', message: `Server returned ${res.statusCode}.`})
+			}
+		})
+	})
+}
+
+async function pipe(from, to) {
+	return new Promise((resolve, reject) => {
+		from
+			.pipe(to)
+			.on('finish', () => resolve())
+			.on('error', err => reject(err))
+	})
+}
+
+async function getSha1(path) {
+	info(path)
+	return new Promise((resolve, reject) => {
+		const hash = crypto.createHash('sha1')
+		createReadStream(path)
+			.pipe(hash)
+			.on('finish', () => resolve(hash.digest('hex')))
+			.on('error', err => reject(err))
 	})
 }
