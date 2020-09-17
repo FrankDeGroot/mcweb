@@ -1,6 +1,6 @@
 'use strict'
 
-const { log } = require('./log')
+const { info, log } = require('./log')
 
 const {
   versions,
@@ -36,15 +36,20 @@ exports.setup = socket => socket
   .on('change', async changeParameters => {
     progressive(socket, 'changing', 'changed', async () => {
       const { version, world } = changeParameters
-      await change(version, world, message => socket.emit('message', message))
+      await change(version, world, message => notify(socket, message))
     })
   })
   .on('update', async updateParameters => {
     progressive(socket, 'updating', 'updated', async () => {
       const { version } = updateParameters
-      await update(version, message => socket.emit('message', message))
+      await update(version, message => notify(socket, message))
     })
   })
+
+async function notify (socket, message) {
+  info(message)
+  socket.emit('message', message)
+}
 
 async function progressive (socket, doing, done, action) {
   socket.emit(doing)

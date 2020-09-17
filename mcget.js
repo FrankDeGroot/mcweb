@@ -1,8 +1,7 @@
 'use strict'
 
-const fs = require('fs')
-const { constants } = fs
-const { access, lstat, readdir, readlink } = fs.promises
+const { constants, promises } = require('fs')
+const { access, lstat, readdir, readlink } = promises
 const { join } = require('path')
 const {
   currentVersionPath,

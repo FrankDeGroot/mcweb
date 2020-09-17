@@ -1,7 +1,6 @@
 'use strict'
 
 const { symlink, unlink } = require('fs').promises
-const { info } = require('./log')
 const {
   currentVersionPath,
   currentWorldPath
@@ -10,44 +9,19 @@ const {
   currentVersion,
   currentWorld
 } = require('./mcget')
-const { start, stop } = require('./mcservice')
-const { say } = require('./mcrcon')
-const { sleep } = require('./sleep')
+const { restart } = require('./restart')
 
-let changing = false
-
-exports.change = async (version, world, onchange) => {
+exports.change = async (version, world, notify) => {
   const nowVersion = await currentVersion()
   const nowWorld = await currentWorld(version)
   if (version === nowVersion && world === nowWorld) {
-    onchange('Already current')
+    notify('Already current')
     return
   }
-  if (changing) {
-    throw new Error('Already changing version/world')
-  }
-  try {
-    changing = true
-    onchange('Send warning to players and wait')
-    await say(`Switching to ${version} with ${world} in 2 s, see you there!`)
-    await sleep(2000)
-    onchange('Stopping Minecraft')
-    info('stopping mc')
-    await stop()
-    onchange('Reconfiguring')
+  await restart(`Switching to ${version} with ${world}`, notify, async () => {
     await setVersion(version)
     await setWorld(version, world)
-    onchange('Starting Minecraft')
-    info('starting mc')
-    await start()
-    onchange('Waiting for Minecraft')
-    await say('Welcome back!')
-    onchange('Done!')
-    changing = false
-  } catch (err) {
-    changing = false
-    throw err
-  }
+  })
 }
 
 async function setVersion (version) {

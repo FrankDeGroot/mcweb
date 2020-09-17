@@ -2,85 +2,67 @@
 
 const { get } = require('https')
 const { createHash } = require('crypto')
-const { createReadStream, createWriteStream } = require('fs')
-const { rename } = require('fs').promises
+const { createReadStream, createWriteStream, promises } = require('fs')
+const { rename, unlink } = promises
 const { join } = require('path')
-const { info } = require('./log')
 const { versionPath } = require('./mcpaths')
-const { start, stop } = require('./mcservice')
-const { say } = require('./mcrcon')
-const { sleep } = require('./sleep')
 const { currentVersion } = require('./mcget')
+const { restart } = require('./restart')
 
-exports.update = async (version, onchange) => {
-  info('updating', version)
+exports.update = async (version, notify) => {
+  notify(`Updating ${version}`)
   const history = await getJson('https://launchermeta.mojang.com/mc/game/version_manifest.json')
   const latest = history.latest[version]
-  info('latest', version, 'is', latest)
   const versionInfoUrl = history.versions.find(entry => entry.id === latest).url
   const versionInfo = await getJson(versionInfoUrl)
   const serverInfo = versionInfo.downloads.server
   const serverSha1 = serverInfo.sha1
 
   const pathCurrentServer = join(versionPath(version), 'server.jar')
-  if (serverSha1 === await (getSha1(pathCurrentServer))) {
-    onchange(`Current ${version} is already ${latest}`)
+  if (serverSha1 === await getSha1(pathCurrentServer)) {
+    notify(`Current ${version} is already ${latest}`)
     return
+  } else {
+    notify(`Upgrading ${version} to ${latest}`)
   }
 
   const serverUrl = serverInfo.url
-  onchange(`Downloading ${version} ${latest} at ${serverUrl}`)
-  info(`downloading ${version} ${latest} at ${serverUrl}`)
+  notify(`Downloading ${version} ${latest}`)
   const pathLatestServer = join(versionPath(version), `server.${latest}.jar`)
   await pipe(await getStream(serverUrl), createWriteStream(pathLatestServer))
   if (serverSha1 !== await getSha1(pathLatestServer)) {
+    await unlink(pathLatestServer)
     throw new Error(`Latest ${version} ${latest} download sha1 does not match`)
   }
-  await restartIfCurrent(version, latest, async () => {
-    onchange('Replacing server')
-    info('replacing server.jar')
+  await safeReplace(version, latest, notify, async () => {
+    notify('Replacing server.jar')
     await rename(pathLatestServer, pathCurrentServer)
-  }, onchange)
-  onchange('done')
+  })
 }
 
-async function restartIfCurrent (version, latest, action, onchange) {
+async function safeReplace (version, latest, notify, reconfigure) {
   if (version === await currentVersion()) {
-    await say(`Upgrading to ${latest} in 2 s`)
-    await sleep(2000)
-    onchange('Stopping Minecraft')
-    info('stopping mc')
-    await stop()
-
-    await action()
-
-    onchange('Starting Minecraft')
-    info('starting mc')
-    await start()
-    onchange('Waiting for Minecraft')
-    info('waiting for mc')
-    await say('Welcome back!')
+    restart(`Upgrading to ${latest}`, notify, reconfigure)
   } else {
-    await action()
+    await reconfigure()
   }
 }
 
 async function getJson (url) {
-  const buffer = await getString(url)
+  const buffer = await getBuffer(url)
   return JSON.parse(buffer.toString())
 }
 
-async function getString (url) {
+async function getBuffer (url) {
+  const res = await getStream(url)
   return new Promise((resolve, reject) => {
-    get(url, res => {
-      const chunks = []
-      res
-        .on('data', chunk => {
-          chunks.push(chunk)
-        })
-        .on('end', () => resolve(Buffer.concat(chunks)))
-        .on('error', err => reject(err))
-    })
+    const chunks = []
+    res
+      .on('data', chunk => {
+        chunks.push(chunk)
+      })
+      .on('end', () => resolve(Buffer.concat(chunks)))
+      .on('error', err => reject(err))
   })
 }
 
@@ -106,11 +88,7 @@ async function pipe (from, to) {
 }
 
 async function getSha1 (path) {
-  return new Promise((resolve, reject) => {
-    const hash = createHash('sha1')
-    createReadStream(path)
-      .pipe(hash)
-      .on('finish', () => resolve(hash.digest('hex')))
-      .on('error', err => reject(err))
-  })
+  const hash = createHash('sha1')
+  await pipe(createReadStream(path), hash)
+  return hash.digest('hex')
 }
