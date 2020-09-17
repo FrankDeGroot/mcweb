@@ -24,8 +24,8 @@ function Main() {
 	const socket = io()
 		.on('message', message => {
 			model.messages.push(message)
-			if (model.messages.lengh > 3) {
-				model.messages.shift()
+			if (model.messages.length > 3) {
+        model.messages.shift()
 			}
 			m.redraw()
 		})
