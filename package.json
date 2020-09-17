@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "jest"
+    "test": "jest",
+    "lint": "nodemon --watch . --exec eslint --fix *.js"
   },
   "author": "https://github.com/FrankDeGroot",
   "repository": "https://github.com/FrankDeGroot/mcweb",
