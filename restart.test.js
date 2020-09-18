@@ -25,8 +25,8 @@ describe('restart', () => {
     await restart('some reason', notify, reconfigure)
 
     expect(stop.mock.calls.length).toBe(1)
-    expect(notify.mock.calls.length).toBeGreaterThan(0)
-    expect(say.mock.calls.length).toBeGreaterThan(0)
+    expect(notify).toHaveBeenCalled()
+    expect(say).toHaveBeenCalled()
     expect(reconfigure.mock.calls.length).toBe(1)
     expect(start.mock.calls.length).toBe(1)
   })
