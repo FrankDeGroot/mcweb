@@ -83,7 +83,7 @@ describe('say', () => {
       handlers.error({ code: 'ECONNREFUSED' })
     })
 
-    await expect(() => say('hello')).rejects.toEqual({ code: 'SERVERFAILURE', message: 'Server failed to restart' })
+    await expect(() => say('hello')).rejects.toEqual(new Error('Server failed to restart'))
 
     expect(con.connect.mock.calls.length).toBe(120)
     expect(sleep.mock.calls.length).toBe(120)

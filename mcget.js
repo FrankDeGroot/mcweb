@@ -27,7 +27,7 @@ async function directoryFilter (path, filter) {
       .filter(name => name)
   } catch (err) {
     if (err.code === 'ENOENT') {
-      throw new Error(`Unknown path '${path}'.`)
+      throw new Error(`Unknown path '${path}'`)
     }
     throw err
   }
@@ -46,7 +46,7 @@ async function readCurrent (path) {
     return await readlink(path)
   } catch (err) {
     if (err.code === 'ENOENT') {
-      throw new Error(`Unknown path '${path}'.`)
+      throw new Error(`Unknown path '${path}'`)
     }
     throw err
   }

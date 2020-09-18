@@ -18,7 +18,7 @@ describe('currentVersion', () => {
   })
   it('throws notFound if path does not exist', async () => {
     readlink.mockRejectedValue({ code: 'ENOENT' })
-    await expect(currentVersion).rejects.toEqual({ code: 'NOTFOUND', message: 'Unknown path' })
+    await expect(currentVersion).rejects.toEqual(new Error('Unknown path \'../server/current\''))
   })
 })
 
@@ -33,7 +33,7 @@ describe('currentWorld', () => {
   })
   it('throws notFound if path does not exist', async () => {
     readlink.mockRejectedValue({ code: 'ENOENT' })
-    await expect(currentWorld('version')).rejects.toEqual({ code: 'NOTFOUND', message: 'Unknown path' })
+    await expect(() => currentWorld('version')).rejects.toEqual(new Error('Unknown path \'../server/version/world\''))
   })
 })
 
@@ -46,7 +46,7 @@ describe('versions', () => {
   it('throws on unknown path', async () => {
     readdir.mockRejectedValue({ code: 'ENOENT' })
 
-    await expect(versions).rejects.toStrictEqual({ code: 'NOTFOUND', message: 'Unknown path' })
+    await expect(versions).rejects.toStrictEqual(new Error('Unknown path \'../server\''))
   })
   it('reads versions', async () => {
     access
@@ -92,7 +92,7 @@ describe('worlds', () => {
   it('throws on unknown path', async () => {
     readdir.mockRejectedValue({ code: 'ENOENT' })
 
-    await expect(() => worlds('version')).rejects.toStrictEqual({ code: 'NOTFOUND', message: 'Unknown path' })
+    await expect(() => worlds('version')).rejects.toStrictEqual(new Error('Unknown path \'../server/version\''))
   })
   it('reads worlds', async () => {
     access

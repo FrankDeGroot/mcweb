@@ -1,15 +1,11 @@
 'use strict'
 
 jest.mock('fs')
-jest.mock('./log')
 jest.mock('./mcpaths')
 jest.mock('./mcget')
-jest.mock('./mcservice')
-jest.mock('./mcrcon')
-jest.mock('./sleep')
+jest.mock('./restart')
 
 const { symlink, unlink } = require('fs').promises
-const { info } = require('./log')
 const {
   currentWorldPath,
   versionPath
@@ -18,12 +14,9 @@ const {
   currentVersion,
   currentWorld
 } = require('./mcget')
-const { start, stop } = require('./mcservice')
-const { say } = require('./mcrcon')
-const { sleep } = require('./sleep')
-const { badRequest } = require('./error')
+const { restart } = require('./restart')
 
-const onchange = jest.fn()
+const notify = jest.fn()
 
 const { change } = require('./mcset')
 
@@ -31,22 +24,19 @@ describe('change', () => {
   beforeAll(() => {
     symlink.mockReset()
     unlink.mockReset()
-    info.mockReset()
     currentWorldPath.mockReset()
     versionPath.mockReset()
     currentVersion.mockReset()
     currentWorld.mockReset()
-    start.mockReset()
-    stop.mockReset()
-    say.mockReset()
-    sleep.mockReset()
+    restart.mockReset()
   })
   it('should change version and world', async () => {
     currentVersion.mockResolvedValue('oldVersion')
     currentWorld.mockResolvedValue('newVersion')
     currentWorldPath.mockReturnValue('currentWorldPath')
+    restart.mockImplementation((reason, notify, reconfigure) => reconfigure())
 
-    await change('newVersion', 'newWorld', onchange)
+    await change('newVersion', 'newWorld', notify)
 
     expect(unlink).toHaveBeenCalledWith('currentVersionPath')
     expect(symlink).toHaveBeenCalledWith('newVersion', 'currentVersionPath')
@@ -62,33 +52,8 @@ describe('change', () => {
     currentVersion.mockResolvedValue(VERSION)
     currentWorld.mockResolvedValue(WORLD)
 
-    await change(VERSION, WORLD, onchange)
+    await change(VERSION, WORLD, notify)
 
-    expect(onchange).toHaveBeenCalledWith('Already current')
-  })
-  it('should skip when already changing', async () => {
-    currentVersion.mockResolvedValue('oldVersion')
-    currentWorld.mockResolvedValue('newVersion')
-    onchange.mockImplementationOnce(async () => {
-      await expect(() =>
-        change('someVersion', 'someWorld', onchange))
-        .rejects.toStrictEqual({
-          code: badRequest,
-          message: 'Already changing version/world'
-        })
-    })
-
-    await change('newVersion', 'newWorld', onchange)
-  })
-  it('should not skip when changing fails', async () => {
-    currentVersion.mockResolvedValue('oldVersion')
-    currentWorld.mockResolvedValue('newVersion')
-    const ERR = {}
-    onchange.mockImplementationOnce(() => {
-      throw ERR
-    })
-
-    await expect(() => change('newVersion', 'newWorld', onchange)).rejects.toBe(ERR)
-    await change('someVersion', 'someWorld', onchange)
+    expect(notify).toHaveBeenCalledWith('Already current')
   })
 })
