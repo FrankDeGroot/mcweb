@@ -20,16 +20,18 @@ function Main() {
 		handler()
 		m.redraw()
 	}
+  
+  function pushMessage(message) {
+    model.messages.push(message)
+    if (model.messages.length > 3) {
+      model.messages.shift()
+    }
+    m.redraw()
+  }
 
 	const socket = io()
-		.on('message', message => {
-			model.messages.push(message)
-			if (model.messages.length > 3) {
-        model.messages.shift()
-			}
-			m.redraw()
-		})
-		.on('throw', message => redraw(() => model.messages.push('Error: ' + message)))
+		.on('message', message => pushMessage(message))
+		.on('throw', message => redraw(() => pushMessage('Error: ' + message)))
 		.on('changing', () => redraw(() => model.busy = true))
 		.on('changed', () => redraw(() => model.busy = false))
 		.on('updating', () => redraw(() => model.busy = true))
