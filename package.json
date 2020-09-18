@@ -4,8 +4,8 @@
   "description": "Rudimentary web interface for minecraft server",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "jest",
+    "start": "node --unhandled-rejections=strict server.js",
+    "test": "nodemon --watch . --exec jest",
     "lint": "nodemon --watch . --exec eslint --fix *.js"
   },
   "author": "https://github.com/FrankDeGroot",
@@ -28,9 +28,13 @@
     "jest": "^26.4.1"
   },
   "nodemonConfig": {
+    "ext": "js,json",
+    "ignore": [
+      "*.test.js",
+      "__mocks__/*"
+    ],
     "watch": [
       "."
-    ],
-    "ext": "js,json"
+    ]
   }
 }
