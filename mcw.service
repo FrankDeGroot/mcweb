@@ -5,7 +5,7 @@ Description=mcw
 SuccessExitStatus=0 1
 Restart=on-failure
 WorkingDirectory=/home/mc/web/
-ExecStart=/home/mc/web/node_modules/nodemon/bin/nodemon.js --unhandled-rejections=strict
+ExecStart=/usr/bin/npm start
 
 [Install]
 WantedBy=default.target
