@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node --unhandled-rejections=strict server.js",
     "test": "nodemon --watch . --exec jest",
-    "lint": "nodemon --watch . --exec eslint --fix *.js"
+    "lint": "nodemon --watch . --exec eslint --fix ."
   },
   "author": "https://github.com/FrankDeGroot",
   "repository": "https://github.com/FrankDeGroot/mcweb",

@@ -48,4 +48,3 @@ async function pipe (from, to) {
       .on('error', err => reject(err))
   })
 }
-
