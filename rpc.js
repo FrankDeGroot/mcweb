@@ -13,7 +13,7 @@ const {
 } = require('./mcset')
 const {
   update
-} = require('./update')
+} = require('./update/update')
 
 exports.setup = socket => socket
   .on('worlds', async version =>
