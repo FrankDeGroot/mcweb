@@ -1,7 +1,7 @@
 'use strict'
 
 const { createHash } = require('crypto')
-const { pipe } = require('./pipe') 
+const { pipe } = require('./pipe')
 
 exports.getSha1 = async readableStream => {
   const hash = createHash('sha1')

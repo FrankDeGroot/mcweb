@@ -35,4 +35,3 @@ describe('getStream', () => {
     expect(() => getStream('some url')).rejects.toEqual(error)
   })
 })
-

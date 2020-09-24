@@ -13,4 +13,3 @@ exports.getStream = async url => {
     })
   })
 }
-
