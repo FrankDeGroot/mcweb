@@ -1,49 +1,25 @@
 'use strict'
 
-const { createReadStream, createWriteStream, promises } = require('fs')
-const { rename, unlink } = promises
-const { join } = require('path')
-const { versionPath } = require('./../mcpaths')
+const { rename } = require('fs').promises
+const { getLatest } = require('./get_latest')
 const { currentVersion } = require('./../mcget')
 const { restart } = require('./../restart')
-const { getStream } = require('./get_stream')
-const { getJson } = require('./get_json')
-const { getSha1 } = require('./get_sha1')
-const { pipe } = require('./pipe')
+const { compareCurrent, downloadLatest } = require('./update_steps')
 
 exports.update = async (version, notify) => {
   notify(`Updating ${version}`)
-  const serverInfo = await latestServerInfo(version)
-
-  const pathCurrentServer = join(versionPath(version), 'server.jar')
-  if (hasSha1(pathCurrentServer, serverInfo.sha1)) {
+  const serverInfo = await getLatest(version)
+  const { pathCurrent, alreadyLatest } = await compareCurrent(version, serverInfo)
+  if (alreadyLatest) {
     notify(`Current ${version} is already ${serverInfo.latest}`)
     return
   }
   notify(`Downloading ${version} ${serverInfo.latest}`)
-  const pathLatestServer = join(versionPath(version), `server.${serverInfo.latest}.jar`)
-  await pipe(await getStream(serverInfo.url), createWriteStream(pathLatestServer))
-  if (!hasSha1(pathLatestServer, serverInfo.sha1)) {
-    await unlink(pathLatestServer)
-    throw new Error(`Latest ${version} ${serverInfo.latest} download failed`)
-  }
+  const pathLatest = downloadLatest(version, serverInfo)
   await safeReplace(version, serverInfo.latest, notify, async () => {
     notify('Replacing server.jar')
-    await rename(pathLatestServer, pathCurrentServer)
+    await rename(pathLatest, pathCurrent)
   })
-}
-
-async function hasSha1 (path, sha1) {
-  return sha1 === await getSha1(createReadStream(path))
-}
-
-async function latestServerInfo (version) {
-  const history = await getJson('https://launchermeta.mojang.com/mc/game/version_manifest.json')
-  const latest = history.latest[version]
-  const latestManifestUrl = history.versions.find(entry => entry.id === latest).url
-  const latestManifest = await getJson(latestManifestUrl)
-  const { sha1, url } = latestManifest.downloads.server
-  return { latest, sha1, url }
 }
 
 async function safeReplace (version, latest, notify, reconfigure) {
