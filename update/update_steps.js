@@ -8,18 +8,18 @@ const { getStream } = require('./get_stream')
 const { getSha1 } = require('./get_sha1')
 const { pipe } = require('./pipe')
 
-exports.compareCurrent = async (version, serverInfo) => {
-  const pathCurrent = join(versionPath(version), 'server.jar')
-  return {
-    pathCurrent,
-    alreadyLatest: await hasSha1(pathCurrent, serverInfo.sha1)
-  }
+exports.pathCurrentServer = (version, serverInfo) => {
+  return join(versionPath(version), 'server.jar')
+}
+
+exports.currentIsLatest = async (pathCurrent, serverInfo) => {
+  return await hasSha1(pathCurrent, serverInfo.sha1)
 }
 
 exports.downloadLatest = async (version, serverInfo) => {
   const pathLatest = join(versionPath(version), `server.${serverInfo.latest}.jar`)
   await pipe(await getStream(serverInfo.url), createWriteStream(pathLatest))
-  if (!hasSha1(pathLatest, serverInfo.sha1)) {
+  if (!await hasSha1(pathLatest, serverInfo.sha1)) {
     await unlink(pathLatest)
     throw new Error(`Latest ${version} ${serverInfo.latest} download failed`)
   }
