@@ -8,7 +8,8 @@ export function Versions () {
       'Versions',
       value => vnode.attrs.onchange(vnode.attrs.model.version = value),
       vnode.attrs.model.versions,
-      vnode.attrs.model.version
+      vnode.attrs.model.version,
+      vnode.attrs.model.busy
     )
   }
 }

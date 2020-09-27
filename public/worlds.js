@@ -11,7 +11,8 @@ export function Worlds () {
         vnode.attrs.onchange && vnode.attrs.onchange(value)
       },
       vnode.attrs.model.worlds,
-      vnode.attrs.model.world
+      vnode.attrs.model.world,
+      vnode.attrs.model.busy
     )
   }
 }

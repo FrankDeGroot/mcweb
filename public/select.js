@@ -1,6 +1,6 @@
 'use strict'
 
-export function select (title, onchange, list, selected) {
+export function select (title, onchange, list, selected, disabled) {
   return m(polythene.List, {
     header: { title },
     tiles: list.map(title => m(polythene.ListTile, {
@@ -10,6 +10,7 @@ export function select (title, onchange, list, selected) {
       events: {
         onclick: () => onchange(title)
       },
+      disabled: disabled ? 'disabled' : undefined,
       rounded: true,
       compact: true,
       hoverable: true,

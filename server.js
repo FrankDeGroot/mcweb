@@ -2,15 +2,10 @@
 'use strict'
 
 const io = require('socket.io')
-const server = require('http').createServer()
-const { info, level } = require('./log')
+const { level } = require('./log')
 const { setup } = require('./rpc')
 
 level('info')
 
-io(server).on('connection', setup)
-
-server.listen(1024, err => {
-  if (err) throw err
-  info('Server running')
-})
+const server = io.listen(1024)
+server.on('connection', socket => setup(socket, server))

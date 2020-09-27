@@ -15,15 +15,50 @@ const {
   update
 } = require('./update/update')
 
-exports.setup = socket => socket
-  .on('worlds', version =>
-    reply(socket, 'worlds', async () => ({
+exports.setup = (socket, server) => {
+  function notify (message) {
+    info(message)
+    server.emit('message', message)
+  }
+
+  async function longReply (doing, done, action) {
+    server.emit(doing)
+    try {
+      await action()
+    } catch (err) {
+      replyError(err)
+    } finally {
+      server.emit(done)
+    }
+  }
+
+  async function reply (name, getReply) {
+    try {
+      socket.emit(name, await getReply())
+    } catch (err) {
+      replyError(err)
+    }
+  }
+
+  function replyError (err) {
+    log(err.code ? 'error' : 'info', err)
+    socket.emit('throw', err.code ? 'An internal error occurred' : err.message)
+  }
+
+  socket.replyOn = (name, replier) =>
+    socket.on(name, (...args) =>
+      reply(name, () => replier(...args)))
+
+  socket.longReplyOn = (name, doing, done, replier) =>
+    socket.on(name, (...args) =>
+      longReply(doing, done, () => replier(...args)))
+
+  socket
+    .replyOn('worlds', async version => ({
       worlds: await worlds(version),
       world: await currentWorld(version)
     }))
-  )
-  .on('current', () =>
-    reply(socket, 'current', async () => {
+    .replyOn('current', async () => {
       const version = await currentVersion()
       return {
         versions: await versions(),
@@ -32,46 +67,12 @@ exports.setup = socket => socket
         world: await currentWorld(version)
       }
     })
-  )
-  .on('change', changeParameters => {
-    progressive(socket, 'changing', 'changed', async () => {
+    .longReplyOn('change', 'changing', 'changed', changeParameters => {
       const { version, world } = changeParameters
-      await change(version, world, message => notify(socket, message))
+      return change(version, world, message => notify(message))
     })
-  })
-  .on('update', updateParameters => {
-    progressive(socket, 'updating', 'updated', async () => {
+    .longReplyOn('update', 'updating', 'updated', updateParameters => {
       const { version } = updateParameters
-      await update(version, message => notify(socket, message))
+      return update(version, message => notify(message))
     })
-  })
-
-function notify (socket, message) {
-  info(message)
-  socket.emit('message', message)
-}
-
-async function progressive (socket, doing, done, action) {
-  socket.emit(doing)
-  try {
-    await action()
-  } catch (err) {
-    replyError(socket, err)
-  } finally {
-    socket.emit(done)
-  }
-}
-
-async function reply (socket, name, buildMessage) {
-  try {
-    socket.emit(name, await buildMessage())
-  } catch (err) {
-    replyError(socket, err)
-  }
-}
-
-function replyError (socket, err) {
-  const message = err.code ? 'An internal error occurred' : err.message
-  log(err.code ? 'error' : 'info', err)
-  socket.emit('throw', message)
 }

@@ -15,25 +15,6 @@ function Main () {
     world: '',
     busy: false
   }
-
-  function redraw (handler) {
-    handler()
-    m.redraw()
-  }
-
-  function pushMessage (message) {
-    model.messages.push(message)
-    if (model.messages.length > 3) {
-      model.messages.shift()
-    }
-    m.redraw()
-  }
-
-  function busy (busy) {
-    model.busy = busy
-    m.redraw()
-  }
-
   const socket = io()
     .on('message', message => pushMessage(message))
     .on('throw', message => redraw(() => pushMessage('Error: ' + message)))
@@ -54,6 +35,25 @@ function Main () {
       m.redraw()
     })
     .emit('current')
+
+  function redraw (handler) {
+    handler()
+    m.redraw()
+  }
+
+  function pushMessage (message) {
+    model.messages.push(message)
+    if (model.messages.length > 3) {
+      model.messages.shift()
+    }
+    m.redraw()
+  }
+
+  function busy (busy) {
+    model.busy = busy
+    m.redraw()
+    if (!busy) socket.emit('current')
+  }
 
   return {
     view: vnode => [
