@@ -10,9 +10,9 @@ const {
   versionPath
 } = require('./mcpaths')
 
-exports.currentVersion = async () => readCurrent(currentVersionPath)
+exports.currentVersion = async () => readCurrent(currentVersionPath())
 exports.currentWorld = async version => readCurrent(currentWorldPath(version))
-exports.versions = async () => directoryFilter(serverPath, isVersion)
+exports.versions = async () => directoryFilter(serverPath(), isVersion)
 exports.worlds = async version => directoryFilter(versionPath(version), isWorld)
 
 async function directoryFilter (path, filter) {

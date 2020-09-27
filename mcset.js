@@ -25,8 +25,8 @@ exports.change = async (version, world, notify) => {
 }
 
 async function setVersion (version) {
-  await unlink(currentVersionPath)
-  await symlink(version, currentVersionPath)
+  await unlink(currentVersionPath())
+  await symlink(version, currentVersionPath())
 }
 
 async function setWorld (version, world) {

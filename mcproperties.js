@@ -6,7 +6,7 @@ const { join } = require('path')
 const { serverPath } = require('./mcpaths')
 
 exports.readServerProperties = async () => {
-  const serverProperties = await readFile(join(serverPath, 'common', 'server.properties'), 'utf8')
+  const serverProperties = await readFile(join(serverPath(), 'common', 'server.properties'), 'utf8')
   return serverProperties.split(/[\r\n]+/)
     .filter(line => line && !line.startsWith('#'))
     .reduce((acc, line) => {

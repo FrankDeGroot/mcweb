@@ -8,7 +8,7 @@ const {
 } = require('./mcpaths')
 
 test('currentVersionPath', () => {
-  expect(currentVersionPath).toBe('../server/current')
+  expect(currentVersionPath()).toBe('../server/current')
 })
 
 test('currentWorldPath', () => {
@@ -16,7 +16,7 @@ test('currentWorldPath', () => {
 })
 
 test('serverPath', () => {
-  expect(serverPath).toBe('../server')
+  expect(serverPath()).toBe('../server')
 })
 
 test('versionPath', () => {

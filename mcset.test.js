@@ -7,6 +7,7 @@ jest.mock('./restart')
 
 const { symlink, unlink } = require('fs').promises
 const {
+  currentVersionPath,
   currentWorldPath,
   versionPath
 } = require('./mcpaths')
@@ -24,6 +25,7 @@ describe('change', () => {
   beforeAll(() => {
     symlink.mockReset()
     unlink.mockReset()
+    currentVersionPath.mockReset()
     currentWorldPath.mockReset()
     versionPath.mockReset()
     currentVersion.mockReset()
@@ -33,6 +35,7 @@ describe('change', () => {
   it('should change version and world', async () => {
     currentVersion.mockResolvedValue('oldVersion')
     currentWorld.mockResolvedValue('newVersion')
+    currentVersionPath.mockReturnValue('currentVersionPath')
     currentWorldPath.mockReturnValue('currentWorldPath')
     restart.mockImplementation((reason, notify, reconfigure) => reconfigure())
 
