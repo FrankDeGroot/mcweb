@@ -1,6 +1,6 @@
 'use strict'
 
-const { info, log } = require('./log')
+const { info, log } = require('./../log')
 
 exports.Replier = function (socket, server) {
   function notify (message) {
@@ -13,7 +13,7 @@ exports.Replier = function (socket, server) {
     try {
       await action()
     } catch (err) {
-      replyError(err)
+      replyError(server, err)
     } finally {
       server.emit(done)
     }
@@ -23,13 +23,13 @@ exports.Replier = function (socket, server) {
     try {
       socket.emit(name, await getReply())
     } catch (err) {
-      replyError(err)
+      replyError(socket, err)
     }
   }
 
-  function replyError (err) {
+  function replyError (emitter, err) {
     log(err.code ? 'error' : 'info', err)
-    socket.emit('throw', err.code ? 'An internal error occurred' : err.message)
+    emitter.emit('throw', err.code ? 'An internal error occurred' : err.message)
   }
 
   this.replyOn = (name, handler) => {

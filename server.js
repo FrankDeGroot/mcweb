@@ -1,11 +1,11 @@
 #!/usr/bin/node
 'use strict'
 
-const io = require('socket.io')
+const { listen } = require('socket.io')
 const { level } = require('./log')
-const { setup } = require('./rpc')
+const { setup } = require('./rpc/setup')
 
 level('info')
 
-const server = io.listen(1024)
+const server = listen(1024)
 server.on('connection', socket => setup(socket, server))
