@@ -2,6 +2,8 @@
 
 jest.mock('fs')
 jest.mock('./../mcpaths')
+jest.mock('./../mcget')
+jest.mock('./../restart')
 jest.mock('./get_stream')
 jest.mock('./get_sha1')
 jest.mock('./pipe')
@@ -9,11 +11,18 @@ jest.mock('./pipe')
 const { createReadStream, createWriteStream, promises } = require('fs')
 const { unlink } = promises
 const { versionPath } = require('./../mcpaths')
+const { currentVersion } = require('./../mcget')
+const { restart } = require('./../restart')
 const { getStream } = require('./get_stream')
 const { getSha1 } = require('./get_sha1')
 const { pipe } = require('./pipe')
 
-const { pathCurrentServer, currentIsLatest, downloadLatest } = require('./update_steps')
+const {
+  pathCurrentServer,
+  currentIsLatest,
+  downloadLatest,
+  restartIfNeeded
+} = require('./update_steps')
 
 const serverInfo = {
   latest: '1.2.3',
@@ -24,62 +33,73 @@ const readStream = {}
 const gottenStream = {}
 const writtenStream = {}
 
-function commonMockSetup () {
-  versionPath.mockReset().mockReturnValue('versionPath')
-  getSha1.mockReset().mockResolvedValue('sha1')
-  createReadStream.mockReset().mockReturnValue(readStream)
-  getStream.mockReset().mockResolvedValue(gottenStream)
-  createWriteStream.mockReset().mockReturnValue(writtenStream)
-}
-
-describe('pathCurrentServer', () => {
+describe('update steps', () => {
   beforeEach(() => {
-    commonMockSetup()
+    versionPath.mockReset().mockReturnValue('versionPath')
+    currentVersion.mockReset().mockResolvedValue('version')
+    restart.mockReset()
+    getSha1.mockReset().mockResolvedValue('sha1')
+    createReadStream.mockReset().mockReturnValue(readStream)
+    getStream.mockReset().mockResolvedValue(gottenStream)
+    createWriteStream.mockReset().mockReturnValue(writtenStream)
   })
-  it('should return path of current server jar', () => {
-    expect(pathCurrentServer('release', serverInfo)).toBe('versionPath/server.jar')
+  describe('pathCurrentServer', () => {
+    it('should return path of current server jar', () => {
+      expect(pathCurrentServer('release', serverInfo)).toBe('versionPath/server.jar')
 
-    expect(versionPath).toHaveBeenCalledWith('release')
+      expect(versionPath).toHaveBeenCalledWith('release')
+    })
   })
-})
+  describe('currentIsLatest', () => {
+    it('should return true when current and latest match SHA1', async () => {
+      createReadStream.mockReturnValue(readStream)
 
-describe('currentIsLatest', () => {
-  beforeEach(() => {
-    commonMockSetup()
+      expect(currentIsLatest('currentPath', serverInfo)).resolves.toEqual(true)
+
+      expect(createReadStream).toHaveBeenCalledWith('currentPath')
+      expect(getSha1).toHaveBeenCalledWith(readStream)
+    })
+    it('should return false when current SHA1 does not match latest', async () => {
+      getSha1.mockResolvedValue('otherSha1')
+
+      expect(currentIsLatest('currentPath', serverInfo)).resolves.toEqual(false)
+
+      expect(createReadStream).toHaveBeenCalledWith('currentPath')
+      expect(getSha1).toHaveBeenCalledWith(readStream)
+    })
   })
-  it('should return true when current and latest match SHA1', async () => {
-    createReadStream.mockReturnValue(readStream)
+  describe('downloadLatest', () => {
+    it('should download latest and proceed on matching sha1', async () => {
+      await expect(downloadLatest('release', serverInfo)).resolves.toEqual('versionPath/server.1.2.3.jar')
 
-    expect(currentIsLatest('currentPath', serverInfo)).resolves.toEqual(true)
+      expect(pipe).toHaveBeenCalledWith(gottenStream, writtenStream)
+      expect(createReadStream).toHaveBeenCalledWith('versionPath/server.1.2.3.jar')
+    })
+    it('should throw when latest download does not match sha1', async () => {
+      getSha1.mockResolvedValue('otherSha1')
 
-    expect(createReadStream).toHaveBeenCalledWith('currentPath')
-    expect(getSha1).toHaveBeenCalledWith(readStream)
+      await expect(downloadLatest('release', serverInfo)).rejects.toEqual(new Error('Latest release 1.2.3 download failed'))
+
+      expect(unlink).toHaveBeenCalledWith('versionPath/server.1.2.3.jar')
+    })
   })
-  it('should return false when current SHA1 does not match latest', async () => {
-    getSha1.mockResolvedValue('otherSha1')
+  describe('restartIfNeeded', () => {
+    const notify = jest.fn()
+    const reconfigure = jest.fn()
+    beforeEach(() => {
+      notify.mockReset()
+      reconfigure.mockReset()
+    })
+    it('should restart if replaced version is current', async () => {
+      await restartIfNeeded('version', 'latest', notify, reconfigure)
 
-    expect(currentIsLatest('currentPath', serverInfo)).resolves.toEqual(false)
+      expect(restart).toHaveBeenCalledWith('Upgrading to latest', notify, reconfigure)
+    })
+    it('should not restart if replaced version is not current', async () => {
+      await restartIfNeeded('other version', 'latest', notify, reconfigure)
 
-    expect(createReadStream).toHaveBeenCalledWith('currentPath')
-    expect(getSha1).toHaveBeenCalledWith(readStream)
-  })
-})
-
-describe('downloadLatest', () => {
-  beforeEach(() => {
-    commonMockSetup()
-  })
-  it('should download latest and proceed on matching sha1', async () => {
-    await expect(downloadLatest('release', serverInfo)).resolves.toEqual('versionPath/server.1.2.3.jar')
-
-    expect(pipe).toHaveBeenCalledWith(gottenStream, writtenStream)
-    expect(createReadStream).toHaveBeenCalledWith('versionPath/server.1.2.3.jar')
-  })
-  it('should throw when latest download does not match sha1', async () => {
-    getSha1.mockResolvedValue('otherSha1')
-
-    await expect(downloadLatest('release', serverInfo)).rejects.toEqual(new Error('Latest release 1.2.3 download failed'))
-
-    expect(unlink).toHaveBeenCalledWith('versionPath/server.1.2.3.jar')
+      expect(restart.mock.calls.length).toBe(0)
+      expect(reconfigure).toHaveBeenCalled()
+    })
   })
 })

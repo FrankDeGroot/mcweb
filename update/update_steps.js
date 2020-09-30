@@ -4,6 +4,8 @@ const { createReadStream, createWriteStream, promises } = require('fs')
 const { unlink } = promises
 const { join } = require('path')
 const { versionPath } = require('./../mcpaths')
+const { currentVersion } = require('./../mcget')
+const { restart } = require('./../restart')
 const { getStream } = require('./get_stream')
 const { getSha1 } = require('./get_sha1')
 const { pipe } = require('./pipe')
@@ -24,6 +26,14 @@ exports.downloadLatest = async (version, serverInfo) => {
     throw new Error(`Latest ${version} ${serverInfo.latest} download failed`)
   }
   return pathLatest
+}
+
+exports.restartIfNeeded = async (version, latest, notify, reconfigure) => {
+  if (version === await currentVersion()) {
+    restart(`Upgrading to ${latest}`, notify, reconfigure)
+  } else {
+    await reconfigure()
+  }
 }
 
 async function hasSha1 (path, sha1) {
