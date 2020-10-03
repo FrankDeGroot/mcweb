@@ -5,6 +5,7 @@ import { Submitter } from './submitter.js'
 import { Versions } from './versions.js'
 import { Worlds } from './worlds.js'
 import { Updater } from './updater.js'
+import { Creator } from './creator.js'
 
 function Main () {
   const model = {
@@ -13,6 +14,7 @@ function Main () {
     worlds: [],
     version: '',
     world: '',
+    seed: '',
     busy: false
   }
   const socket = io()
@@ -42,10 +44,8 @@ function Main () {
   }
 
   function pushMessage (message) {
-    model.messages.push(message)
-    if (model.messages.length > 3) {
-      model.messages.shift()
-    }
+    model.messages.unshift(message)
+    model.messages.splice(3)
     m.redraw()
   }
 
@@ -57,6 +57,10 @@ function Main () {
 
   return {
     view: vnode => [
+      m(Updater, {
+        onupdateversion: version => socket.emit('update', { version }),
+        model
+      }),
       m(Versions, {
         onchange: version => {
           socket.emit('worlds', version)
@@ -73,8 +77,8 @@ function Main () {
         }),
         model
       }),
-      m(Updater, {
-        onupdateversion: version => socket.emit('update', { version }),
+      m(Creator, {
+        oncreateworld: seed => socket.emit('create', { seed }),
         model
       }),
       m(Messages, { model })

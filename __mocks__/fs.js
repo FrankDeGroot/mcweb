@@ -9,6 +9,7 @@ fs.promises = {
   readlink: jest.fn(),
   rename: jest.fn(),
   symlink: jest.fn(),
-  unlink: jest.fn()
+  unlink: jest.fn(),
+  writeFile: jest.fn()
 }
 module.exports = fs

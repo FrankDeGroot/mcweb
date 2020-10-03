@@ -2,7 +2,7 @@
 
 export function Updater () {
   return {
-    view: vnode => m('span', [
+    view: vnode => m('.row', [
       m(polythene.Button, {
         label: 'Update Release',
         events: {

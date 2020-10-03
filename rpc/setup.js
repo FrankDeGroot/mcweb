@@ -5,7 +5,8 @@ const {
   worlds,
   current,
   change,
-  update
+  update,
+  create
 } = require('./calls')
 
 exports.setup = (socket, server) => new Replier(socket, server)
@@ -13,3 +14,4 @@ exports.setup = (socket, server) => new Replier(socket, server)
   .replyOn('current', current)
   .longReplyOn('change', 'changing', 'changed', change)
   .longReplyOn('update', 'updating', 'updated', update)
+  .longReplyOn('create', 'creating', 'created', create)

@@ -2,6 +2,14 @@
 
 export function Messages () {
   return {
-    view: vnode => vnode.attrs.model.messages.map(item => m('div', item))
+    view: vnode => m(polythene.List, {
+      header: { title: 'Messages' },
+      tiles: vnode.attrs.model.messages.map(title => m(polythene.ListTile, {
+        title
+      })),
+      rounded: true,
+      compact: true,
+      insetH: true
+    })
   }
 }

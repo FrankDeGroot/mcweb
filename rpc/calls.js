@@ -8,6 +8,7 @@ const {
 } = require('./../mcget')
 const { change } = require('./../mcset')
 const { update } = require('./../update/update')
+const { create } = require('./../create')
 
 exports.worlds = async version => ({
   worlds: await worlds(version),
@@ -32,4 +33,9 @@ exports.change = (notify, changeParameters) => {
 exports.update = (notify, updateParameters) => {
   const { version } = updateParameters
   return update(version, notify)
+}
+
+exports.create = (notify, createParameters) => {
+  const { seed } = createParameters
+  return create(seed, notify)
 }
