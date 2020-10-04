@@ -8,8 +8,10 @@ import { Updater } from './updater.js'
 import { Creator } from './creator.js'
 
 function Main () {
+  // Non-breaking spaces!
+  const emptyMessages = [' ', ' ']
   const model = {
-    messages: [],
+    messages: [...emptyMessages],
     versions: [],
     worlds: [],
     version: '',
@@ -45,7 +47,7 @@ function Main () {
 
   function pushMessage (message) {
     model.messages.unshift(message)
-    model.messages.splice(3)
+    model.messages.splice(emptyMessages.length)
     m.redraw()
   }
 
@@ -81,7 +83,13 @@ function Main () {
         oncreateworld: seed => socket.emit('create', { seed }),
         model
       }),
-      m(Messages, { model })
+      m(Messages, {
+        onclear: () => {
+          model.messages = [...emptyMessages]
+          m.redraw()
+        },
+        model
+      })
     ]
   }
 }
