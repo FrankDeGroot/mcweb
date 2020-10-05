@@ -16,7 +16,7 @@ export function Messages () {
         m(polythene.Button, {
           label: 'Clear',
           events: {
-            onclick: e => vnode.attrs.onclear()
+            onclick: e => vnode.attrs.onClearMessages()
           },
           disabled: vnode.attrs.model.busy ? 'disabled' : undefined
         })

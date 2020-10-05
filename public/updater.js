@@ -4,18 +4,11 @@ export function Updater () {
   return {
     view: vnode => m('.row', [
       m(polythene.Button, {
-        label: 'Update Release',
+        label: 'Update',
         events: {
-          onclick: e => vnode.attrs.onupdateversion('release')
+          onclick: e => vnode.attrs.onUpdateVersion(vnode.attrs.model.version)
         },
-        disabled: vnode.attrs.model.busy ? 'disabled' : undefined
-      }),
-      m(polythene.Button, {
-        label: 'Update Snapshot',
-        events: {
-          onclick: e => vnode.attrs.onupdateversion('snapshot')
-        },
-        disabled: vnode.attrs.model.busy ? 'disabled' : undefined
+        disabled: vnode.attrs.model.busy || !vnode.attrs.model.canUpdate ? 'disabled' : undefined
       })
     ])
   }

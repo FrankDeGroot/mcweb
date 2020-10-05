@@ -13,7 +13,7 @@ export function Creator () {
       m(polythene.Button, {
         label: 'Create',
         events: {
-          onclick: e => vnode.attrs.oncreateworld(vnode.attrs.model.seed)
+          onclick: e => vnode.attrs.onCreateWorld(vnode.attrs.model.seed)
         },
         disabled: vnode.attrs.model.busy ? 'disabled' : undefined
       })

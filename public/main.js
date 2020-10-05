@@ -1,7 +1,7 @@
 'use strict'
 
 import { Messages } from './messages.js'
-import { Submitter } from './submitter.js'
+import { Changer } from './changer.js'
 import { Versions } from './versions.js'
 import { Worlds } from './worlds.js'
 import { Updater } from './updater.js'
@@ -17,7 +17,8 @@ function Main () {
     version: '',
     world: '',
     seed: '',
-    busy: false
+    busy: false,
+    canUpdate: false
   }
   const socket = io()
     .on('message', message => pushMessage(message))
@@ -31,6 +32,8 @@ function Main () {
       model.version = response.version
       model.worlds = response.worlds
       model.world = response.world
+      model.busy = false
+      model.canUpdate = canUpdate(response.version)
       m.redraw()
     })
     .on('worlds', response => {
@@ -57,34 +60,40 @@ function Main () {
     if (!busy) socket.emit('current')
   }
 
+  function canUpdate (version) {
+    return ['release', 'snapshot'].indexOf(model.version) !== -1
+  }
+
   return {
     view: vnode => [
-      m(Updater, {
-        onupdateversion: version => socket.emit('update', { version }),
-        model
-      }),
       m(Versions, {
-        onchange: version => {
+        onChangeVersion: version => {
+          model.version = version
+          model.canUpdate = canUpdate(version)
           socket.emit('worlds', version)
         },
+        model
+      }),
+      m(Updater, {
+        onChangeVerionAndWorld: version => socket.emit('update', { version }),
         model
       }),
       m(Worlds, {
         model
       }),
-      m(Submitter, {
-        onsubmit: () => socket.emit('change', {
+      m(Changer, {
+        onChangeVerionAndWorld: () => socket.emit('change', {
           version: model.version,
           world: model.world
         }),
         model
       }),
       m(Creator, {
-        oncreateworld: seed => socket.emit('create', { seed }),
+        onCreateWorld: seed => socket.emit('create', { seed }),
         model
       }),
       m(Messages, {
-        onclear: () => {
+        onClearMessages: () => {
           model.messages = [...emptyMessages]
           m.redraw()
         },
