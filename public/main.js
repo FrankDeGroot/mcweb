@@ -75,14 +75,14 @@ function Main () {
         model
       }),
       m(Updater, {
-        onChangeVerionAndWorld: version => socket.emit('update', { version }),
+        onUpdateVersion: version => socket.emit('update', { version }),
         model
       }),
       m(Worlds, {
         model
       }),
       m(Changer, {
-        onChangeVerionAndWorld: () => socket.emit('change', {
+        onChangeVersionAndWorld: () => socket.emit('change', {
           version: model.version,
           world: model.world
         }),
