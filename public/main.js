@@ -89,7 +89,11 @@ function Main () {
         model
       }),
       m(Creator, {
-        onCreateWorld: seed => socket.emit('create', { seed }),
+        onCreateWorld: seed => socket.emit('create', {
+          version: model.version,
+          world: model.world,
+          seed
+        }),
         model
       }),
       m(Messages, {

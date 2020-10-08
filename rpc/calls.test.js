@@ -3,10 +3,12 @@
 jest.mock('./../mcget')
 jest.mock('./../mcset')
 jest.mock('./../update/update')
+jest.mock('./../create')
 
 const get = require('./../mcget')
 const { change } = require('./../mcset')
 const { update } = require('./../update/update')
+const { create } = require('./../create')
 
 const calls = require('./calls')
 
@@ -16,6 +18,7 @@ describe('calls', () => {
   const worlds = {}
   const world = 'world'
   const notify = jest.fn()
+  const seed = 'seed'
 
   beforeEach(() => {
     get.versions.mockReset()
@@ -59,6 +62,13 @@ describe('calls', () => {
       calls.update(notify, { version })
 
       expect(update).toHaveBeenCalledWith(version, notify)
+    })
+  })
+  describe('create', () => {
+    it('should extract parameters and call create', () => {
+      calls.create(notify, { version, world, seed })
+
+      expect(create).toHaveBeenCalledWith(version, world, seed, notify)
     })
   })
 })

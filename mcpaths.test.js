@@ -4,7 +4,8 @@ const {
   currentVersionPath,
   currentWorldPath,
   serverPath,
-  versionPath
+  versionPath,
+  worldPath
 } = require('./mcpaths')
 
 test('currentVersionPath', () => {
@@ -21,4 +22,8 @@ test('serverPath', () => {
 
 test('versionPath', () => {
   expect(versionPath('someVersion')).toBe('../server/someVersion')
+})
+
+test('worldPath', () => {
+  expect(worldPath('someVersion', 'someWorld')).toBe('../server/someVersion/someWorld')
 })

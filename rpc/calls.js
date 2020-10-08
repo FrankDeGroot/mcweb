@@ -36,6 +36,6 @@ exports.update = (notify, updateParameters) => {
 }
 
 exports.create = (notify, createParameters) => {
-  const { seed } = createParameters
-  return create(seed, notify)
+  const { version, world, seed } = createParameters
+  return create(version, world, seed, notify)
 }
