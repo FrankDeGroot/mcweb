@@ -6,10 +6,7 @@ export function Worlds () {
   return {
     view: vnode => select(
       'Worlds',
-      value => {
-        vnode.attrs.model.world = value
-        vnode.attrs.onchange && vnode.attrs.onchange(value)
-      },
+      value => vnode.attrs.onChangeWorld(value),
       vnode.attrs.model.worlds,
       vnode.attrs.model.world,
       vnode.attrs.model.busy

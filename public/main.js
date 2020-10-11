@@ -79,6 +79,9 @@ function Main () {
         model
       }),
       m(Worlds, {
+        onChangeWorld: world => {
+          model.world = world
+        },
         model
       }),
       m(Changer, {

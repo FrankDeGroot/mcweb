@@ -6,7 +6,7 @@ export function Versions () {
   return {
     view: vnode => select(
       'Versions',
-      value => vnode.attrs.onChangeVersion(vnode.attrs.model.version = value),
+      value => vnode.attrs.onChangeVersion(value),
       vnode.attrs.model.versions,
       vnode.attrs.model.version,
       vnode.attrs.model.busy
