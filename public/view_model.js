@@ -116,6 +116,6 @@ export function ViewModel (handlers) {
   }
 
   this.createWorld = () => {
-    handlers.onCreateWorld(currentVersion, this.seed, this.newWorldName)
+    handlers.onCreateWorld(currentVersion, this.newWorldName, this.seed)
   }
 }
