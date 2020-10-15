@@ -5,9 +5,9 @@ export function Changer () {
     view: vnode => m('.row', m(polythene.Button, {
       label: 'Change',
       events: {
-        onclick: e => vnode.attrs.onChangeVersionAndWorld()
+        onclick: e => vnode.attrs.viewModel.changeVersionAndWorld()
       },
-      disabled: vnode.attrs.model.busy ? 'disabled' : undefined
+      disabled: vnode.attrs.viewModel.busy ? 'disabled' : undefined
     }))
   }
 }

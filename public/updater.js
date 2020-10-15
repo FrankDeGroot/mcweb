@@ -6,9 +6,9 @@ export function Updater () {
       m(polythene.Button, {
         label: 'Update',
         events: {
-          onclick: e => vnode.attrs.onUpdateVersion(vnode.attrs.model.version)
+          onclick: e => vnode.attrs.viewModel.updateVersion(vnode.attrs.currentVersion)
         },
-        disabled: vnode.attrs.model.busy || !vnode.attrs.model.canUpdate ? 'disabled' : undefined
+        disabled: vnode.attrs.viewModel.canUpdate ? undefined : 'disabled'
       })
     ])
   }

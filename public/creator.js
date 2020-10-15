@@ -7,15 +7,15 @@ export function Creator () {
         help: 'Seed for created world',
         label: 'Seed',
         onChange: newState => {
-          vnode.attrs.model.seed = newState.value
+          vnode.attrs.viewModel.seed = newState.value
         }
       }),
       m(polythene.Button, {
         label: 'Create',
         events: {
-          onclick: e => vnode.attrs.onCreateWorld(vnode.attrs.model.seed)
+          onclick: e => vnode.attrs.viewModel.onCreateWorld(vnode.attrs.seed)
         },
-        disabled: vnode.attrs.model.busy ? 'disabled' : undefined
+        disabled: vnode.attrs.viewModel.busy ? 'disabled' : undefined
       })
     ])
   }
