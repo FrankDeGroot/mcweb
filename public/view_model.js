@@ -17,7 +17,7 @@ export function ViewModel (handlers) {
         changeScheduled = false
         handlers.onChange()
       }, 0)
-      // changeScheduled = true
+      changeScheduled = true
     }
   }
 

@@ -12,7 +12,6 @@ function Main () {
   const socket = io()
   const viewModel = new ViewModel({
     onChange: () => {
-      console.log('redraw')
       m.redraw()
     },
     onChangeVersion: version => {
