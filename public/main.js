@@ -18,7 +18,6 @@ function Main () {
       socket.emit('worlds', version)
     },
     onChangeWorld: world => {},
-    onBusy: () => {},
     onReady: () => {
       socket.emit('current')
     },

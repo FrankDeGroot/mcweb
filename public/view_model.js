@@ -11,6 +11,17 @@ export function ViewModel (handlers) {
   let busy = false
   let changeScheduled = false
 
+  handlers = {
+    onBusy: () => {},
+    onChangeVersion: () => {},
+    onChangeVersionAndWorld: () => {},
+    onChangeWorld: () => {},
+    onCreateWorld: () => {},
+    onReady: () => {},
+    onUpdateVersion: () => {},
+    ...handlers
+  }
+
   function scheduleChange () {
     if (handlers.onChange && !changeScheduled) {
       setTimeout(() => {
@@ -36,7 +47,7 @@ export function ViewModel (handlers) {
       set: value => {
         if (currentVersion !== value) {
           currentVersion = value
-          handlers.onChangeVersion && handlers.onChangeVersion(value)
+          handlers.onChangeVersion(value)
           scheduleChange()
         }
       }
@@ -46,7 +57,7 @@ export function ViewModel (handlers) {
       set: value => {
         if (currentWorld !== value) {
           currentWorld = value
-          handlers.onChangeWorld && handlers.onChangeWorld(value)
+          handlers.onChangeWorld(value)
           scheduleChange()
         }
       }
@@ -56,7 +67,7 @@ export function ViewModel (handlers) {
       set: value => {
         if (busy !== value) {
           busy = value
-          busy ? handlers.onBusy && handlers.onBusy() : handlers.onReady && handlers.onReady()
+          busy ? handlers.onBusy() : handlers.onReady()
           scheduleChange()
         }
       }
@@ -97,14 +108,14 @@ export function ViewModel (handlers) {
   }
 
   this.updateVersion = version => {
-    handlers.onUpdateVersion && handlers.onUpdateVersion(currentVersion)
+    handlers.onUpdateVersion(currentVersion)
   }
 
   this.changeVersionAndWorld = () => {
-    handlers.onChangeVersionAndWorld && handlers.onChangeVersionAndWorld(currentVersion, currentWorld)
+    handlers.onChangeVersionAndWorld(currentVersion, currentWorld)
   }
 
   this.createWorld = () => {
-    handlers.onCreateWorld && handlers.onCreateWorld(currentVersion, this.seed, this.newWorldName)
+    handlers.onCreateWorld(currentVersion, this.seed, this.newWorldName)
   }
 }
