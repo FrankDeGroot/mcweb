@@ -18,7 +18,7 @@ exports.update = async (version, notify) => {
     return
   }
   notify(`Downloading ${version} ${serverInfo.latest}`)
-  const pathLatest = downloadLatest(version, serverInfo)
+  const pathLatest = await downloadLatest(version, serverInfo)
   await restartIfNeeded(version, serverInfo.latest, notify, async () => {
     notify('Replacing server.jar')
     await rename(pathLatest, pathCurrent)

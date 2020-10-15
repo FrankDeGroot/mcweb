@@ -34,7 +34,7 @@ describe('update', () => {
     restart.mockReset()
     pathCurrentServer.mockReset().mockReturnValue(pathCurrent)
     currentIsLatest.mockReset()
-    downloadLatest.mockReset().mockReturnValue(pathLatest)
+    downloadLatest.mockReset().mockResolvedValue(pathLatest)
     notify.mockReset()
   })
   it('should not update when already latest', async () => {
