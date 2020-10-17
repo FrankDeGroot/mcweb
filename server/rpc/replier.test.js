@@ -1,7 +1,7 @@
 'use strict'
 
-jest.mock('./../log')
-const { info } = require('./../log')
+jest.mock('../utils/log')
+const { info } = require('../utils/log')
 
 const { Replier } = require('./replier')
 

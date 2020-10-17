@@ -6,7 +6,7 @@ const {
   serverPath,
   versionPath,
   worldPath
-} = require('./mcpaths')
+} = require('./paths')
 
 test('currentVersionPath', () => {
   expect(currentVersionPath()).toBe('../server/current')

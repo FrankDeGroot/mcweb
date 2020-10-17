@@ -1,14 +1,14 @@
 'use strict'
 
 jest.mock('fs')
-jest.mock('./mcproperties.js')
-jest.mock('./mcpaths')
-jest.mock('./restart')
+jest.mock('./serverproperties.js')
+jest.mock('./paths')
+jest.mock('../service/restart')
 
 const { mkdir, symlink, unlink } = require('fs').promises
-const { readServerProperties, writeServerProperties } = require('./mcproperties.js')
-const { currentWorldPath, worldPath } = require('./mcpaths')
-const { restart } = require('./restart')
+const { readServerProperties, writeServerProperties } = require('./serverproperties.js')
+const { currentWorldPath, worldPath } = require('./paths')
+const { restart } = require('../service/restart')
 
 const { create } = require('./create')
 

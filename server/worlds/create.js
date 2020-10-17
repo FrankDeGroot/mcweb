@@ -1,9 +1,9 @@
 'use strict'
 
 const { mkdir, symlink, unlink } = require('fs').promises
-const { readServerProperties, writeServerProperties } = require('./mcproperties.js')
-const { currentWorldPath, worldPath } = require('./mcpaths')
-const { restart } = require('./restart')
+const { readServerProperties, writeServerProperties } = require('./serverproperties.js')
+const { currentWorldPath, worldPath } = require('./paths')
+const { restart } = require('../service/restart')
 
 exports.create = async (version, world, seed, notify) => {
   const serverProperties = await readServerProperties()

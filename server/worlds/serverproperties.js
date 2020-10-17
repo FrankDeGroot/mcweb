@@ -3,7 +3,7 @@
 const { readFile, writeFile } = require('fs').promises
 const { join } = require('path')
 
-const { serverPath } = require('./mcpaths')
+const { serverPath } = require('./paths')
 
 exports.readServerProperties = async () => {
   const serverProperties = await readFile(serverPropertiesFileName(), 'utf8')

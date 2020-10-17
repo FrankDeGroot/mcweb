@@ -1,18 +1,18 @@
 'use strict'
 
 jest.mock('fs')
-jest.mock('./../mcpaths')
-jest.mock('./../mcget')
-jest.mock('./../restart')
+jest.mock('../worlds/paths')
+jest.mock('../worlds/read')
+jest.mock('../service/restart')
 jest.mock('./get_stream')
 jest.mock('./get_sha1')
 jest.mock('./pipe')
 
 const { createReadStream, createWriteStream, promises } = require('fs')
 const { unlink } = promises
-const { versionPath } = require('./../mcpaths')
-const { currentVersion } = require('./../mcget')
-const { restart } = require('./../restart')
+const { versionPath } = require('../worlds/paths')
+const { currentVersion } = require('../worlds/read')
+const { restart } = require('../service/restart')
 const { getStream } = require('./get_stream')
 const { getSha1 } = require('./get_sha1')
 const { pipe } = require('./pipe')

@@ -4,12 +4,12 @@ const { symlink, unlink } = require('fs').promises
 const {
   currentVersionPath,
   currentWorldPath
-} = require('./mcpaths')
+} = require('./paths')
 const {
   currentVersion,
   currentWorld
-} = require('./mcget')
-const { restart } = require('./restart')
+} = require('./read')
+const { restart } = require('../service/restart')
 
 exports.change = async (version, world, notify) => {
   const nowVersion = await currentVersion()

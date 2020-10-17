@@ -3,9 +3,9 @@
 const { createReadStream, createWriteStream, promises } = require('fs')
 const { unlink } = promises
 const { join } = require('path')
-const { versionPath } = require('./../mcpaths')
-const { currentVersion } = require('./../mcget')
-const { restart } = require('./../restart')
+const { versionPath } = require('../worlds/paths')
+const { currentVersion } = require('../worlds/read')
+const { restart } = require('../service/restart')
 const { getStream } = require('./get_stream')
 const { getSha1 } = require('./get_sha1')
 const { pipe } = require('./pipe')

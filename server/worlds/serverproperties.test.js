@@ -3,7 +3,7 @@
 jest.mock('fs')
 
 const { readFile, writeFile } = require('fs').promises
-const { readServerProperties, writeServerProperties } = require('./mcproperties')
+const { readServerProperties, writeServerProperties } = require('./serverproperties')
 
 test('readServerProperties', async () => {
   readFile.mockResolvedValue('#notaproperty\nproperty1=value\nproperty2=value=value')

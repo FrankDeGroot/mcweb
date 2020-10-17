@@ -2,9 +2,9 @@
 
 jest.mock('rcon')
 
-jest.mock('./log')
-jest.mock('./sleep')
-jest.mock('./mcproperties')
+jest.mock('../utils/log')
+jest.mock('../utils/sleep')
+jest.mock('../worlds/serverproperties')
 
 const Rcon = require('rcon')
 const con = {
@@ -14,14 +14,14 @@ const con = {
   send: jest.fn()
 }
 
-const { info, trace } = require('./log')
-const { sleep } = require('./sleep')
-const { readServerProperties } = require('./mcproperties')
+const { info, trace } = require('../utils/log')
+const { sleep } = require('../utils/sleep')
+const { readServerProperties } = require('../worlds/serverproperties')
 
 const PORT = 123
 const PASSWORD = 'password'
 
-const { say } = require('./mcrcon')
+const { say } = require('./rcon')
 
 describe('say', () => {
   const handlers = {}

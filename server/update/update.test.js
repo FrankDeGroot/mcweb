@@ -2,14 +2,14 @@
 
 jest.mock('fs')
 jest.mock('./get_latest')
-jest.mock('./../mcget')
-jest.mock('./../restart')
+jest.mock('../worlds/read')
+jest.mock('../service/restart')
 jest.mock('./update_steps')
 
 const { rename } = require('fs').promises
 const { getLatest } = require('./get_latest')
-const { currentVersion } = require('./../mcget')
-const { restart } = require('./../restart')
+const { currentVersion } = require('../worlds/read')
+const { restart } = require('../service/restart')
 const {
   pathCurrentServer,
   currentIsLatest,

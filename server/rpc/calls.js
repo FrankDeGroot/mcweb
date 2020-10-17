@@ -5,10 +5,10 @@ const {
   currentVersion,
   worlds,
   currentWorld
-} = require('./../mcget')
-const { change } = require('./../mcset')
-const { update } = require('./../update/update')
-const { create } = require('./../create')
+} = require('../worlds/read')
+const { change } = require('../worlds/change')
+const { update } = require('../update/update')
+const { create } = require('../worlds/create')
 
 exports.worlds = async version => ({
   worlds: await worlds(version),

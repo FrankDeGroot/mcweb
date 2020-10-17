@@ -2,7 +2,7 @@
   "name": "web",
   "version": "0.0.1",
   "description": "Rudimentary web interface for minecraft server",
-  "main": "server.js",
+  "main": "server/server.js",
   "scripts": {
     "start": "nodemon --ignore '*.test.js' --ignore '__mocks__/*' --ignore 'public/*' --unhandled-rejections=strict",
     "test": "nodemon --ignore 'public/*' --exec jest",

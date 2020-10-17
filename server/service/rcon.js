@@ -1,14 +1,14 @@
 'use strict'
 
 const Rcon = require('rcon')
-const { info, trace } = require('./log')
-const { sleep } = require('./sleep')
+const { info, trace } = require('../utils/log')
+const { sleep } = require('../utils/sleep')
 
 let serverProperties = null
 
 async function readServerProperties () {
   if (!serverProperties) {
-    serverProperties = await require('./mcproperties').readServerProperties()
+    serverProperties = await require('../worlds/serverproperties').readServerProperties()
   }
 }
 

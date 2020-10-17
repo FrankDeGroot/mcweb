@@ -8,7 +8,7 @@ const {
   currentWorldPath,
   serverPath,
   versionPath
-} = require('./mcpaths')
+} = require('./paths')
 
 exports.currentVersion = async () => readCurrent(currentVersionPath())
 exports.currentWorld = async version => readCurrent(currentWorldPath(version))

@@ -3,7 +3,7 @@
 jest.mock('fs')
 
 const { access, lstat, readdir, readlink } = require('fs').promises
-const { currentVersion, currentWorld, versions, worlds } = require('./mcget')
+const { currentVersion, currentWorld, versions, worlds } = require('./read')
 
 const CURRENT = 'current'
 

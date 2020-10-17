@@ -1,11 +1,11 @@
 'use strict'
 
 jest.mock('socket.io')
-jest.mock('./log')
+jest.mock('./utils/log')
 jest.mock('./rpc/setup')
 
 const { listen } = require('socket.io')
-const { level } = require('./log')
+const { level } = require('./utils/log')
 const { setup } = require('./rpc/setup')
 
 const server = {

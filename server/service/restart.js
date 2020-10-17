@@ -1,8 +1,8 @@
 'use strict'
 
-const { start, stop } = require('./mcservice')
-const { say } = require('./mcrcon')
-const { sleep } = require('./sleep')
+const { start, stop } = require('./service')
+const { say } = require('./rcon')
+const { sleep } = require('../utils/sleep')
 
 let restarting = false
 

@@ -1,6 +1,6 @@
 'use strict'
 
-const { info, log } = require('./../log')
+const { info, log } = require('../utils/log')
 
 exports.Replier = function (socket, server) {
   function notify (message) {

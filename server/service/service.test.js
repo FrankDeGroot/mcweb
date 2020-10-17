@@ -1,7 +1,7 @@
 'use strict'
 
 jest.mock('child_process')
-jest.mock('./log')
+jest.mock('../utils/log')
 
 const { spawn } = require('child_process')
 const childProcess = {
@@ -14,9 +14,9 @@ const childProcess = {
   }
 }
 
-const { error, info } = require('./log')
+const { error, info } = require('../utils/log')
 
-const { start } = require('./mcservice')
+const { start } = require('./service')
 
 describe('start', () => {
   const childProcessHandlers = {}

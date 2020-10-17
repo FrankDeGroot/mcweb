@@ -1,25 +1,25 @@
 'use strict'
 
 jest.mock('fs')
-jest.mock('./mcpaths')
-jest.mock('./mcget')
-jest.mock('./restart')
+jest.mock('./paths')
+jest.mock('./read')
+jest.mock('../service/restart')
 
 const { symlink, unlink } = require('fs').promises
 const {
   currentVersionPath,
   currentWorldPath,
   versionPath
-} = require('./mcpaths')
+} = require('./paths')
 const {
   currentVersion,
   currentWorld
-} = require('./mcget')
-const { restart } = require('./restart')
+} = require('./read')
+const { restart } = require('../service/restart')
 
 const notify = jest.fn()
 
-const { change } = require('./mcset')
+const { change } = require('./change')
 
 describe('change', () => {
   beforeAll(() => {
