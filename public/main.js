@@ -9,7 +9,7 @@ import { Creator } from './creator.js'
 import { connectedViewModel } from './rpc.js'
 
 function Main () {
-  const viewModel = connectedViewModel()
+  const { viewModel, messagesViewModel } = connectedViewModel()
   return {
     view: vnode => [
       m(Versions, { viewModel }),
@@ -17,7 +17,7 @@ function Main () {
       m(Worlds, { viewModel }),
       m(Changer, { viewModel }),
       m(Creator, { viewModel }),
-      m(Messages, { viewModel })
+      m(Messages, { viewModel: messagesViewModel })
     ]
   }
 }

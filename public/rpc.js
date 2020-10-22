@@ -1,17 +1,17 @@
 'use strict'
 
 import { ViewModel } from './view_model.js'
+import { MessagesViewModel } from './messages_view_model.js'
 
 export function connectedViewModel () {
   const socket = io()
-  const viewModel = new ViewModel({
+  const handlers = {
     onChange: () => {
       m.redraw()
     },
     onChangeVersion: version => {
       socket.emit('worlds', version)
     },
-    onChangeWorld: world => {},
     onReady: () => {
       socket.emit('current')
     },
@@ -25,10 +25,12 @@ export function connectedViewModel () {
       world,
       seed
     })
-  })
+  }
+  const viewModel = new ViewModel(handlers)
+  const messagesViewModel = new MessagesViewModel(handlers)
   socket
-    .on('message', message => viewModel.pushMessage(message))
-    .on('throw', message => viewModel.pushError(message))
+    .on('message', message => messagesViewModel.pushMessage(message))
+    .on('throw', message => messagesViewModel.pushError(message))
     .on('changing', () => {
       viewModel.busy = true
     })
@@ -45,5 +47,5 @@ export function connectedViewModel () {
     .on('worlds', response => viewModel.loadWorld(response))
     .emit('current')
 
-  return viewModel
+  return { viewModel, messagesViewModel }
 }

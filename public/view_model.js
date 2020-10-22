@@ -1,5 +1,7 @@
 'use strict'
 
+import { ChangeScheduler } from './change_scheduler.js'
+
 export function ViewModel (handlers) {
   // Non-breaking spaces!
   const emptyMessages = [' ', ' ']
@@ -9,10 +11,10 @@ export function ViewModel (handlers) {
   let currentVersion = null
   let currentWorld = null
   let busy = false
-  let changeScheduled = false
 
   handlers = {
     onBusy: () => {},
+    onChange: () => {},
     onChangeVersion: () => {},
     onChangeVersionAndWorld: () => {},
     onChangeWorld: () => {},
@@ -21,16 +23,7 @@ export function ViewModel (handlers) {
     onUpdateVersion: () => {},
     ...handlers
   }
-
-  function scheduleChange () {
-    if (handlers.onChange && !changeScheduled) {
-      setTimeout(() => {
-        changeScheduled = false
-        handlers.onChange()
-      }, 0)
-      changeScheduled = true
-    }
-  }
+  const changeScheduler = new ChangeScheduler(handlers.onChange)
 
   Object.defineProperties(this, {
     messages: {
@@ -48,7 +41,7 @@ export function ViewModel (handlers) {
         if (currentVersion !== value) {
           currentVersion = value
           handlers.onChangeVersion(value)
-          scheduleChange()
+          changeScheduler.scheduleChange()
         }
       }
     },
@@ -58,7 +51,7 @@ export function ViewModel (handlers) {
         if (currentWorld !== value) {
           currentWorld = value
           handlers.onChangeWorld(value)
-          scheduleChange()
+          changeScheduler.scheduleChange()
         }
       }
     },
@@ -68,7 +61,7 @@ export function ViewModel (handlers) {
         if (busy !== value) {
           busy = value
           busy ? handlers.onBusy() : handlers.onReady()
-          scheduleChange()
+          changeScheduler.scheduleChange()
         }
       }
     },
@@ -83,7 +76,7 @@ export function ViewModel (handlers) {
   this.pushMessage = message => {
     messages.unshift(message)
     messages.splice(emptyMessages.length)
-    scheduleChange()
+    changeScheduler.scheduleChange()
   }
 
   this.pushError = error => {
@@ -92,7 +85,7 @@ export function ViewModel (handlers) {
 
   this.clearMessages = () => {
     messages = [...emptyMessages]
-    scheduleChange()
+    changeScheduler.scheduleChange()
   }
 
   this.loadVersionAndWorld = response => {
@@ -104,7 +97,7 @@ export function ViewModel (handlers) {
   this.loadWorld = response => {
     worlds = response.worlds
     currentWorld = response.world
-    scheduleChange()
+    changeScheduler.scheduleChange()
   }
 
   this.updateVersion = version => {

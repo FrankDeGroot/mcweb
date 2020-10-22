@@ -5,7 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "start": "nodemon --ignore '*.test.js' --ignore '__mocks__/*' --ignore 'public/*' --unhandled-rejections=strict",
-    "test": "nodemon --ignore 'public/*' --exec jest --config=jest.config.js",
+    "test": "nodemon --exec jest --config=jest.config.js",
     "lint": "nodemon --exec eslint --fix ."
   },
   "author": "https://github.com/FrankDeGroot",
