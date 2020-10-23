@@ -3,9 +3,6 @@
 import { ChangeScheduler } from './change_scheduler.js'
 
 export function ViewModel (handlers) {
-  // Non-breaking spaces!
-  const emptyMessages = [' ', ' ']
-  let messages = [...emptyMessages]
   let versions = []
   let worlds = []
   let currentVersion = null
@@ -26,9 +23,6 @@ export function ViewModel (handlers) {
   const changeScheduler = new ChangeScheduler(handlers.onChange)
 
   Object.defineProperties(this, {
-    messages: {
-      get: () => messages
-    },
     versions: {
       get: () => versions
     },
@@ -72,21 +66,6 @@ export function ViewModel (handlers) {
 
   this.seed = null
   this.newWorldName = null
-
-  this.pushMessage = message => {
-    messages.unshift(message)
-    messages.splice(emptyMessages.length)
-    changeScheduler.scheduleChange()
-  }
-
-  this.pushError = error => {
-    this.pushMessage(`Error: ${error}`)
-  }
-
-  this.clearMessages = () => {
-    messages = [...emptyMessages]
-    changeScheduler.scheduleChange()
-  }
 
   this.loadVersionAndWorld = response => {
     versions = response.versions
