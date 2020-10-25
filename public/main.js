@@ -9,14 +9,14 @@ import { Creator } from './creator.js'
 import { connectedViewModel } from './rpc.js'
 
 function Main () {
-  const { viewModel, messagesViewModel } = connectedViewModel()
+  const { worldsViewModel, messagesViewModel } = connectedViewModel()
   return {
     view: vnode => [
-      m(Versions, { viewModel }),
-      m(Updater, { viewModel }),
-      m(Worlds, { viewModel }),
-      m(Changer, { viewModel }),
-      m(Creator, { viewModel }),
+      m(Versions, { viewModel: worldsViewModel }),
+      m(Updater, { viewModel: worldsViewModel }),
+      m(Worlds, { viewModel: worldsViewModel }),
+      m(Changer, { viewModel: worldsViewModel }),
+      m(Creator, { viewModel: worldsViewModel }),
       m(Messages, { viewModel: messagesViewModel })
     ]
   }

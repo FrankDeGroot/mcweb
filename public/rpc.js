@@ -1,6 +1,6 @@
 'use strict'
 
-import { ViewModel } from './view_model.js'
+import { WorldsViewModel } from './worlds_view_model.js'
 import { MessagesViewModel } from './messages_view_model.js'
 
 export function connectedViewModel () {
@@ -26,26 +26,26 @@ export function connectedViewModel () {
       seed
     })
   }
-  const viewModel = new ViewModel(handlers)
+  const worldsViewModel = new WorldsViewModel(handlers)
   const messagesViewModel = new MessagesViewModel(handlers)
   socket
     .on('message', message => messagesViewModel.pushMessage(message))
     .on('throw', message => messagesViewModel.pushError(message))
     .on('changing', () => {
-      viewModel.busy = true
+      worldsViewModel.busy = true
     })
     .on('changed', () => {
-      viewModel.busy = false
+      worldsViewModel.busy = false
     })
     .on('updating', () => {
-      viewModel.busy = true
+      worldsViewModel.busy = true
     })
     .on('updated', () => {
-      viewModel.busy = false
+      worldsViewModel.busy = false
     })
-    .on('current', response => viewModel.loadVersionAndWorld(response))
-    .on('worlds', response => viewModel.loadWorld(response))
+    .on('current', response => worldsViewModel.loadVersionAndWorld(response))
+    .on('worlds', response => worldsViewModel.loadWorld(response))
     .emit('current')
 
-  return { viewModel, messagesViewModel }
+  return { worldsViewModel, messagesViewModel }
 }

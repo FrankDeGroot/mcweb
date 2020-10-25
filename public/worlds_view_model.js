@@ -2,7 +2,7 @@
 
 import { ChangeScheduler } from './change_scheduler.js'
 
-export function ViewModel (handlers) {
+export function WorldsViewModel (handlers) {
   let versions = []
   let worlds = []
   let currentVersion = null
