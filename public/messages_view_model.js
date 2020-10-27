@@ -1,12 +1,12 @@
 'use strict'
 
-import { ChangeScheduler } from './change_scheduler.js'
+import { Scheduler } from './scheduler.js'
 
 export function MessagesViewModel (handlers) {
   // Non-breaking spaces!
   const emptyMessages = [' ', ' ']
   let messages = [...emptyMessages]
-  const changeScheduler = new ChangeScheduler(handlers.onChange)
+  const changeScheduler = new Scheduler(handlers.onChange)
 
   Object.defineProperties(this, {
     messages: {

@@ -1,8 +1,8 @@
 'use strict'
 
-jest.mock('../public/change_scheduler')
+jest.mock('../public/scheduler')
 
-const { ChangeScheduler } = require('../public/change_scheduler')
+const { Scheduler } = require('../public/scheduler')
 
 const { MessagesViewModel } = require('../public/messages_view_model')
 
@@ -17,7 +17,7 @@ const changeScheduler = {
 describe('MessagesViewModel', () => {
   let messagesViewModel
   beforeEach(() => {
-    ChangeScheduler.mockImplementation(handler => {
+    Scheduler.mockImplementation(handler => {
       expect(handler).toBe(handlers.onChange)
       return changeScheduler
     })

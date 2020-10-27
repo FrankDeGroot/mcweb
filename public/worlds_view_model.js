@@ -1,6 +1,6 @@
 'use strict'
 
-import { ChangeScheduler } from './change_scheduler.js'
+import { Scheduler } from './scheduler.js'
 
 export function WorldsViewModel (handlers) {
   let versions = []
@@ -20,7 +20,7 @@ export function WorldsViewModel (handlers) {
     onUpdateVersion: () => {},
     ...handlers
   }
-  const changeScheduler = new ChangeScheduler(handlers.onChange)
+  const changeScheduler = new Scheduler(handlers.onChange)
 
   Object.defineProperties(this, {
     versions: {
@@ -35,7 +35,7 @@ export function WorldsViewModel (handlers) {
         if (currentVersion !== value) {
           currentVersion = value
           handlers.onChangeVersion(value)
-          changeScheduler.scheduleChange()
+          changeScheduler.schedule()
         }
       }
     },
@@ -45,7 +45,7 @@ export function WorldsViewModel (handlers) {
         if (currentWorld !== value) {
           currentWorld = value
           handlers.onChangeWorld(value)
-          changeScheduler.scheduleChange()
+          changeScheduler.schedule()
         }
       }
     },
@@ -55,7 +55,7 @@ export function WorldsViewModel (handlers) {
         if (busy !== value) {
           busy = value
           busy ? handlers.onBusy() : handlers.onReady()
-          changeScheduler.scheduleChange()
+          changeScheduler.schedule()
         }
       }
     },
@@ -76,7 +76,7 @@ export function WorldsViewModel (handlers) {
   this.loadWorld = response => {
     worlds = response.worlds
     currentWorld = response.world
-    changeScheduler.scheduleChange()
+    changeScheduler.schedule()
   }
 
   this.updateVersion = version => {
