@@ -17,7 +17,7 @@ export function MessagesViewModel (handlers) {
   this.pushMessage = message => {
     messages.unshift(message)
     messages.splice(emptyMessages.length)
-    changeScheduler.scheduleChange()
+    changeScheduler.schedule()
   }
 
   this.pushError = error => {
@@ -26,6 +26,6 @@ export function MessagesViewModel (handlers) {
 
   this.clearMessages = () => {
     messages = [...emptyMessages]
-    changeScheduler.scheduleChange()
+    changeScheduler.schedule()
   }
 }
