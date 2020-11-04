@@ -11,7 +11,7 @@ const handlers = {
 }
 
 const changeScheduler = {
-  scheduleChange: jest.fn()
+  schedule: jest.fn()
 }
 
 describe('MessagesViewModel', () => {
@@ -30,7 +30,7 @@ describe('MessagesViewModel', () => {
     messagesViewModel.pushMessage('message')
     expect(messagesViewModel.messages.length).toBe(2)
     expect(messagesViewModel.messages[0]).toBe('message')
-    expect(changeScheduler.scheduleChange).toHaveBeenCalled()
+    expect(changeScheduler.schedule).toHaveBeenCalled()
   })
   it('should keep shifting when adding two new messages', () => {
     messagesViewModel.pushMessage('message 1')
@@ -41,13 +41,13 @@ describe('MessagesViewModel', () => {
   it('should add an error', () => {
     messagesViewModel.pushError('error')
     expect(messagesViewModel.messages[0]).toBe('Error: error')
-    expect(changeScheduler.scheduleChange).toHaveBeenCalled()
+    expect(changeScheduler.schedule).toHaveBeenCalled()
   })
   it('should clear messages', () => {
     messagesViewModel.pushMessage('message 1')
     messagesViewModel.pushMessage('message 2')
     messagesViewModel.clearMessages()
     expect(messagesViewModel.messages).toStrictEqual([' ', ' '])
-    expect(changeScheduler.scheduleChange).toHaveBeenCalled()
+    expect(changeScheduler.schedule).toHaveBeenCalled()
   })
 })
