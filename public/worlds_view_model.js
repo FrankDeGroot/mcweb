@@ -22,6 +22,10 @@ export function WorldsViewModel (handlers) {
   }
   const changeScheduler = new Scheduler(handlers.onChange)
 
+  function canUpdateCurrentVersion () {
+    return ['release', 'snapshot'].indexOf(currentVersion) !== -1
+  }
+
   Object.defineProperties(this, {
     versions: {
       get: () => versions
@@ -60,7 +64,7 @@ export function WorldsViewModel (handlers) {
       }
     },
     canUpdate: {
-      get: () => !busy && ['release', 'snapshot'].indexOf(currentVersion) !== -1
+      get: () => !busy && canUpdateCurrentVersion()
     }
   })
 
@@ -79,8 +83,8 @@ export function WorldsViewModel (handlers) {
     changeScheduler.schedule()
   }
 
-  this.updateVersion = version => {
-    handlers.onUpdateVersion(currentVersion)
+  this.updateVersion = () => {
+    if (canUpdateCurrentVersion()) handlers.onUpdateVersion(currentVersion)
   }
 
   this.changeVersionAndWorld = () => {
