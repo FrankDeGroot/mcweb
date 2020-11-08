@@ -1,8 +1,8 @@
 'use strict'
 
 const { join } = require('path')
+const { serverPath } = require('../config/config')
 
-const serverPath = join('..', 'server')
 const currentVersionName = 'current'
 const currentWorldName = 'world'
 const versionPath = version => join(serverPath, version)

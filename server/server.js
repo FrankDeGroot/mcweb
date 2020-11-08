@@ -3,8 +3,9 @@
 const io = require('socket.io')
 const { level } = require('./utils/log')
 const { setup } = require('./rpc/setup')
+const { logLevel, port } = require('./config/config')
 
-level('info')
+level(logLevel)
 
-const server = io(1024)
+const server = io(port)
 server.on('connection', socket => setup(socket, server))
