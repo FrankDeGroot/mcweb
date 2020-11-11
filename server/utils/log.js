@@ -1,7 +1,7 @@
 'use strict'
 
 const levels = ['trace', 'info', 'warning', 'error']
-var min = 0
+let min = 0
 
 exports.log = log
 exports.level = level => {
