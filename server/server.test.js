@@ -25,7 +25,7 @@ test('server', () => {
   require('./server')
 
   expect(level).toHaveBeenCalledWith('trace')
-  expect(io).toHaveBeenCalledWith(1234)
+  expect(io).toHaveBeenCalledWith(2048)
   expect(server.on).toHaveBeenCalledWith('connection', expect.any(Function))
 
   serverOnHandlers.connection(socket)

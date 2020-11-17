@@ -11,7 +11,7 @@ test('readServerProperties', async () => {
     property1: 'value',
     property2: 'value=value'
   })
-  expect(readFile.mock.calls[0][0]).toBe('../server/common/server.properties')
+  expect(readFile.mock.calls[0][0]).toBe('../test/server/common/server.properties')
   expect(readFile.mock.calls[0][1]).toBe('utf8')
 })
 
@@ -20,5 +20,5 @@ test('writeServerProperties', async () => {
     property2: 'value=value',
     property1: 'value'
   })
-  expect(writeFile).toHaveBeenCalledWith('../server/common/server.properties', 'property1=value\nproperty2=value=value', 'utf-8')
+  expect(writeFile).toHaveBeenCalledWith('../test/server/common/server.properties', 'property1=value\nproperty2=value=value', 'utf-8')
 })

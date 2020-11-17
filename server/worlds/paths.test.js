@@ -9,21 +9,21 @@ const {
 } = require('./paths')
 
 test('currentVersionPath', () => {
-  expect(currentVersionPath()).toBe('../server/current')
+  expect(currentVersionPath()).toBe('../test/server/current')
 })
 
 test('currentWorldPath', () => {
-  expect(currentWorldPath('someVersion')).toBe('../server/someVersion/world')
+  expect(currentWorldPath('someVersion')).toBe('../test/server/someVersion/world')
 })
 
 test('serverPath', () => {
-  expect(serverPath()).toBe('../server')
+  expect(serverPath()).toBe('../test/server')
 })
 
 test('versionPath', () => {
-  expect(versionPath('someVersion')).toBe('../server/someVersion')
+  expect(versionPath('someVersion')).toBe('../test/server/someVersion')
 })
 
 test('worldPath', () => {
-  expect(worldPath('someVersion', 'someWorld')).toBe('../server/someVersion/someWorld')
+  expect(worldPath('someVersion', 'someWorld')).toBe('../test/server/someVersion/someWorld')
 })

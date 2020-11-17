@@ -1,5 +1,7 @@
 'use strict'
 
-module.exports.port = 1024
-module.exports.serverPath = '../server'
-module.exports.logLevel = 'info'
+Object.assign(module.exports, {
+  logLevel: 'info',
+  port: 1024,
+  serverPath: '../server'
+})
