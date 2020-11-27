@@ -7,7 +7,9 @@ level(logLevel)
 
 if (enableAppInsights) {
   try {
-    require('applicationinsights').setup(require('../.keys').applicationInsightsInstrumentationKey).start()
+    require('applicationinsights').setup(require('../.keys').applicationInsightsInstrumentationKey)
+      .setSendLiveMetrics(true)
+      .start()
   } catch (caught) {
     error('Error starting Application Insights', caught)
   }
