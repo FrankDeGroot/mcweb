@@ -7,7 +7,7 @@ const {
   currentWorld
 } = require('../worlds/read')
 const { change } = require('../worlds/change')
-const { update } = require('../update/update')
+const { update } = require('../download/update')
 const { create } = require('../worlds/create')
 
 exports.worlds = async version => ({

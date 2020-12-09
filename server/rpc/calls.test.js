@@ -2,12 +2,12 @@
 
 jest.mock('../worlds/read')
 jest.mock('../worlds/change')
-jest.mock('../update/update')
+jest.mock('../download/update')
 jest.mock('../worlds/create')
 
 const get = require('../worlds/read')
 const { change } = require('../worlds/change')
-const { update } = require('../update/update')
+const { update } = require('../download/update')
 const { create } = require('../worlds/create')
 
 const calls = require('./calls')
