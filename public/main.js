@@ -6,10 +6,11 @@ import { Versions } from './versions.js'
 import { Worlds } from './worlds.js'
 import { Updater } from './updater.js'
 import { Creator } from './creator.js'
+import { Players } from './players.js'
 import { connectedViewModel } from './rpc.js'
 
 function Main () {
-  const { worldsViewModel, messagesViewModel } = connectedViewModel()
+  const { worldsViewModel, messagesViewModel, playersViewModel } = connectedViewModel()
   return {
     view: vnode => [
       m(Versions, { viewModel: worldsViewModel }),
@@ -17,7 +18,8 @@ function Main () {
       m(Worlds, { viewModel: worldsViewModel }),
       m(Changer, { viewModel: worldsViewModel }),
       m(Creator, { viewModel: worldsViewModel }),
-      m(Messages, { viewModel: messagesViewModel })
+      m(Messages, { viewModel: messagesViewModel }),
+      m(Players, { viewModel: playersViewModel })
     ]
   }
 }

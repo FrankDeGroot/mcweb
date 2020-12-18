@@ -9,6 +9,7 @@ const {
 const { change } = require('../worlds/change')
 const { update } = require('../download/update')
 const { create } = require('../worlds/create')
+const { allowedPlayers } = require('../players/inc_list')
 
 exports.worlds = async version => ({
   worlds: await worlds(version),
@@ -38,4 +39,10 @@ exports.update = (notify, updateParameters) => {
 exports.create = (notify, createParameters) => {
   const { version, world, seed } = createParameters
   return create(version, world, seed, notify)
+}
+
+exports.players = async () => {
+  return {
+    allowed: await allowedPlayers()
+  }
 }

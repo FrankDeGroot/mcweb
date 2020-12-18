@@ -14,3 +14,4 @@ exports.currentWorldPath = version => join(versionPath(version), currentWorldNam
 exports.serverPath = () => serverPath
 exports.versionPath = versionPath
 exports.worldPath = worldPath
+exports.common = () => join(serverPath, 'common')
