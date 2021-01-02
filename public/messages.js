@@ -2,25 +2,13 @@
 
 export function Messages () {
   return {
-    view: vnode => m('div', [
-      m(polythene.List, {
-        header: { title: 'Messages' },
-        tiles: vnode.attrs.viewModel.messages.map(title => m(polythene.ListTile, {
-          title
-        })),
-        rounded: true,
-        compact: true,
-        insetH: true
-      }),
-      m('.row',
-        m(polythene.Button, {
-          label: 'Clear',
-          events: {
-            onclick: e => vnode.attrs.viewModel.clearMessages()
-          },
-          disabled: vnode.attrs.viewModel.busy ? 'disabled' : undefined
-        })
-      )
-    ])
+    view: vnode => [
+      m('label', 'Messages'),
+      m('messages', vnode.attrs.viewModel.messages.map(message => m('message', message))),
+      m('button', {
+        disabled: vnode.attrs.viewModel.noMessages(),
+        onclick: e => vnode.attrs.viewModel.clearMessages()
+      }, 'Clear')
+    ]
   }
 }

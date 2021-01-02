@@ -5,10 +5,10 @@ jest.mock('./calls')
 
 const { Replier } = require('./replier')
 const {
-  worlds,
   current,
   change,
-  update
+  update,
+  players
 } = require('./calls')
 
 const { setup } = require('./setup')
@@ -29,9 +29,9 @@ describe('setup', () => {
     setup(socket, server)
 
     expect(Replier).toHaveBeenCalledWith(socket, server)
-    expect(replier.replyOn).toHaveBeenCalledWith('worlds', worlds)
     expect(replier.replyOn).toHaveBeenCalledWith('current', current)
     expect(replier.longReplyOn).toHaveBeenCalledWith('change', 'changing', 'changed', change)
     expect(replier.longReplyOn).toHaveBeenCalledWith('update', 'updating', 'updated', update)
+    expect(replier.replyOn).toHaveBeenCalledWith('players', players)
   })
 })

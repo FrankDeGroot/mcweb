@@ -13,38 +13,52 @@ const { create } = require('../worlds/create')
 const calls = require('./calls')
 
 describe('calls', () => {
-  const versions = {}
-  const version = 'version'
-  const worlds = {}
+  const versions = [
+    'version 1',
+    'version 2'
+  ]
+  const version = 'version 1'
+  const worlds1 = [
+    'world 1',
+    'world 2'
+  ]
+  const worlds2 = [
+    'world 3',
+    'world 4'
+  ]
   const world = 'world'
+  const world1 = 'world 1'
+  const world2 = 'world 3'
   const notify = jest.fn()
   const seed = 'seed'
 
   beforeEach(() => {
     get.versions.mockReset()
     get.currentVersion.mockReset()
-    get.worlds.mockReset().mockResolvedValue(worlds)
-    get.currentWorld.mockReset().mockResolvedValue(world)
-  })
-  describe('worlds', () => {
-    it('should return worlds for version and current world', async () => {
-      await expect(calls.worlds(version)).resolves.toEqual({
-        worlds,
-        world
-      })
-      expect(get.worlds).toHaveBeenCalledWith(version)
-      expect(get.currentWorld).toHaveBeenCalledWith(version)
-    })
+    get.worlds.mockReset()
+    get.currentWorld.mockReset()
   })
   describe('current', () => {
     it('should return versions, current version, worlds and current world for version', async () => {
-      get.currentVersion.mockResolvedValue(version)
       get.versions.mockResolvedValue(versions)
+      get.currentVersion.mockResolvedValue(version)
+      get.worlds
+        .mockResolvedValueOnce(worlds1)
+        .mockResolvedValueOnce(worlds2)
+      get.currentWorld
+        .mockResolvedValueOnce(world1)
+        .mockResolvedValueOnce(world2)
       await expect(calls.current()).resolves.toEqual({
-        versions,
-        version,
-        worlds,
-        world
+        versions: [{
+          version: 'version 1',
+          worlds: worlds1,
+          world: world1
+        }, {
+          version: 'version 2',
+          worlds: worlds2,
+          world: world2
+        }],
+        version
       })
       expect(get.worlds).toHaveBeenCalledWith(version)
       expect(get.currentWorld).toHaveBeenCalledWith(version)

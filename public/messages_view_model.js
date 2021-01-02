@@ -3,8 +3,8 @@
 import { Scheduler } from './scheduler.js'
 
 export function MessagesViewModel (handlers) {
-  // Non-breaking spaces!
-  const emptyMessages = [' ', ' ']
+  const nonBreakingSpace = '\xa0'
+  const emptyMessages = Array(2).fill(nonBreakingSpace)
   let messages = [...emptyMessages]
   const changeScheduler = new Scheduler(handlers.onChange)
 
@@ -28,4 +28,6 @@ export function MessagesViewModel (handlers) {
     messages = [...emptyMessages]
     changeScheduler.schedule()
   }
+
+  this.noMessages = () => messages.every(message => message === nonBreakingSpace)
 }

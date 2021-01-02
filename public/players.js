@@ -1,19 +1,11 @@
 'use strict'
 
-import { select } from './select.js'
-
 export function Players () {
   return {
-    view: vnode => {
-      return select(
-        'Players',
-        value => {
-          vnode.attrs.viewModel.currentPlayer = value
-        },
-        vnode.attrs.viewModel.players,
-        vnode.attrs.viewModel.currentPlayer,
-        vnode.attrs.viewModel.busy
-      )
-    }
+    view: vnode => [
+      m('select', {
+        disabled: vnode.attrs.viewModel.busy
+      }, vnode.attrs.viewModel.players.map(player => m('option', player)))
+    ]
   }
 }

@@ -2,28 +2,33 @@
 
 export function Creator () {
   return {
-    view: vnode => m('.row', [
-      m(polythene.TextField, {
-        help: 'Name for created world',
-        label: 'Name',
-        onChange: newState => {
-          vnode.attrs.viewModel.newWorldName = newState.value
-        }
-      }),
-      m(polythene.TextField, {
-        help: 'Seed for created world',
-        label: 'Seed',
-        onChange: newState => {
-          vnode.attrs.viewModel.seed = newState.value
-        }
-      }),
-      m(polythene.Button, {
-        label: 'Create',
-        events: {
-          onclick: e => vnode.attrs.viewModel.createWorld()
+    view: vnode => [
+      m('select', {
+        onchange: e => vnode.attrs.viewModel.selectVersion(e.target.value)
+      }, vnode.attrs.viewModel.versions.map(group => m('option', {
+        disabled: vnode.attrs.viewModel.busy,
+        selected: group.selected
+      }, group.label))),
+      m('input', {
+        disabled: vnode.attrs.viewModel.busy,
+        onchange: e => {
+          vnode.attrs.viewModel.newWorldName = e.target.value
         },
-        disabled: vnode.attrs.viewModel.busy ? 'disabled' : undefined
-      })
-    ])
+        type: 'text',
+        placeholder: 'Name'
+      }),
+      m('input', {
+        disabled: vnode.attrs.viewModel.busy,
+        onchange: e => {
+          vnode.attrs.viewModel.seed = e.target.value
+        },
+        type: 'text',
+        placeholder: 'Seed'
+      }),
+      m('button', {
+        disabled: vnode.attrs.viewModel.busy,
+        onclick: e => vnode.attrs.viewModel.createWorld()
+      }, 'Create')
+    ]
   }
 }

@@ -3,18 +3,17 @@
 import { Scheduler } from './scheduler.js'
 
 export function WorldsViewModel (handlers) {
-  let versions = []
-  let worlds = []
-  let currentVersion = null
-  let currentWorld = null
+  let versionsAndWorlds = {
+    versions: [],
+    version: null
+  }
+  let selectedVersion = null
+  let selectedWorld = null
   let busy = false
 
   handlers = {
-    onBusy: () => {},
     onChange: () => {},
-    onChangeVersion: () => {},
     onChangeVersionAndWorld: () => {},
-    onChangeWorld: () => {},
     onCreateWorld: () => {},
     onReady: () => {},
     onUpdateVersion: () => {},
@@ -22,49 +21,39 @@ export function WorldsViewModel (handlers) {
   }
   const changeScheduler = new Scheduler(handlers.onChange)
 
-  function canUpdateCurrentVersion () {
-    return ['release', 'snapshot'].indexOf(currentVersion) !== -1
+  function canUpdateVersion (version) {
+    return ['release', 'snapshot'].indexOf(version) !== -1
   }
 
   Object.defineProperties(this, {
     versions: {
-      get: () => versions
-    },
-    worlds: {
-      get: () => worlds
-    },
-    currentVersion: {
-      get: () => currentVersion,
-      set: value => {
-        if (currentVersion !== value) {
-          currentVersion = value
-          handlers.onChangeVersion(value)
-          changeScheduler.schedule()
+      get: () => versionsAndWorlds.versions.map(version => {
+        return {
+          label: version.version + (version.version === versionsAndWorlds.version ? ' (current)' : ''),
+          options: version.worlds.map(world => {
+            return {
+              label: version.version + ' ' + world + (world === version.world ? ' (current)' : ''),
+              selected: world === selectedWorld,
+              value: JSON.stringify({
+                version: version.version,
+                world: world
+              })
+            }
+          }),
+          selected: version.version === versionsAndWorlds.version,
+          value: version.version
         }
-      }
-    },
-    currentWorld: {
-      get: () => currentWorld,
-      set: value => {
-        if (currentWorld !== value) {
-          currentWorld = value
-          handlers.onChangeWorld(value)
-          changeScheduler.schedule()
-        }
-      }
+      })
     },
     busy: {
       get: () => busy,
       set: value => {
         if (busy !== value) {
           busy = value
-          busy ? handlers.onBusy() : handlers.onReady()
+          if (!busy) handlers.onReady()
           changeScheduler.schedule()
         }
       }
-    },
-    canUpdate: {
-      get: () => !busy && canUpdateCurrentVersion()
     }
   })
 
@@ -72,26 +61,32 @@ export function WorldsViewModel (handlers) {
   this.newWorldName = null
 
   this.loadVersionAndWorld = response => {
-    versions = response.versions
-    currentVersion = response.version
-    this.loadWorld(response)
-  }
-
-  this.loadWorld = response => {
-    worlds = response.worlds
-    currentWorld = response.world
+    versionsAndWorlds = response
+    selectedVersion = versionsAndWorlds.version
+    selectedWorld = versionsAndWorlds.versions.find(v => v.version === versionsAndWorlds.version).world
     changeScheduler.schedule()
   }
 
-  this.updateVersion = () => {
-    if (canUpdateCurrentVersion()) handlers.onUpdateVersion(currentVersion)
+  this.updateVersion = version => {
+    if (canUpdateVersion(version)) handlers.onUpdateVersion(version)
+  }
+
+  this.selectVersion = version => {
+    selectedVersion = version
+    selectedWorld = null
+  }
+
+  this.selectVersionAndWorld = value => {
+    value = JSON.parse(value)
+    selectedVersion = value.version
+    selectedWorld = value.world
   }
 
   this.changeVersionAndWorld = () => {
-    handlers.onChangeVersionAndWorld(currentVersion, currentWorld)
+    handlers.onChangeVersionAndWorld(selectedVersion, selectedWorld)
   }
 
   this.createWorld = () => {
-    handlers.onCreateWorld(currentVersion, this.newWorldName, this.seed)
+    handlers.onCreateWorld(selectedVersion, this.newWorldName, this.seed)
   }
 }

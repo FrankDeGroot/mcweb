@@ -1,26 +1,30 @@
 'use strict'
 
+import { Nav } from './nav.js'
 import { Messages } from './messages.js'
 import { Changer } from './changer.js'
-import { Versions } from './versions.js'
-import { Worlds } from './worlds.js'
 import { Updater } from './updater.js'
 import { Creator } from './creator.js'
 import { Players } from './players.js'
 import { connectedViewModel } from './rpc.js'
 
-function Main () {
-  const { worldsViewModel, messagesViewModel, playersViewModel } = connectedViewModel()
+const { worldsViewModel, messagesViewModel, playersViewModel } = connectedViewModel()
+
+function Pane (content) {
   return {
     view: vnode => [
-      m(Versions, { viewModel: worldsViewModel }),
-      m(Updater, { viewModel: worldsViewModel }),
-      m(Worlds, { viewModel: worldsViewModel }),
-      m(Changer, { viewModel: worldsViewModel }),
-      m(Creator, { viewModel: worldsViewModel }),
-      m(Messages, { viewModel: messagesViewModel }),
-      m(Players, { viewModel: playersViewModel })
+      m(Nav),
+      m('main', [
+        content(),
+        m(Messages, { viewModel: messagesViewModel })
+      ])
     ]
   }
 }
-m.mount(document.getElementById('main'), Main)
+
+m.route(document.getElementsByTagName('body')[0], '/update', {
+  '/update': () => Pane(() => m(Updater, { viewModel: worldsViewModel })),
+  '/change': () => Pane(() => m(Changer, { viewModel: worldsViewModel })),
+  '/create': () => Pane(() => m(Creator, { viewModel: worldsViewModel })),
+  '/players': () => Pane(() => m(Players, { viewModel: playersViewModel }))
+})

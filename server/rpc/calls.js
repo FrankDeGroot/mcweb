@@ -11,18 +11,16 @@ const { update } = require('../download/update')
 const { create } = require('../worlds/create')
 const { allowedPlayers } = require('../players/inc_list')
 
-exports.worlds = async version => ({
-  worlds: await worlds(version),
-  world: await currentWorld(version)
-})
-
 exports.current = async () => {
-  const version = await currentVersion()
   return {
-    versions: await versions(),
-    version: version,
-    worlds: await worlds(version),
-    world: await currentWorld(version)
+    versions: await Promise.all((await versions()).map(async version => {
+      return {
+        version,
+        worlds: await worlds(version),
+        world: await currentWorld(version)
+      }
+    })),
+    version: await currentVersion()
   }
 }
 

@@ -10,9 +10,6 @@ export function connectedViewModel () {
     onChange: () => {
       m.redraw()
     },
-    onChangeVersion: version => {
-      socket.emit('worlds', version)
-    },
     onReady: () => {
       socket.emit('current')
     },
@@ -42,12 +39,12 @@ export function connectedViewModel () {
     .on('updating', () => {
       worldsViewModel.busy = true
     })
-    .on('updated', () => { worldsViewModel.busy = false })
+    .on('updated', () => {
+      worldsViewModel.busy = false
+    })
     .on('current', response => worldsViewModel.loadVersionAndWorld(response))
-    .on('worlds', response => worldsViewModel.loadWorld(response))
     .on('players', response => playersViewModel.loadPlayers(response))
     .emit('players')
     .emit('current')
-
   return { worldsViewModel, messagesViewModel, playersViewModel }
 }
