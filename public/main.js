@@ -16,7 +16,7 @@ const {
   opsViewModel
 } = connectedViewModel()
 
-m.route(document.getElementsByTagName('body')[0], '/update', {
+m.route(document.body, '/update', {
   '/change': () => Pane(() => m(Changer, { busyViewModel, changeViewModel }), messagesViewModel),
   '/create': () => Pane(() => m(Creator, { busyViewModel, createViewModel }), messagesViewModel),
   '/update': () => Pane(() => m(Updater, { busyViewModel, updateViewModel }), messagesViewModel),
