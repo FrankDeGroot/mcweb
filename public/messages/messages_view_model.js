@@ -1,6 +1,6 @@
 'use strict'
 
-import { Scheduler } from './scheduler.js'
+import { Scheduler } from '../scheduler.js'
 
 export function MessagesViewModel (handlers) {
   const nonBreakingSpace = '\xa0'

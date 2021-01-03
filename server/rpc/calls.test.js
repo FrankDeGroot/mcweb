@@ -4,11 +4,13 @@ jest.mock('../worlds/read')
 jest.mock('../worlds/change')
 jest.mock('../download/update')
 jest.mock('../worlds/create')
+jest.mock('../players/inc_list')
 
 const get = require('../worlds/read')
 const { change } = require('../worlds/change')
 const { update } = require('../download/update')
 const { create } = require('../worlds/create')
+const { allowedPlayers } = require('../players/inc_list')
 
 const calls = require('./calls')
 
@@ -31,12 +33,17 @@ describe('calls', () => {
   const world2 = 'world 3'
   const notify = jest.fn()
   const seed = 'seed'
+  const players = [{
+    uuid: '1',
+    name: 'player 1'
+  }]
 
   beforeEach(() => {
     get.versions.mockReset()
     get.currentVersion.mockReset()
     get.worlds.mockReset()
     get.currentWorld.mockReset()
+    allowedPlayers.mockReset()
   })
   describe('current', () => {
     it('should return versions, current version, worlds and current world for version', async () => {
@@ -48,6 +55,7 @@ describe('calls', () => {
       get.currentWorld
         .mockResolvedValueOnce(world1)
         .mockResolvedValueOnce(world2)
+      allowedPlayers.mockResolvedValue(players)
       await expect(calls.current()).resolves.toEqual({
         versions: [{
           version: 'version 1',
@@ -58,10 +66,16 @@ describe('calls', () => {
           worlds: worlds2,
           world: world2
         }],
-        version
+        version,
+        ops: players
       })
+      expect(get.versions).toHaveBeenCalled()
       expect(get.worlds).toHaveBeenCalledWith(version)
+      expect(get.worlds).toHaveBeenCalledWith('version 2')
       expect(get.currentWorld).toHaveBeenCalledWith(version)
+      expect(get.currentWorld).toHaveBeenCalledWith('version 2')
+      expect(get.currentVersion).toHaveBeenCalled()
+      expect(allowedPlayers).toHaveBeenCalled()
     })
   })
   describe('change', () => {

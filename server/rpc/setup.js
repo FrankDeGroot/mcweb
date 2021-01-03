@@ -5,8 +5,7 @@ const {
   current,
   change,
   update,
-  create,
-  players
+  create
 } = require('./calls')
 
 exports.setup = (socket, server) => new Replier(socket, server)
@@ -14,4 +13,3 @@ exports.setup = (socket, server) => new Replier(socket, server)
   .longReplyOn('change', 'changing', 'changed', change)
   .longReplyOn('update', 'updating', 'updated', update)
   .longReplyOn('create', 'creating', 'created', create)
-  .replyOn('players', players)

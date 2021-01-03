@@ -20,7 +20,8 @@ exports.current = async () => {
         world: await currentWorld(version)
       }
     })),
-    version: await currentVersion()
+    version: await currentVersion(),
+    ops: await allowedPlayers()
   }
 }
 
@@ -37,10 +38,4 @@ exports.update = (notify, updateParameters) => {
 exports.create = (notify, createParameters) => {
   const { version, world, seed } = createParameters
   return create(version, world, seed, notify)
-}
-
-exports.players = async () => {
-  return {
-    allowed: await allowedPlayers()
-  }
 }

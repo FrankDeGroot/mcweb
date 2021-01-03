@@ -7,7 +7,7 @@ export function Nav () {
         item('#!/update', 'Update Server'),
         item('#!/change', 'Change World'),
         item('#!/create', 'Create World'),
-        item('#!/players', 'Config Player')
+        item('#!/ops', 'Set Operators')
       ])
     ]
   }

@@ -1,10 +1,10 @@
 'use strict'
 
-jest.mock('../public/scheduler')
+jest.mock('../../public/scheduler')
 
-const { Scheduler } = require('../public/scheduler')
+const { Scheduler } = require('../../public/scheduler')
 
-const { MessagesViewModel } = require('../public/messages_view_model')
+const { MessagesViewModel } = require('../../public/messages/messages_view_model')
 
 const handlers = {
   onChange: jest.fn()
@@ -47,7 +47,7 @@ describe('MessagesViewModel', () => {
     messagesViewModel.pushMessage('message 1')
     messagesViewModel.pushMessage('message 2')
     messagesViewModel.clearMessages()
-    expect(messagesViewModel.messages).toStrictEqual([' ', ' '])
+    expect(messagesViewModel.messages).toStrictEqual(['\xa0', '\xa0'])
     expect(changeScheduler.schedule).toHaveBeenCalled()
   })
 })

@@ -14,11 +14,10 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['public/*'],
+      files: ['public/**/*'],
       globals: {
         io: 'readonly',
-        m: 'readonly',
-        polythene: 'readonly'
+        m: 'readonly'
       }
     }
   ]

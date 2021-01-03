@@ -7,8 +7,7 @@ const { Replier } = require('./replier')
 const {
   current,
   change,
-  update,
-  players
+  update
 } = require('./calls')
 
 const { setup } = require('./setup')
@@ -32,6 +31,5 @@ describe('setup', () => {
     expect(replier.replyOn).toHaveBeenCalledWith('current', current)
     expect(replier.longReplyOn).toHaveBeenCalledWith('change', 'changing', 'changed', change)
     expect(replier.longReplyOn).toHaveBeenCalledWith('update', 'updating', 'updated', update)
-    expect(replier.replyOn).toHaveBeenCalledWith('players', players)
   })
 })
