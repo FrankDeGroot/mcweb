@@ -9,7 +9,7 @@ const {
 const { change } = require('../worlds/change')
 const { update } = require('../download/update')
 const { create } = require('../worlds/create')
-const { allowedPlayers } = require('../players/inc_list')
+const { operators } = require('../players/ops')
 
 exports.current = async () => {
   return {
@@ -21,7 +21,7 @@ exports.current = async () => {
       }
     })),
     version: await currentVersion(),
-    ops: await allowedPlayers()
+    ops: await operators()
   }
 }
 

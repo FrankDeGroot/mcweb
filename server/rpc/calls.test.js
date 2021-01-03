@@ -4,13 +4,13 @@ jest.mock('../worlds/read')
 jest.mock('../worlds/change')
 jest.mock('../download/update')
 jest.mock('../worlds/create')
-jest.mock('../players/inc_list')
+jest.mock('../players/ops')
 
 const get = require('../worlds/read')
 const { change } = require('../worlds/change')
 const { update } = require('../download/update')
 const { create } = require('../worlds/create')
-const { allowedPlayers } = require('../players/inc_list')
+const { operators } = require('../players/ops')
 
 const calls = require('./calls')
 
@@ -43,7 +43,7 @@ describe('calls', () => {
     get.currentVersion.mockReset()
     get.worlds.mockReset()
     get.currentWorld.mockReset()
-    allowedPlayers.mockReset()
+    operators.mockReset()
   })
   describe('current', () => {
     it('should return versions, current version, worlds and current world for version', async () => {
@@ -55,7 +55,7 @@ describe('calls', () => {
       get.currentWorld
         .mockResolvedValueOnce(world1)
         .mockResolvedValueOnce(world2)
-      allowedPlayers.mockResolvedValue(players)
+      operators.mockResolvedValue(players)
       await expect(calls.current()).resolves.toEqual({
         versions: [{
           version: 'version 1',
@@ -75,7 +75,7 @@ describe('calls', () => {
       expect(get.currentWorld).toHaveBeenCalledWith(version)
       expect(get.currentWorld).toHaveBeenCalledWith('version 2')
       expect(get.currentVersion).toHaveBeenCalled()
-      expect(allowedPlayers).toHaveBeenCalled()
+      expect(operators).toHaveBeenCalled()
     })
   })
   describe('change', () => {
