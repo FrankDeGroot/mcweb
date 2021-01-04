@@ -2,9 +2,10 @@
 
 export function Checkbox () {
   return {
-    view: ({ attrs: { checked, id, label, onchange } }) => m('combo', [
+    view: ({ attrs: { checked, disabled, id, label, onchange } }) => m('combo', [
       m('input', {
         checked,
+        disabled,
         id,
         onchange: e => onchange(e.target.checked),
         type: 'checkbox'

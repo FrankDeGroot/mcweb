@@ -8,7 +8,7 @@ export function Radio () {
         m('combo', [
           m('input', {
             id,
-            checked: checked === id,
+            checked: id === checked,
             name,
             onchange: e => onchange(e.target.id),
             type: 'radio'
