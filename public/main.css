@@ -187,7 +187,6 @@ messages {
   border-right: 2px solid var(--light-border);
   border-top: 2px solid var(--dark-border);
   outline: 2px solid black;
-  overflow-y: scroll;
   width: calc(100% - 2 * var(--spacing));
 }
 select {
