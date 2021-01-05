@@ -45,7 +45,7 @@ describe('OpsViewModel', () => {
     expect(changeScheduler.schedule).toHaveBeenCalled()
     expect(opsViewModel.ops).toStrictEqual([{
       label: 'ops 1',
-      selected: false,
+      selected: true,
       value: '1'
     }, {
       label: 'ops 2',
