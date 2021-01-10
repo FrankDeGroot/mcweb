@@ -52,7 +52,7 @@ describe('say', () => {
       handlers.end()
     })
 
-    await say('hello')
+    await expect(say('hello')).resolves.toBe('response')
 
     expect(Rcon).toHaveBeenCalledWith('localhost', PORT, PASSWORD, {
       tcp: true,

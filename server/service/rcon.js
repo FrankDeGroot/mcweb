@@ -14,16 +14,18 @@ async function readServerProperties () {
 
 function send (message) {
   return new Promise((resolve, reject) => {
+    let response = null
     const con = new Rcon('localhost', serverProperties['rcon.port'], serverProperties['rcon.password'], {
       tcp: true,
       challenge: false
     })
       .on('auth', () => con.send(message))
-      .on('end', () => resolve())
+      .on('end', () => resolve(response))
       .on('error', err => reject(err))
-      .on('response', response => {
-        if (response) {
-          info('rcon response', response)
+      .on('response', res => {
+        if (res) {
+          response = res
+          info('rcon response', res)
         }
         con.disconnect()
       })
@@ -35,12 +37,13 @@ exports.say = async message => {
   await readServerProperties()
   let tries = 0
   let done = false
+  let response = null
   info('Saying', message)
   do {
     tries++
     try {
       trace('Saying', message, 'attempt', tries)
-      await send('say ' + message)
+      response = await send('say ' + message)
       done = true
       info('Said', message)
     } catch (err) {
@@ -55,4 +58,5 @@ exports.say = async message => {
   if (!done) {
     throw new Error('Server failed to restart')
   }
+  return response
 }
