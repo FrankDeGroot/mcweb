@@ -12,33 +12,39 @@ const changeScheduler = {
   schedule: jest.fn()
 }
 
+const versionsAndWorlds = {
+  versions: [{
+    version: 'version 1',
+    worlds: [
+      'world 1',
+      'world 2'
+    ],
+    world: 'world 1'
+  }, {
+    version: 'version 2',
+    worlds: [
+      'world 3',
+      'world 4'
+    ],
+    world: 'world 3'
+  }],
+  version: 'version 1'
+}
+
 describe('ChangeViewModel', () => {
   let changeViewModel
   beforeEach(() => {
     changeViewModel = new ChangeViewModel(handlers, changeScheduler)
+    handlers.onChangeVersionAndWorld.mockReset()
+    handlers.onCreateWorld.mockReset()
+    handlers.onUpdateVersion.mockReset()
+    changeScheduler.schedule.mockReset()
   })
   it('should initialize properly', () => {
     expect(changeViewModel.versions).toStrictEqual([])
   })
   it('should load version and world', () => {
-    changeViewModel.setCurrent({
-      versions: [{
-        version: 'version 1',
-        worlds: [
-          'world 1',
-          'world 2'
-        ],
-        world: 'world 1'
-      }, {
-        version: 'version 2',
-        worlds: [
-          'world 3',
-          'world 4'
-        ],
-        world: 'world 3'
-      }],
-      version: 'version 1'
-    })
+    changeViewModel.setCurrent(versionsAndWorlds)
     expect(changeViewModel.versions).toStrictEqual([{
       label: 'version 1 (current)',
       options: [{
@@ -63,6 +69,46 @@ describe('ChangeViewModel', () => {
       }]
     }])
     expect(changeScheduler.schedule).toHaveBeenCalled()
+  })
+  it('should retain selected version and world when previously selected', () => {
+    changeViewModel.setCurrent(versionsAndWorlds)
+    changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 2', world: 'world 4' }))
+    changeViewModel.setCurrent(versionsAndWorlds)
+    changeViewModel.changeVersionAndWorld()
+    expect(handlers.onChangeVersionAndWorld).toHaveBeenCalledWith('version 2', 'world 4')
+  })
+  it('should not retain selected version and world when previously selected are gone', () => {
+    changeViewModel.setCurrent(versionsAndWorlds)
+    changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 2', world: 'world 4' }))
+    changeViewModel.setCurrent({
+      versions: [{
+        version: 'version 1',
+        worlds: [
+          'world 1',
+          'world 2'
+        ],
+        world: 'world 1'
+      }],
+      version: 'version 1'
+    })
+    changeViewModel.changeVersionAndWorld()
+    expect(handlers.onChangeVersionAndWorld).toHaveBeenCalledWith('version 1', 'world 1')
+  })
+  it('should not retain selected world when previously selected is gone', () => {
+    changeViewModel.setCurrent(versionsAndWorlds)
+    changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 1', world: 'world 2' }))
+    changeViewModel.setCurrent({
+      versions: [{
+        version: 'version 1',
+        worlds: [
+          'world 1'
+        ],
+        world: 'world 1'
+      }],
+      version: 'version 1'
+    })
+    changeViewModel.changeVersionAndWorld()
+    expect(handlers.onChangeVersionAndWorld).toHaveBeenCalledWith('version 1', 'world 1')
   })
   it('should change version and world', () => {
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 1', world: 'world 1' }))

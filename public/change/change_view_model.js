@@ -35,8 +35,15 @@ export function ChangeViewModel (handlers, changeScheduler) {
 
   this.setCurrent = current => {
     versionsAndWorlds = current
-    selectedVersion = versionsAndWorlds.version
-    selectedWorld = versionsAndWorlds.versions.find(v => v.version === versionsAndWorlds.version).world
+    if (!selectedVersion ||
+        !versionsAndWorlds.versions.find(v => v.version === selectedVersion)) {
+      selectedVersion = versionsAndWorlds.version
+      selectedWorld = null
+    }
+    if (!selectedWorld ||
+        !versionsAndWorlds.versions.find(v => v.version === selectedVersion).worlds.find(w => w === selectedWorld)) {
+      selectedWorld = versionsAndWorlds.versions.find(v => v.version === versionsAndWorlds.version).world
+    }
     changeScheduler.schedule()
   }
 
