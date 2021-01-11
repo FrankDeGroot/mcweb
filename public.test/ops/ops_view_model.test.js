@@ -1,11 +1,8 @@
 'use strict'
 
-jest.mock('../../public/scheduler')
-const { Scheduler } = require('../../public/scheduler')
 const { OpsViewModel } = require('../../public/ops/ops_view_model')
 
 const handlers = {
-  onChange: jest.fn()
 }
 
 const changeScheduler = {
@@ -27,11 +24,7 @@ const ops = [{
 describe('OpsViewModel', () => {
   let opsViewModel
   beforeEach(() => {
-    Scheduler.mockImplementation(handler => {
-      expect(handler).toBe(handlers.onChange)
-      return changeScheduler
-    })
-    opsViewModel = new OpsViewModel(handlers)
+    opsViewModel = new OpsViewModel(handlers, changeScheduler)
   })
   it('should initialize properly', () => {
     expect(opsViewModel.ops).toStrictEqual([])

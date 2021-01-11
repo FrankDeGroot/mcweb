@@ -1,12 +1,9 @@
 'use strict'
 
-import { Scheduler } from '../scheduler.js'
-
-export function MessagesViewModel (handlers) {
+export function MessagesViewModel (changeScheduler) {
   const nonBreakingSpace = '\xa0'
   const emptyMessages = Array(2).fill(nonBreakingSpace)
   let messages = [...emptyMessages]
-  const changeScheduler = new Scheduler(handlers.onChange)
 
   Object.defineProperties(this, {
     messages: {

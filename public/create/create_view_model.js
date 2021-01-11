@@ -1,8 +1,6 @@
 'use strict'
 
-import { Scheduler } from '../scheduler.js'
-
-export function CreateViewModel (handlers) {
+export function CreateViewModel (handlers, changeScheduler) {
   let versionsAndWorlds = {
     versions: [],
     version: null
@@ -10,11 +8,9 @@ export function CreateViewModel (handlers) {
   let selectedVersion = null
 
   handlers = {
-    onChange: () => {},
     onCreateWorld: () => {},
     ...handlers
   }
-  const changeScheduler = new Scheduler(handlers.onChange)
 
   Object.defineProperties(this, {
     versions: {

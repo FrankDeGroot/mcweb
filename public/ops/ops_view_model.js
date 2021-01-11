@@ -1,11 +1,8 @@
 'use strict'
 
-import { Scheduler } from '../scheduler.js'
-
-export function OpsViewModel (handlers) {
+export function OpsViewModel (handlers, changeScheduler) {
   let ops = []
   let selectedOperator = null
-  const changeScheduler = new Scheduler(handlers.onChange)
   Object.defineProperties(this, {
     ops: {
       get: () => ops.map(op => {

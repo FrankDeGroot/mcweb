@@ -1,14 +1,6 @@
 'use strict'
 
-jest.mock('../../public/scheduler')
-
-const { Scheduler } = require('../../public/scheduler')
-
 const { MessagesViewModel } = require('../../public/messages/messages_view_model')
-
-const handlers = {
-  onChange: jest.fn()
-}
 
 const changeScheduler = {
   schedule: jest.fn()
@@ -17,11 +9,7 @@ const changeScheduler = {
 describe('MessagesViewModel', () => {
   let messagesViewModel
   beforeEach(() => {
-    Scheduler.mockImplementation(handler => {
-      expect(handler).toBe(handlers.onChange)
-      return changeScheduler
-    })
-    messagesViewModel = new MessagesViewModel(handlers)
+    messagesViewModel = new MessagesViewModel(changeScheduler)
   })
   it('starts with empty messages', () => {
     expect(messagesViewModel.messages.length).toBe(2)

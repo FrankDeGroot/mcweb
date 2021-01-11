@@ -1,11 +1,8 @@
 'use strict'
 
-jest.mock('../public/scheduler')
-const { Scheduler } = require('../public/scheduler')
 const { BusyViewModel } = require('../public/busy_view_model')
 
 const handlers = {
-  onChange: jest.fn(),
   onReady: jest.fn()
 }
 
@@ -16,11 +13,7 @@ const changeScheduler = {
 describe('BusyViewModel', () => {
   let busyViewModel
   beforeEach(() => {
-    Scheduler.mockImplementation(handler => {
-      expect(handler).toBe(handlers.onChange)
-      return changeScheduler
-    })
-    busyViewModel = new BusyViewModel(handlers)
+    busyViewModel = new BusyViewModel(handlers, changeScheduler)
   })
   it('should initialize properly', () => {
     expect(busyViewModel.busy).toBe(false)

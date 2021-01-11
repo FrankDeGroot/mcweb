@@ -1,16 +1,12 @@
 'use strict'
 
-import { Scheduler } from './scheduler.js'
-
-export function BusyViewModel (handlers) {
+export function BusyViewModel (handlers, changeScheduler) {
   let busy = false
 
   handlers = {
-    onChange: () => {},
     onReady: () => {},
     ...handlers
   }
-  const changeScheduler = new Scheduler(handlers.onChange)
 
   Object.defineProperties(this, {
     busy: {

@@ -7,12 +7,9 @@ import { UpdateViewModel } from './update/update_view_model.js'
 import { MessagesViewModel } from './messages/messages_view_model.js'
 import { OpsViewModel } from './ops/ops_view_model.js'
 
-export function connectedViewModel () {
+export function connectedViewModel (changeScheduler) {
   const socket = io()
   const handlers = {
-    onChange: () => {
-      m.redraw()
-    },
     onReady: () => {
       socket.emit('current')
     },
@@ -27,12 +24,12 @@ export function connectedViewModel () {
       seed
     })
   }
-  const busyViewModel = new BusyViewModel(handlers)
-  const changeViewModel = new ChangeViewModel(handlers)
-  const createViewModel = new CreateViewModel(handlers)
+  const busyViewModel = new BusyViewModel(handlers, changeScheduler)
+  const changeViewModel = new ChangeViewModel(handlers, changeScheduler)
+  const createViewModel = new CreateViewModel(handlers, changeScheduler)
   const updateViewModel = new UpdateViewModel(handlers)
-  const messagesViewModel = new MessagesViewModel(handlers)
-  const opsViewModel = new OpsViewModel(handlers)
+  const messagesViewModel = new MessagesViewModel(changeScheduler)
+  const opsViewModel = new OpsViewModel(handlers, changeScheduler)
   socket
     .on('message', message => messagesViewModel.pushMessage(message))
     .on('throw', message => messagesViewModel.pushError(message))

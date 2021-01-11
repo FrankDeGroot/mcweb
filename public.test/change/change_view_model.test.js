@@ -1,11 +1,8 @@
 'use strict'
 
-jest.mock('../../public/scheduler')
-const { Scheduler } = require('../../public/scheduler')
 const { ChangeViewModel } = require('../../public/change/change_view_model')
 
 const handlers = {
-  onChange: jest.fn(),
   onChangeVersionAndWorld: jest.fn(),
   onCreateWorld: jest.fn(),
   onUpdateVersion: jest.fn()
@@ -18,11 +15,7 @@ const changeScheduler = {
 describe('ChangeViewModel', () => {
   let changeViewModel
   beforeEach(() => {
-    Scheduler.mockImplementation(handler => {
-      expect(handler).toBe(handlers.onChange)
-      return changeScheduler
-    })
-    changeViewModel = new ChangeViewModel(handlers)
+    changeViewModel = new ChangeViewModel(handlers, changeScheduler)
   })
   it('should initialize properly', () => {
     expect(changeViewModel.versions).toStrictEqual([])
