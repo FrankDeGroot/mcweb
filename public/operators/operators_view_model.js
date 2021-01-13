@@ -33,12 +33,18 @@ export function OperatorsViewModel (handlers, changeScheduler) {
     }
   })
   this.select = value => {
-    selectedOperator = operators.find(({ uuid }) => uuid === value)
+    selectedOperator = findOperator(value)
     changeScheduler.schedule()
   }
   this.setCurrent = response => {
     operators = response.operators
-    selectedOperator = operators[0]
+    if (!selectedOperator ||
+        !findOperator(selectedOperator.uuid)) {
+      selectedOperator = operators[0]
+    }
     changeScheduler.schedule()
+  }
+  function findOperator (value) {
+    return operators.find(({ uuid }) => uuid === value)
   }
 }

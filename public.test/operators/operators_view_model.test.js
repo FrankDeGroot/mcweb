@@ -48,6 +48,43 @@ describe('OperatorsViewModel', () => {
     }])
     expect(operatorsViewModel.bypassesPlayerLimit).toBe(false)
   })
+  it('should retain selected operator after reload', () => {
+    operatorsViewModel.setCurrent({
+      operators
+    })
+    operatorsViewModel.select('2')
+    operatorsViewModel.setCurrent({
+      operators
+    })
+    expect(operatorsViewModel.operators).toStrictEqual([{
+      label: 'ops 1',
+      selected: false,
+      value: '1'
+    }, {
+      label: 'ops 2',
+      selected: true,
+      value: '2'
+    }])
+  })
+  it('should not retain selected operator when removed after reload', () => {
+    operatorsViewModel.setCurrent({
+      operators
+    })
+    operatorsViewModel.select('2')
+    operatorsViewModel.setCurrent({
+      operators: [{
+        uuid: '1',
+        name: 'ops 1',
+        level: 0,
+        bypassesPlayerLimit: false
+      }]
+    })
+    expect(operatorsViewModel.operators).toStrictEqual([{
+      label: 'ops 1',
+      selected: true,
+      value: '1'
+    }])
+  })
   it('should select operator and expose its properties', () => {
     operatorsViewModel.setCurrent({
       operators
