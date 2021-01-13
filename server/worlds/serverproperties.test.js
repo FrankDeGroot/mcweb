@@ -20,5 +20,5 @@ test('writeServerProperties', async () => {
     property2: 'value=value',
     property1: 'value'
   })
-  expect(writeFile).toHaveBeenCalledWith('../test/server/common/server.properties', 'property1=value\nproperty2=value=value', 'utf-8')
+  expect(writeFile).toHaveBeenCalledWith('../test/server/common/server.properties', 'property1=value\nproperty2=value=value', 'utf8')
 })

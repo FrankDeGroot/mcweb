@@ -3,7 +3,7 @@
 const { readFile, writeFile } = require('fs').promises
 const { join } = require('path')
 
-const { serverPath } = require('./paths')
+const { getCommonPath } = require('./paths')
 
 exports.readServerProperties = async () => {
   const serverProperties = await readFile(serverPropertiesFileName(), 'utf8')
@@ -17,11 +17,11 @@ exports.readServerProperties = async () => {
 }
 
 exports.writeServerProperties = async serverProperties => {
-  await writeFile(serverPropertiesFileName(), Object.keys(serverProperties).sort()
-    .map(key => `${key}=${serverProperties[key]}`)
-    .join('\n'), 'utf-8')
+  await writeFile(serverPropertiesFileName(), Object.entries(serverProperties).sort()
+    .map(([key, value]) => `${key}=${value}`)
+    .join('\n'), 'utf8')
 }
 
 function serverPropertiesFileName () {
-  return join(serverPath(), 'common', 'server.properties')
+  return join(getCommonPath(), 'server.properties')
 }

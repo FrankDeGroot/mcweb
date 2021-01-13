@@ -1,10 +1,10 @@
 'use strict'
 
-const { common } = require('../worlds/paths')
+const { getCommonPath } = require('../worlds/paths')
 const { readFile, writeFile } = require('fs').promises
 const { join } = require('path')
-const allowedFilename = join(common(), 'whitelist.json')
-const operatorsFilename = join(common(), 'ops.json')
+const allowedFilename = join(getCommonPath(), 'whitelist.json')
+const operatorsFilename = join(getCommonPath(), 'ops.json')
 
 exports.operators = async () => {
   const operators = await readOptionalJson(operatorsFilename)
