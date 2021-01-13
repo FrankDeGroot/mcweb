@@ -13,21 +13,22 @@ const changeScheduler = {
 }
 
 const versionsAndWorlds = {
-  versions: [{
-    version: 'version 1',
-    worlds: [
-      'world 1',
-      'world 2'
-    ],
-    world: 'world 1'
-  }, {
-    version: 'version 2',
-    worlds: [
-      'world 3',
-      'world 4'
-    ],
-    world: 'world 3'
-  }],
+  versions: {
+    'version 1': {
+      worlds: [
+        'world 1',
+        'world 2'
+      ],
+      world: 'world 1'
+    },
+    'version 2': {
+      worlds: [
+        'world 3',
+        'world 4'
+      ],
+      world: 'world 3'
+    }
+  },
   version: 'version 1'
 }
 
@@ -81,14 +82,15 @@ describe('ChangeViewModel', () => {
     changeViewModel.setCurrent(versionsAndWorlds)
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 2', world: 'world 4' }))
     changeViewModel.setCurrent({
-      versions: [{
-        version: 'version 1',
-        worlds: [
-          'world 1',
-          'world 2'
-        ],
-        world: 'world 1'
-      }],
+      versions: {
+        'version 1': {
+          worlds: [
+            'world 1',
+            'world 2'
+          ],
+          world: 'world 1'
+        }
+      },
       version: 'version 1'
     })
     changeViewModel.changeVersionAndWorld()
@@ -98,13 +100,14 @@ describe('ChangeViewModel', () => {
     changeViewModel.setCurrent(versionsAndWorlds)
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 1', world: 'world 2' }))
     changeViewModel.setCurrent({
-      versions: [{
-        version: 'version 1',
-        worlds: [
-          'world 1'
-        ],
-        world: 'world 1'
-      }],
+      versions: {
+        'version 1': {
+          worlds: [
+            'world 1'
+          ],
+          world: 'world 1'
+        }
+      },
       version: 'version 1'
     })
     changeViewModel.changeVersionAndWorld()

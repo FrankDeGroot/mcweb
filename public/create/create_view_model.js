@@ -14,11 +14,11 @@ export function CreateViewModel (handlers, changeScheduler) {
 
   Object.defineProperties(this, {
     versions: {
-      get: () => versionsAndWorlds.versions.map(version => {
+      get: () => Object.entries(versionsAndWorlds.versions).map(([version]) => {
         return {
-          label: version.version + (version.version === versionsAndWorlds.version ? ' (current)' : ''),
-          selected: version.version === selectedVersion,
-          value: version.version
+          label: version + (version === versionsAndWorlds.version ? ' (current)' : ''),
+          selected: version === selectedVersion,
+          value: version
         }
       })
     }

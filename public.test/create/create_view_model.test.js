@@ -20,11 +20,12 @@ describe('CreateViewModel', () => {
   })
   it('should load version and world', () => {
     createViewModel.setCurrent({
-      versions: [{
-        version: 'version 1'
-      }, {
-        version: 'version 2'
-      }],
+      versions: {
+        'version 1': {
+        },
+        'version 2': {
+        }
+      },
       version: 'version 1'
     })
     expect(createViewModel.versions).toStrictEqual([{

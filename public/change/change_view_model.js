@@ -15,15 +15,15 @@ export function ChangeViewModel (handlers, changeScheduler) {
 
   Object.defineProperties(this, {
     versions: {
-      get: () => versionsAndWorlds.versions.map(version => {
+      get: () => Object.entries(versionsAndWorlds.versions).map(([version, value]) => {
         return {
-          label: version.version + (version.version === versionsAndWorlds.version ? ' (current)' : ''),
-          options: version.worlds.map(world => {
+          label: version + (version === versionsAndWorlds.version ? ' (current)' : ''),
+          options: value.worlds.map(world => {
             return {
-              label: version.version + ' ' + world + (world === version.world ? ' (current)' : ''),
+              label: version + ' ' + world + (world === value.world ? ' (current)' : ''),
               selected: world === selectedWorld,
               value: JSON.stringify({
-                version: version.version,
+                version: version,
                 world: world
               })
             }
@@ -36,21 +36,21 @@ export function ChangeViewModel (handlers, changeScheduler) {
   this.setCurrent = current => {
     versionsAndWorlds = current
     if (!selectedVersion ||
-        !versionsAndWorlds.versions.find(v => v.version === selectedVersion)) {
+        !versionsAndWorlds.versions[selectedVersion]) {
       selectedVersion = versionsAndWorlds.version
       selectedWorld = null
     }
     if (!selectedWorld ||
-        !versionsAndWorlds.versions.find(v => v.version === selectedVersion).worlds.find(w => w === selectedWorld)) {
-      selectedWorld = versionsAndWorlds.versions.find(v => v.version === versionsAndWorlds.version).world
+        !versionsAndWorlds.versions[selectedVersion].worlds.includes(selectedWorld)) {
+      selectedWorld = versionsAndWorlds.versions[selectedVersion].world
     }
     changeScheduler.schedule()
   }
 
   this.selectVersionAndWorld = value => {
-    value = JSON.parse(value)
-    selectedVersion = value.version
-    selectedWorld = value.world
+    const { version, world } = JSON.parse(value)
+    selectedVersion = version
+    selectedWorld = world
   }
 
   this.changeVersionAndWorld = () => {

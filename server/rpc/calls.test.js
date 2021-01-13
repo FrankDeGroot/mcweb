@@ -57,15 +57,16 @@ describe('calls', () => {
         .mockResolvedValueOnce(world2)
       operators.mockResolvedValue(players)
       await expect(calls.current()).resolves.toEqual({
-        versions: [{
-          version: 'version 1',
-          worlds: worlds1,
-          world: world1
-        }, {
-          version: 'version 2',
-          worlds: worlds2,
-          world: world2
-        }],
+        versions: {
+          'version 1': {
+            worlds: worlds1,
+            world: world1
+          },
+          'version 2': {
+            worlds: worlds2,
+            world: world2
+          }
+        },
         version,
         ops: players
       })
