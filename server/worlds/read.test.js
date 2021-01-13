@@ -13,7 +13,7 @@ describe('getCurrentVersion', () => {
   })
   it('reads current', async () => {
     readlink.mockResolvedValue(CURRENT)
-    expect(await getCurrentVersion()).toBe(CURRENT)
+    await expect(getCurrentVersion()).resolves.toBe(CURRENT)
     expect(readlink.mock.calls[0][0]).toBe('../test/server/current')
   })
   it('throws notFound if path does not exist', async () => {
@@ -28,7 +28,7 @@ describe('getCurrentWorld', () => {
   })
   it('reads current', async () => {
     readlink.mockResolvedValue(CURRENT)
-    expect(await getCurrentWorld('version')).toBe(CURRENT)
+    await expect(getCurrentWorld('version')).resolves.toBe(CURRENT)
     expect(readlink.mock.calls[0][0]).toBe('../test/server/version/world')
   })
   it('throws notFound if path does not exist', async () => {
@@ -68,7 +68,7 @@ describe('getVersions', () => {
       })
     readdir.mockResolvedValue(['version1', 'notVersion', 'version2', 'notDirectory'])
 
-    expect(await getVersions()).toStrictEqual(['version1', 'version2'])
+    await expect(getVersions()).resolves.toStrictEqual(['version1', 'version2'])
 
     expect(access.mock.calls[0][0]).toBe('../test/server/version1/server.jar')
     expect(access.mock.calls[1][0]).toBe('../test/server/notVersion/server.jar')
@@ -114,7 +114,7 @@ describe('getWorlds', () => {
       })
     readdir.mockResolvedValue(['world1', 'notWorld', 'world2', 'notDirectory'])
 
-    expect(await getWorlds('version')).toStrictEqual(['world1', 'world2'])
+    await expect(getWorlds('version')).resolves.toStrictEqual(['world1', 'world2'])
 
     expect(access.mock.calls[0][0]).toBe('../test/server/version/world1/level.dat')
     expect(access.mock.calls[1][0]).toBe('../test/server/version/notWorld/level.dat')

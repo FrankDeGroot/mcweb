@@ -7,7 +7,7 @@ const { readServerProperties, writeServerProperties } = require('./serverpropert
 
 test('readServerProperties', async () => {
   readFile.mockResolvedValue('#notaproperty\nproperty1=value\nproperty2=value=value')
-  expect(await readServerProperties()).toStrictEqual({
+  await expect(readServerProperties()).resolves.toStrictEqual({
     property1: 'value',
     property2: 'value=value'
   })

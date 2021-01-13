@@ -30,7 +30,7 @@ describe('getOperators', () => {
       uuid: '2',
       name: 'player 2'
     }]))
-    expect(await getOperators()).toStrictEqual([{
+    await expect(getOperators()).resolves.toStrictEqual([{
       uuid: '1',
       name: 'player 1',
       level: 0,
@@ -65,7 +65,7 @@ describe('getOperators', () => {
       uuid: '1',
       name: 'player 1'
     }]))
-    expect(await getOperators()).toStrictEqual([{
+    await expect(getOperators()).resolves.toStrictEqual([{
       uuid: '1',
       name: 'player 1',
       level: 4,
@@ -82,7 +82,7 @@ describe('getOperators', () => {
     const fileNotFoundError = new Error('file not found')
     fileNotFoundError.code = 'ENOENT'
     readFile.mockRejectedValueOnce(fileNotFoundError)
-    expect(await getOperators()).toStrictEqual([{
+    await expect(getOperators()).resolves.toStrictEqual([{
       uuid: '1',
       name: 'player 1',
       level: 1,

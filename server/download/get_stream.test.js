@@ -16,7 +16,7 @@ describe('getStream', () => {
     }
     get.mockImplementation((url, cb) => cb(response))
 
-    expect(await getStream('some url')).toBe(response)
+    await expect(getStream('some url')).resolves.toBe(response)
   })
   it('should reject on another status code', async () => {
     const response = {
