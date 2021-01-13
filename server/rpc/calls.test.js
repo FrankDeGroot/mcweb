@@ -38,7 +38,7 @@ describe('calls', () => {
   const world2 = 'world 3'
   const notify = jest.fn()
   const seed = 'seed'
-  const players = [{
+  const operators = [{
     uuid: '1',
     name: 'player 1'
   }]
@@ -60,7 +60,7 @@ describe('calls', () => {
       getCurrentWorld
         .mockResolvedValueOnce(world1)
         .mockResolvedValueOnce(world2)
-      getOperators.mockResolvedValue(players)
+      getOperators.mockResolvedValue(operators)
       await expect(calls.current()).resolves.toEqual({
         versions: {
           'version 1': {
@@ -73,7 +73,7 @@ describe('calls', () => {
           }
         },
         version,
-        ops: players
+        operators
       })
       expect(getVersions).toHaveBeenCalled()
       expect(getWorlds).toHaveBeenCalledWith(version)

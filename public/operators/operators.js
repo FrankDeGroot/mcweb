@@ -3,31 +3,31 @@
 import { Checkbox } from '../checkbox.js'
 import { Radio } from '../radio.js'
 
-export function Ops () {
+export function Operators () {
   return {
-    view: ({ attrs: { busyViewModel, opsViewModel } }) => [
+    view: ({ attrs: { busyViewModel, operatorsViewModel } }) => [
       m('select', {
         disabled: busyViewModel.busy,
-        onchange: e => opsViewModel.select(e.target.value)
-      }, opsViewModel.ops.map(({ label, selected, value }) => m('option', {
+        onchange: e => operatorsViewModel.select(e.target.value)
+      }, operatorsViewModel.operators.map(({ label, selected, value }) => m('option', {
         value,
         selected
       }, label))),
       m(Checkbox, {
-        checked: opsViewModel.bypassesPlayerLimit,
+        checked: operatorsViewModel.bypassesPlayerLimit,
         disabled: false,
         id: 'bypassesPlayerLimit',
         label: 'Bypasses Player Limit',
         onchange: value => {
-          opsViewModel.bypassesPlayerLimit = value
+          operatorsViewModel.bypassesPlayerLimit = value
         }
       }),
       m(Radio, {
-        checked: opsViewModel.level,
+        checked: operatorsViewModel.level,
         label: 'Ops Level',
         name: 'level',
         onchange: value => {
-          opsViewModel.level = value
+          operatorsViewModel.level = value
         },
         options: [{
           id: '0',

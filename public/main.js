@@ -4,7 +4,7 @@ import { Scheduler } from './scheduler.js'
 import { Changer } from './change/changer.js'
 import { Creator } from './create/creator.js'
 import { Updater } from './update/updater.js'
-import { Ops } from './ops/ops.js'
+import { Operators } from './operators/operators.js'
 import { Pane } from './pane.js'
 import { connectedViewModel } from './rpc.js'
 
@@ -15,12 +15,12 @@ const {
   createViewModel,
   updateViewModel,
   messagesViewModel,
-  opsViewModel
+  operatorsViewModel
 } = connectedViewModel(changeScheduler)
 
 m.route(document.body, '/update', {
   '/change': () => Pane(() => m(Changer, { busyViewModel, changeViewModel }), messagesViewModel),
   '/create': () => Pane(() => m(Creator, { busyViewModel, createViewModel }), messagesViewModel),
   '/update': () => Pane(() => m(Updater, { busyViewModel, updateViewModel }), messagesViewModel),
-  '/ops': () => Pane(() => m(Ops, { busyViewModel, opsViewModel }), messagesViewModel)
+  '/operators': () => Pane(() => m(Operators, { busyViewModel, operatorsViewModel }), messagesViewModel)
 })

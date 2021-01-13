@@ -11,7 +11,7 @@ describe('getOperators', () => {
     readFile.mockReset()
     writeFile.mockReset()
   })
-  it('should list all players in inclusion and ops list', async () => {
+  it('should list all players in inclusion and operators list', async () => {
     readFile.mockResolvedValueOnce(JSON.stringify([{
       uuid: '3',
       name: 'player 3',
@@ -54,7 +54,7 @@ describe('getOperators', () => {
     expect(readFile.mock.calls[0][0]).toBe('../test/server/common/ops.json')
     expect(readFile.mock.calls[1][0]).toBe('../test/server/common/whitelist.json')
   })
-  it('should merge duplicate players in inclusion and ops list', async () => {
+  it('should merge duplicate players in inclusion and operators list', async () => {
     readFile.mockResolvedValueOnce(JSON.stringify([{
       uuid: '1',
       name: 'player 1',

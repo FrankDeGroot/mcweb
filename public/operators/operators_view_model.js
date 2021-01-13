@@ -1,15 +1,15 @@
 'use strict'
 
-export function OpsViewModel (handlers, changeScheduler) {
-  let ops = []
+export function OperatorsViewModel (handlers, changeScheduler) {
+  let operators = []
   let selectedOperator = null
   Object.defineProperties(this, {
-    ops: {
-      get: () => ops.map(op => {
+    operators: {
+      get: () => operators.map(operator => {
         return {
-          label: op.name,
-          selected: op.uuid === selectedOperator.uuid,
-          value: op.uuid
+          label: operator.name,
+          selected: operator.uuid === selectedOperator.uuid,
+          value: operator.uuid
         }
       })
     },
@@ -33,12 +33,12 @@ export function OpsViewModel (handlers, changeScheduler) {
     }
   })
   this.select = value => {
-    selectedOperator = ops.find(({ uuid }) => uuid === value)
+    selectedOperator = operators.find(({ uuid }) => uuid === value)
     changeScheduler.schedule()
   }
   this.setCurrent = response => {
-    ops = response.ops
-    selectedOperator = ops[0]
+    operators = response.operators
+    selectedOperator = operators[0]
     changeScheduler.schedule()
   }
 }

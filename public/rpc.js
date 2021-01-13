@@ -5,7 +5,7 @@ import { ChangeViewModel } from './change/change_view_model.js'
 import { CreateViewModel } from './create/create_view_model.js'
 import { UpdateViewModel } from './update/update_view_model.js'
 import { MessagesViewModel } from './messages/messages_view_model.js'
-import { OpsViewModel } from './ops/ops_view_model.js'
+import { OperatorsViewModel } from './operators/operators_view_model.js'
 
 export function connectedViewModel (changeScheduler) {
   const socket = io()
@@ -31,7 +31,7 @@ export function connectedViewModel (changeScheduler) {
     onUpdateVersion: version => socket.emit('update', { version })
   })
   const messagesViewModel = new MessagesViewModel(changeScheduler)
-  const opsViewModel = new OpsViewModel({}, changeScheduler)
+  const operatorsViewModel = new OperatorsViewModel({}, changeScheduler)
   socket
     .on('message', message => messagesViewModel.pushMessage(message))
     .on('throw', message => messagesViewModel.pushError(message))
@@ -56,7 +56,7 @@ export function connectedViewModel (changeScheduler) {
     .on('current', current => {
       changeViewModel.setCurrent(current)
       createViewModel.setCurrent(current)
-      opsViewModel.setCurrent(current)
+      operatorsViewModel.setCurrent(current)
     })
     .emit('current')
   return {
@@ -65,6 +65,6 @@ export function connectedViewModel (changeScheduler) {
     createViewModel,
     updateViewModel,
     messagesViewModel,
-    opsViewModel
+    operatorsViewModel
   }
 }

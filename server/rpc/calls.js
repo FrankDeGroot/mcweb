@@ -24,7 +24,7 @@ exports.current = async () => {
       return { ...acc, ...version }
     }, {}),
     version: await getCurrentVersion(),
-    ops: await getOperators()
+    operators: await getOperators()
   }
 }
 
