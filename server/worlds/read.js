@@ -5,13 +5,13 @@ const { access, lstat, readdir, readlink } = promises
 const { join } = require('path')
 const {
   getCurrentVersionPath,
-  currentWorldPath,
+  getCurrentWorldPath,
   serverPath,
   versionPath
 } = require('./paths')
 
 exports.currentVersion = async () => readCurrent(getCurrentVersionPath())
-exports.currentWorld = async version => readCurrent(currentWorldPath(version))
+exports.currentWorld = async version => readCurrent(getCurrentWorldPath(version))
 exports.versions = async () => directoryFilter(serverPath(), isVersion)
 exports.worlds = async version => directoryFilter(versionPath(version), isWorld)
 

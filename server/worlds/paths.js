@@ -10,7 +10,7 @@ const getWorldPath = (version, world) => join(getVersionPath(version), world)
 const getCurrentVersionPath = getVersionPath(currentVersionName)
 
 exports.getCurrentVersionPath = () => getCurrentVersionPath
-exports.currentWorldPath = version => join(getVersionPath(version), currentWorldName)
+exports.getCurrentWorldPath = version => join(getVersionPath(version), currentWorldName)
 exports.serverPath = () => serverPath
 exports.versionPath = getVersionPath
 exports.worldPath = getWorldPath

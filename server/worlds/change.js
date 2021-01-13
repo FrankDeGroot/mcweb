@@ -3,7 +3,7 @@
 const { symlink, unlink } = require('fs').promises
 const {
   getCurrentVersionPath,
-  currentWorldPath
+  getCurrentWorldPath
 } = require('./paths')
 const {
   currentVersion,
@@ -30,7 +30,7 @@ async function setVersion (version) {
 }
 
 async function setWorld (version, world) {
-  const path = currentWorldPath(version)
+  const path = getCurrentWorldPath(version)
   await unlink(path)
   await symlink(world, path)
 }

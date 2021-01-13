@@ -2,7 +2,7 @@
 
 const { mkdir, symlink, unlink } = require('fs').promises
 const { readServerProperties, writeServerProperties } = require('./serverproperties.js')
-const { currentWorldPath, worldPath } = require('./paths')
+const { getCurrentWorldPath, worldPath } = require('./paths')
 const { restart } = require('../service/restart')
 
 exports.create = async (version, world, seed, notify) => {
@@ -11,7 +11,7 @@ exports.create = async (version, world, seed, notify) => {
   await writeServerProperties(serverProperties)
   await mkdir(worldPath(version, world))
   await restart('Creating a new world', notify, async () => {
-    const path = currentWorldPath(version)
+    const path = getCurrentWorldPath(version)
     await unlink(path)
     await symlink(world, path)
   })
