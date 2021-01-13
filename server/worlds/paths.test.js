@@ -1,15 +1,15 @@
 'use strict'
 
 const {
-  currentVersionPath,
+  getCurrentVersionPath,
   currentWorldPath,
   serverPath,
   versionPath,
   worldPath
 } = require('./paths')
 
-test('currentVersionPath', () => {
-  expect(currentVersionPath()).toBe('../test/server/current')
+test('getCurrentVersionPath', () => {
+  expect(getCurrentVersionPath()).toBe('../test/server/current')
 })
 
 test('currentWorldPath', () => {

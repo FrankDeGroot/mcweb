@@ -2,7 +2,7 @@
 
 const { symlink, unlink } = require('fs').promises
 const {
-  currentVersionPath,
+  getCurrentVersionPath,
   currentWorldPath
 } = require('./paths')
 const {
@@ -25,8 +25,8 @@ exports.change = async (version, world, notify) => {
 }
 
 async function setVersion (version) {
-  await unlink(currentVersionPath())
-  await symlink(version, currentVersionPath())
+  await unlink(getCurrentVersionPath())
+  await symlink(version, getCurrentVersionPath())
 }
 
 async function setWorld (version, world) {
