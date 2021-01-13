@@ -10,7 +10,7 @@ jest.mock('./pipe')
 
 const { createReadStream, createWriteStream, promises } = require('fs')
 const { unlink } = promises
-const { versionPath } = require('../worlds/paths')
+const { getVersionPath } = require('../worlds/paths')
 const { currentVersion } = require('../worlds/read')
 const { restart } = require('../service/restart')
 const { getStream } = require('./get_stream')
@@ -35,7 +35,7 @@ const writtenStream = {}
 
 describe('update steps', () => {
   beforeEach(() => {
-    versionPath.mockReset().mockReturnValue('versionPath')
+    getVersionPath.mockReset().mockReturnValue('versionPath')
     currentVersion.mockReset().mockResolvedValue('version')
     restart.mockReset()
     getSha1.mockReset().mockResolvedValue('sha1')
@@ -47,7 +47,7 @@ describe('update steps', () => {
     it('should return path of current server jar', () => {
       expect(pathCurrentServer('release', serverInfo)).toBe('versionPath/server.jar')
 
-      expect(versionPath).toHaveBeenCalledWith('release')
+      expect(getVersionPath).toHaveBeenCalledWith('release')
     })
   })
   describe('currentIsLatest', () => {

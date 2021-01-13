@@ -9,7 +9,7 @@ const { symlink, unlink } = require('fs').promises
 const {
   getCurrentVersionPath,
   getCurrentWorldPath,
-  versionPath
+  getVersionPath
 } = require('./paths')
 const {
   currentVersion,
@@ -27,7 +27,7 @@ describe('change', () => {
     unlink.mockReset()
     getCurrentVersionPath.mockReset()
     getCurrentWorldPath.mockReset()
-    versionPath.mockReset()
+    getVersionPath.mockReset()
     currentVersion.mockReset()
     currentWorld.mockReset()
     restart.mockReset()
