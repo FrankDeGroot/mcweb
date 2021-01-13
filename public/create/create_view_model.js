@@ -39,5 +39,6 @@ export function CreateViewModel (handlers, changeScheduler) {
 
   this.createWorld = () => {
     handlers.onCreateWorld(selectedVersion, this.newWorldName, this.seed)
+    changeScheduler.schedule()
   }
 }

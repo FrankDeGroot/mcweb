@@ -14,6 +14,7 @@ describe('CreateViewModel', () => {
   let createViewModel
   beforeEach(() => {
     createViewModel = new CreateViewModel(handlers, changeScheduler)
+    changeScheduler.schedule.mockReset()
   })
   it('should initialize properly', () => {
     expect(createViewModel.versions).toStrictEqual([])

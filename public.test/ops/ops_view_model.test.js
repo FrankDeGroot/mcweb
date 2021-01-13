@@ -25,6 +25,7 @@ describe('OpsViewModel', () => {
   let opsViewModel
   beforeEach(() => {
     opsViewModel = new OpsViewModel(handlers, changeScheduler)
+    changeScheduler.schedule.mockReset()
   })
   it('should initialize properly', () => {
     expect(opsViewModel.ops).toStrictEqual([])

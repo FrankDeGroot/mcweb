@@ -14,6 +14,7 @@ describe('BusyViewModel', () => {
   let busyViewModel
   beforeEach(() => {
     busyViewModel = new BusyViewModel(handlers, changeScheduler)
+    changeScheduler.schedule.mockReset()
   })
   it('should initialize properly', () => {
     expect(busyViewModel.busy).toBe(false)

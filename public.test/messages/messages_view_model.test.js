@@ -10,6 +10,7 @@ describe('MessagesViewModel', () => {
   let messagesViewModel
   beforeEach(() => {
     messagesViewModel = new MessagesViewModel(changeScheduler)
+    changeScheduler.schedule.mockReset()
   })
   it('starts with empty messages', () => {
     expect(messagesViewModel.messages.length).toBe(2)
