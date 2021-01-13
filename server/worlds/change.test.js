@@ -13,7 +13,7 @@ const {
 } = require('./paths')
 const {
   getCurrentVersion,
-  currentWorld
+  getCurrentWorld
 } = require('./read')
 const { restart } = require('../service/restart')
 
@@ -29,12 +29,12 @@ describe('change', () => {
     getCurrentWorldPath.mockReset()
     getVersionPath.mockReset()
     getCurrentVersion.mockReset()
-    currentWorld.mockReset()
+    getCurrentWorld.mockReset()
     restart.mockReset()
   })
   it('should change version and world', async () => {
     getCurrentVersion.mockResolvedValue('oldVersion')
-    currentWorld.mockResolvedValue('newVersion')
+    getCurrentWorld.mockResolvedValue('newVersion')
     getCurrentVersionPath.mockReturnValue('getCurrentVersionPath')
     getCurrentWorldPath.mockReturnValue('getCurrentWorldPath')
     restart.mockImplementation((reason, notify, reconfigure) => reconfigure())
@@ -53,7 +53,7 @@ describe('change', () => {
     const WORLD = 'World'
 
     getCurrentVersion.mockResolvedValue(VERSION)
-    currentWorld.mockResolvedValue(WORLD)
+    getCurrentWorld.mockResolvedValue(WORLD)
 
     await change(VERSION, WORLD, notify)
 

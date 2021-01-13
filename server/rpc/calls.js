@@ -12,7 +12,7 @@ exports.current = async () => {
       return {
         [version]: {
           worlds: await get.worlds(version),
-          world: await get.currentWorld(version)
+          world: await get.getCurrentWorld(version)
         }
       }
     }))).reduce((acc, version) => {

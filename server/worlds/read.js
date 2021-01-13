@@ -11,7 +11,7 @@ const {
 } = require('./paths')
 
 exports.getCurrentVersion = async () => readCurrent(getCurrentVersionPath())
-exports.currentWorld = async version => readCurrent(getCurrentWorldPath(version))
+exports.getCurrentWorld = async version => readCurrent(getCurrentWorldPath(version))
 exports.versions = async () => directoryFilter(getServerPath(), isVersion)
 exports.worlds = async version => directoryFilter(getVersionPath(version), isWorld)
 

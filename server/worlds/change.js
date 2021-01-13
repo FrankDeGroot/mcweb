@@ -7,13 +7,13 @@ const {
 } = require('./paths')
 const {
   getCurrentVersion,
-  currentWorld
+  getCurrentWorld
 } = require('./read')
 const { restart } = require('../service/restart')
 
 exports.change = async (version, world, notify) => {
   const nowVersion = await getCurrentVersion()
-  const nowWorld = await currentWorld(version)
+  const nowWorld = await getCurrentWorld(version)
   if (version === nowVersion && world === nowWorld) {
     notify('Already current')
     return

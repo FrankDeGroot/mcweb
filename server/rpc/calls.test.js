@@ -42,7 +42,7 @@ describe('calls', () => {
     get.versions.mockReset()
     get.getCurrentVersion.mockReset()
     get.worlds.mockReset()
-    get.currentWorld.mockReset()
+    get.getCurrentWorld.mockReset()
     operators.mockReset()
   })
   describe('current', () => {
@@ -52,7 +52,7 @@ describe('calls', () => {
       get.worlds
         .mockResolvedValueOnce(worlds1)
         .mockResolvedValueOnce(worlds2)
-      get.currentWorld
+      get.getCurrentWorld
         .mockResolvedValueOnce(world1)
         .mockResolvedValueOnce(world2)
       operators.mockResolvedValue(players)
@@ -73,8 +73,8 @@ describe('calls', () => {
       expect(get.versions).toHaveBeenCalled()
       expect(get.worlds).toHaveBeenCalledWith(version)
       expect(get.worlds).toHaveBeenCalledWith('version 2')
-      expect(get.currentWorld).toHaveBeenCalledWith(version)
-      expect(get.currentWorld).toHaveBeenCalledWith('version 2')
+      expect(get.getCurrentWorld).toHaveBeenCalledWith(version)
+      expect(get.getCurrentWorld).toHaveBeenCalledWith('version 2')
       expect(get.getCurrentVersion).toHaveBeenCalled()
       expect(operators).toHaveBeenCalled()
     })
