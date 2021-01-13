@@ -4,7 +4,7 @@ const get = require('../worlds/read')
 const { change } = require('../worlds/change')
 const { update } = require('../download/update')
 const { create } = require('../worlds/create')
-const { operators } = require('../players/operators')
+const { getOperators } = require('../players/operators')
 
 exports.current = async () => {
   return {
@@ -19,7 +19,7 @@ exports.current = async () => {
       return { ...acc, ...version }
     }, {}),
     version: await get.getCurrentVersion(),
-    ops: await operators()
+    ops: await getOperators()
   }
 }
 

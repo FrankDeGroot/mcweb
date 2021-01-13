@@ -6,7 +6,7 @@ const { join } = require('path')
 const allowedFilename = join(getCommonPath(), 'whitelist.json')
 const operatorsFilename = join(getCommonPath(), 'ops.json')
 
-exports.operators = async () => {
+exports.getOperators = async () => {
   const operators = await readOptionalJson(operatorsFilename)
   const allowed = await readOptionalJson(allowedFilename)
   allowed.forEach(({ uuid, name }) => {

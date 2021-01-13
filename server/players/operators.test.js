@@ -4,9 +4,9 @@ jest.mock('fs')
 
 const { readFile, writeFile } = require('fs').promises
 
-const { operators, saveOperator } = require('./operators')
+const { getOperators, saveOperator } = require('./operators')
 
-describe('operators', () => {
+describe('getOperators', () => {
   beforeEach(() => {
     readFile.mockReset()
     writeFile.mockReset()
@@ -30,7 +30,7 @@ describe('operators', () => {
       uuid: '2',
       name: 'player 2'
     }]))
-    expect(await operators()).toStrictEqual([{
+    expect(await getOperators()).toStrictEqual([{
       uuid: '1',
       name: 'player 1',
       level: 0,
@@ -65,7 +65,7 @@ describe('operators', () => {
       uuid: '1',
       name: 'player 1'
     }]))
-    expect(await operators()).toStrictEqual([{
+    expect(await getOperators()).toStrictEqual([{
       uuid: '1',
       name: 'player 1',
       level: 4,
@@ -82,7 +82,7 @@ describe('operators', () => {
     const fileNotFoundError = new Error('file not found')
     fileNotFoundError.code = 'ENOENT'
     readFile.mockRejectedValueOnce(fileNotFoundError)
-    expect(await operators()).toStrictEqual([{
+    expect(await getOperators()).toStrictEqual([{
       uuid: '1',
       name: 'player 1',
       level: 1,

@@ -10,7 +10,7 @@ const get = require('../worlds/read')
 const { change } = require('../worlds/change')
 const { update } = require('../download/update')
 const { create } = require('../worlds/create')
-const { operators } = require('../players/operators')
+const { getOperators } = require('../players/operators')
 
 const calls = require('./calls')
 
@@ -43,7 +43,7 @@ describe('calls', () => {
     get.getCurrentVersion.mockReset()
     get.getWorlds.mockReset()
     get.getCurrentWorld.mockReset()
-    operators.mockReset()
+    getOperators.mockReset()
   })
   describe('current', () => {
     it('should return versions, current version, worlds and current world for version', async () => {
@@ -55,7 +55,7 @@ describe('calls', () => {
       get.getCurrentWorld
         .mockResolvedValueOnce(world1)
         .mockResolvedValueOnce(world2)
-      operators.mockResolvedValue(players)
+      getOperators.mockResolvedValue(players)
       await expect(calls.current()).resolves.toEqual({
         versions: {
           'version 1': {
@@ -76,7 +76,7 @@ describe('calls', () => {
       expect(get.getCurrentWorld).toHaveBeenCalledWith(version)
       expect(get.getCurrentWorld).toHaveBeenCalledWith('version 2')
       expect(get.getCurrentVersion).toHaveBeenCalled()
-      expect(operators).toHaveBeenCalled()
+      expect(getOperators).toHaveBeenCalled()
     })
   })
   describe('change', () => {
