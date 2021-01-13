@@ -41,7 +41,7 @@ describe('calls', () => {
   beforeEach(() => {
     get.getVersions.mockReset()
     get.getCurrentVersion.mockReset()
-    get.worlds.mockReset()
+    get.getWorlds.mockReset()
     get.getCurrentWorld.mockReset()
     operators.mockReset()
   })
@@ -49,7 +49,7 @@ describe('calls', () => {
     it('should return versions, current version, worlds and current world for version', async () => {
       get.getVersions.mockResolvedValue(versions)
       get.getCurrentVersion.mockResolvedValue(version)
-      get.worlds
+      get.getWorlds
         .mockResolvedValueOnce(worlds1)
         .mockResolvedValueOnce(worlds2)
       get.getCurrentWorld
@@ -71,8 +71,8 @@ describe('calls', () => {
         ops: players
       })
       expect(get.getVersions).toHaveBeenCalled()
-      expect(get.worlds).toHaveBeenCalledWith(version)
-      expect(get.worlds).toHaveBeenCalledWith('version 2')
+      expect(get.getWorlds).toHaveBeenCalledWith(version)
+      expect(get.getWorlds).toHaveBeenCalledWith('version 2')
       expect(get.getCurrentWorld).toHaveBeenCalledWith(version)
       expect(get.getCurrentWorld).toHaveBeenCalledWith('version 2')
       expect(get.getCurrentVersion).toHaveBeenCalled()

@@ -3,7 +3,7 @@
 jest.mock('fs')
 
 const { access, lstat, readdir, readlink } = require('fs').promises
-const { getCurrentVersion, getCurrentWorld, getVersions, worlds } = require('./read')
+const { getCurrentVersion, getCurrentWorld, getVersions, getWorlds } = require('./read')
 
 const CURRENT = 'current'
 
@@ -83,7 +83,7 @@ describe('getVersions', () => {
   })
 })
 
-describe('worlds', () => {
+describe('getWorlds', () => {
   beforeEach(() => {
     access.mockReset()
     lstat.mockReset()
@@ -92,7 +92,7 @@ describe('worlds', () => {
   it('throws on unknown path', async () => {
     readdir.mockRejectedValue({ code: 'ENOENT' })
 
-    await expect(() => worlds('version')).rejects.toStrictEqual(new Error('Unknown path \'../test/server/version\''))
+    await expect(() => getWorlds('version')).rejects.toStrictEqual(new Error('Unknown path \'../test/server/version\''))
   })
   it('reads worlds', async () => {
     access
@@ -114,7 +114,7 @@ describe('worlds', () => {
       })
     readdir.mockResolvedValue(['world1', 'notWorld', 'world2', 'notDirectory'])
 
-    expect(await worlds('version')).toStrictEqual(['world1', 'world2'])
+    expect(await getWorlds('version')).toStrictEqual(['world1', 'world2'])
 
     expect(access.mock.calls[0][0]).toBe('../test/server/version/world1/level.dat')
     expect(access.mock.calls[1][0]).toBe('../test/server/version/notWorld/level.dat')

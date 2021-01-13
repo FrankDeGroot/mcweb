@@ -13,7 +13,7 @@ const {
 exports.getCurrentVersion = async () => readCurrent(getCurrentVersionPath())
 exports.getCurrentWorld = async version => readCurrent(getCurrentWorldPath(version))
 exports.getVersions = async () => directoryFilter(getServerPath(), isVersion)
-exports.worlds = async version => directoryFilter(getVersionPath(version), isWorld)
+exports.getWorlds = async version => directoryFilter(getVersionPath(version), isWorld)
 
 async function directoryFilter (path, filter) {
   try {

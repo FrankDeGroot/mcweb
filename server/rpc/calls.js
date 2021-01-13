@@ -11,7 +11,7 @@ exports.current = async () => {
     versions: (await Promise.all((await get.getVersions()).map(async version => {
       return {
         [version]: {
-          worlds: await get.worlds(version),
+          worlds: await get.getWorlds(version),
           world: await get.getCurrentWorld(version)
         }
       }
