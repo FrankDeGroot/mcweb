@@ -8,7 +8,7 @@ jest.mock('./update_steps')
 
 const { rename } = require('fs').promises
 const { getLatest } = require('./get_latest')
-const { currentVersion } = require('../worlds/read')
+const { getCurrentVersion } = require('../worlds/read')
 const { restart } = require('../service/restart')
 const {
   pathCurrentServer,
@@ -30,7 +30,7 @@ describe('update', () => {
   beforeEach(() => {
     rename.mockReset()
     getLatest.mockReset().mockResolvedValue(serverInfo)
-    currentVersion.mockReset().mockResolvedValue('version')
+    getCurrentVersion.mockReset().mockResolvedValue('version')
     restart.mockReset()
     pathCurrentServer.mockReset().mockReturnValue(pathCurrent)
     currentIsLatest.mockReset()

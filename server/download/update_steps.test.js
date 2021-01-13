@@ -11,7 +11,7 @@ jest.mock('./pipe')
 const { createReadStream, createWriteStream, promises } = require('fs')
 const { unlink } = promises
 const { getVersionPath } = require('../worlds/paths')
-const { currentVersion } = require('../worlds/read')
+const { getCurrentVersion } = require('../worlds/read')
 const { restart } = require('../service/restart')
 const { getStream } = require('./get_stream')
 const { getSha1 } = require('./get_sha1')
@@ -36,7 +36,7 @@ const writtenStream = {}
 describe('update steps', () => {
   beforeEach(() => {
     getVersionPath.mockReset().mockReturnValue('versionPath')
-    currentVersion.mockReset().mockResolvedValue('version')
+    getCurrentVersion.mockReset().mockResolvedValue('version')
     restart.mockReset()
     getSha1.mockReset().mockResolvedValue('sha1')
     createReadStream.mockReset().mockReturnValue(readStream)

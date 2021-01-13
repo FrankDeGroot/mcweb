@@ -18,7 +18,7 @@ exports.current = async () => {
     }))).reduce((acc, version) => {
       return { ...acc, ...version }
     }, {}),
-    version: await get.currentVersion(),
+    version: await get.getCurrentVersion(),
     ops: await operators()
   }
 }

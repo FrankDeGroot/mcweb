@@ -3,22 +3,22 @@
 jest.mock('fs')
 
 const { access, lstat, readdir, readlink } = require('fs').promises
-const { currentVersion, currentWorld, versions, worlds } = require('./read')
+const { getCurrentVersion, currentWorld, versions, worlds } = require('./read')
 
 const CURRENT = 'current'
 
-describe('currentVersion', () => {
+describe('getCurrentVersion', () => {
   beforeEach(() => {
     readlink.mockReset()
   })
   it('reads current', async () => {
     readlink.mockResolvedValue(CURRENT)
-    expect(await currentVersion()).toBe(CURRENT)
+    expect(await getCurrentVersion()).toBe(CURRENT)
     expect(readlink.mock.calls[0][0]).toBe('../test/server/current')
   })
   it('throws notFound if path does not exist', async () => {
     readlink.mockRejectedValue({ code: 'ENOENT' })
-    await expect(currentVersion).rejects.toEqual(new Error('Unknown path \'../test/server/current\''))
+    await expect(getCurrentVersion).rejects.toEqual(new Error('Unknown path \'../test/server/current\''))
   })
 })
 

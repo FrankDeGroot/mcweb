@@ -4,7 +4,7 @@ const { createReadStream, createWriteStream, promises } = require('fs')
 const { unlink } = promises
 const { join } = require('path')
 const { getVersionPath } = require('../worlds/paths')
-const { currentVersion } = require('../worlds/read')
+const { getCurrentVersion } = require('../worlds/read')
 const { restart } = require('../service/restart')
 const { getStream } = require('./get_stream')
 const { getSha1 } = require('./get_sha1')
@@ -29,7 +29,7 @@ exports.downloadLatest = async (version, serverInfo) => {
 }
 
 exports.restartIfNeeded = async (version, latest, notify, reconfigure) => {
-  if (version === await currentVersion()) {
+  if (version === await getCurrentVersion()) {
     restart(`Upgrading to ${latest}`, notify, reconfigure)
   } else {
     await reconfigure()
