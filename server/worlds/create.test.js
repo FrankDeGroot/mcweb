@@ -7,7 +7,7 @@ jest.mock('../service/restart')
 
 const { mkdir, symlink, unlink } = require('fs').promises
 const { readServerProperties, writeServerProperties } = require('./serverproperties.js')
-const { getCurrentWorldPath, worldPath } = require('./paths')
+const { getCurrentWorldPath, getWorldPath } = require('./paths')
 const { restart } = require('../service/restart')
 
 const { create } = require('./create')
@@ -18,7 +18,7 @@ describe('create', () => {
   it('should set seed in server properties, create the world directory and set current world while restarting the server', async () => {
     readServerProperties.mockReturnValue({ property: 'value', 'level-seed': 'old value' })
     getCurrentWorldPath.mockReturnValue('getCurrentWorldPath')
-    worldPath.mockReturnValue('worldPath')
+    getWorldPath.mockReturnValue('worldPath')
     restart.mockImplementation(async (reason, notify, reconfigure) => {
       await reconfigure()
       expect(unlink).toHaveBeenCalledWith('getCurrentWorldPath')

@@ -5,7 +5,7 @@ const {
   getCurrentWorldPath,
   getServerPath,
   getVersionPath,
-  worldPath
+  getWorldPath
 } = require('./paths')
 
 test('getCurrentVersionPath', () => {
@@ -24,6 +24,6 @@ test('getVersionPath', () => {
   expect(getVersionPath('someVersion')).toBe('../test/server/someVersion')
 })
 
-test('worldPath', () => {
-  expect(worldPath('someVersion', 'someWorld')).toBe('../test/server/someVersion/someWorld')
+test('getWorldPath', () => {
+  expect(getWorldPath('someVersion', 'someWorld')).toBe('../test/server/someVersion/someWorld')
 })
