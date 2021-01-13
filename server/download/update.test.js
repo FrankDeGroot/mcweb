@@ -12,7 +12,7 @@ const { getCurrentVersion } = require('../worlds/read')
 const { restart } = require('../service/restart')
 const {
   getPathCurrentServer,
-  currentIsLatest,
+  isCurrentLatest,
   downloadLatest,
   restartIfNeeded
 } = require('./update_steps')
@@ -33,23 +33,23 @@ describe('update', () => {
     getCurrentVersion.mockReset().mockResolvedValue('version')
     restart.mockReset()
     getPathCurrentServer.mockReset().mockReturnValue(pathCurrent)
-    currentIsLatest.mockReset()
+    isCurrentLatest.mockReset()
     downloadLatest.mockReset().mockResolvedValue(pathLatest)
     notify.mockReset()
   })
   it('should not update when already latest', async () => {
-    currentIsLatest.mockResolvedValue(true)
+    isCurrentLatest.mockResolvedValue(true)
 
     await update(version, notify)
 
     expect(getLatest).toHaveBeenCalledWith(version)
     expect(getPathCurrentServer).toHaveBeenCalledWith(version, serverInfo)
-    expect(currentIsLatest).toHaveBeenCalledWith(pathCurrent, serverInfo)
+    expect(isCurrentLatest).toHaveBeenCalledWith(pathCurrent, serverInfo)
     expect(notify).toHaveBeenCalledWith('Updating version')
     expect(notify).toHaveBeenCalledWith('Current version is already latest')
   })
   it('should update when not latest', async () => {
-    currentIsLatest.mockResolvedValue(false)
+    isCurrentLatest.mockResolvedValue(false)
     restartIfNeeded.mockImplementation(async (v, l, n, reconfigure) => {
       await reconfigure()
     })
@@ -58,7 +58,7 @@ describe('update', () => {
 
     expect(getLatest).toHaveBeenCalledWith(version)
     expect(getPathCurrentServer).toHaveBeenCalledWith(version, serverInfo)
-    expect(currentIsLatest).toHaveBeenCalledWith(pathCurrent, serverInfo)
+    expect(isCurrentLatest).toHaveBeenCalledWith(pathCurrent, serverInfo)
     expect(notify).toHaveBeenCalledWith('Updating version')
     expect(notify).toHaveBeenCalledWith('Downloading version latest')
     expect(restartIfNeeded).toHaveBeenCalledWith(version, 'latest', notify, expect.any(Function))

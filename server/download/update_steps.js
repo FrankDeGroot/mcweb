@@ -14,7 +14,7 @@ exports.getPathCurrentServer = (version, serverInfo) => {
   return join(getVersionPath(version), 'server.jar')
 }
 
-exports.currentIsLatest = async (pathCurrent, serverInfo) => {
+exports.isCurrentLatest = async (pathCurrent, serverInfo) => {
   return await hasSha1(pathCurrent, serverInfo.sha1)
 }
 

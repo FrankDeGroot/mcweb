@@ -19,7 +19,7 @@ const { pipe } = require('./pipe')
 
 const {
   getPathCurrentServer,
-  currentIsLatest,
+  isCurrentLatest,
   downloadLatest,
   restartIfNeeded
 } = require('./update_steps')
@@ -50,11 +50,11 @@ describe('update steps', () => {
       expect(getVersionPath).toHaveBeenCalledWith('release')
     })
   })
-  describe('currentIsLatest', () => {
+  describe('isCurrentLatest', () => {
     it('should return true when current and latest match SHA1', async () => {
       createReadStream.mockReturnValue(readStream)
 
-      expect(currentIsLatest('currentPath', serverInfo)).resolves.toEqual(true)
+      expect(isCurrentLatest('currentPath', serverInfo)).resolves.toEqual(true)
 
       expect(createReadStream).toHaveBeenCalledWith('currentPath')
       expect(getSha1).toHaveBeenCalledWith(readStream)
@@ -62,7 +62,7 @@ describe('update steps', () => {
     it('should return false when current SHA1 does not match latest', async () => {
       getSha1.mockResolvedValue('otherSha1')
 
-      expect(currentIsLatest('currentPath', serverInfo)).resolves.toEqual(false)
+      expect(isCurrentLatest('currentPath', serverInfo)).resolves.toEqual(false)
 
       expect(createReadStream).toHaveBeenCalledWith('currentPath')
       expect(getSha1).toHaveBeenCalledWith(readStream)
