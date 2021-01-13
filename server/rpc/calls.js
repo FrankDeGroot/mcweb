@@ -1,6 +1,11 @@
 'use strict'
 
-const get = require('../worlds/read')
+const {
+  getCurrentVersion,
+  getCurrentWorld,
+  getVersions,
+  getWorlds
+} = require('../worlds/read')
 const { change } = require('../worlds/change')
 const { update } = require('../download/update')
 const { create } = require('../worlds/create')
@@ -8,17 +13,17 @@ const { getOperators } = require('../players/operators')
 
 exports.current = async () => {
   return {
-    versions: (await Promise.all((await get.getVersions()).map(async version => {
+    versions: (await Promise.all((await getVersions()).map(async version => {
       return {
         [version]: {
-          worlds: await get.getWorlds(version),
-          world: await get.getCurrentWorld(version)
+          worlds: await getWorlds(version),
+          world: await getCurrentWorld(version)
         }
       }
     }))).reduce((acc, version) => {
       return { ...acc, ...version }
     }, {}),
-    version: await get.getCurrentVersion(),
+    version: await getCurrentVersion(),
     ops: await getOperators()
   }
 }

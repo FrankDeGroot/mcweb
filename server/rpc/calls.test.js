@@ -6,7 +6,12 @@ jest.mock('../download/update')
 jest.mock('../worlds/create')
 jest.mock('../players/operators')
 
-const get = require('../worlds/read')
+const {
+  getCurrentVersion,
+  getCurrentWorld,
+  getVersions,
+  getWorlds
+} = require('../worlds/read')
 const { change } = require('../worlds/change')
 const { update } = require('../download/update')
 const { create } = require('../worlds/create')
@@ -39,20 +44,20 @@ describe('calls', () => {
   }]
 
   beforeEach(() => {
-    get.getVersions.mockReset()
-    get.getCurrentVersion.mockReset()
-    get.getWorlds.mockReset()
-    get.getCurrentWorld.mockReset()
+    getVersions.mockReset()
+    getCurrentVersion.mockReset()
+    getWorlds.mockReset()
+    getCurrentWorld.mockReset()
     getOperators.mockReset()
   })
   describe('current', () => {
     it('should return versions, current version, worlds and current world for version', async () => {
-      get.getVersions.mockResolvedValue(versions)
-      get.getCurrentVersion.mockResolvedValue(version)
-      get.getWorlds
+      getVersions.mockResolvedValue(versions)
+      getCurrentVersion.mockResolvedValue(version)
+      getWorlds
         .mockResolvedValueOnce(worlds1)
         .mockResolvedValueOnce(worlds2)
-      get.getCurrentWorld
+      getCurrentWorld
         .mockResolvedValueOnce(world1)
         .mockResolvedValueOnce(world2)
       getOperators.mockResolvedValue(players)
@@ -70,12 +75,12 @@ describe('calls', () => {
         version,
         ops: players
       })
-      expect(get.getVersions).toHaveBeenCalled()
-      expect(get.getWorlds).toHaveBeenCalledWith(version)
-      expect(get.getWorlds).toHaveBeenCalledWith('version 2')
-      expect(get.getCurrentWorld).toHaveBeenCalledWith(version)
-      expect(get.getCurrentWorld).toHaveBeenCalledWith('version 2')
-      expect(get.getCurrentVersion).toHaveBeenCalled()
+      expect(getVersions).toHaveBeenCalled()
+      expect(getWorlds).toHaveBeenCalledWith(version)
+      expect(getWorlds).toHaveBeenCalledWith('version 2')
+      expect(getCurrentWorld).toHaveBeenCalledWith(version)
+      expect(getCurrentWorld).toHaveBeenCalledWith('version 2')
+      expect(getCurrentVersion).toHaveBeenCalled()
       expect(getOperators).toHaveBeenCalled()
     })
   })

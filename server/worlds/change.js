@@ -12,9 +12,9 @@ const {
 const { restart } = require('../service/restart')
 
 exports.change = async (version, world, notify) => {
-  const nowVersion = await getCurrentVersion()
-  const nowWorld = await getCurrentWorld(version)
-  if (version === nowVersion && world === nowWorld) {
+  const currentVersion = await getCurrentVersion()
+  const currentWorld = await getCurrentWorld(version)
+  if (version === currentVersion && world === currentWorld) {
     notify('Already current')
     return
   }
