@@ -3,7 +3,7 @@
 const { rename } = require('fs').promises
 const { getLatest } = require('./get_latest')
 const {
-  pathCurrentServer,
+  getPathCurrentServer,
   currentIsLatest,
   downloadLatest,
   restartIfNeeded
@@ -12,7 +12,7 @@ const {
 exports.update = async (version, notify) => {
   notify(`Updating ${version}`)
   const serverInfo = await getLatest(version)
-  const pathCurrent = pathCurrentServer(version, serverInfo)
+  const pathCurrent = getPathCurrentServer(version, serverInfo)
   if (await currentIsLatest(pathCurrent, serverInfo)) {
     notify(`Current ${version} is already ${serverInfo.latest}`)
     return

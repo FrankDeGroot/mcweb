@@ -11,7 +11,7 @@ const { getLatest } = require('./get_latest')
 const { getCurrentVersion } = require('../worlds/read')
 const { restart } = require('../service/restart')
 const {
-  pathCurrentServer,
+  getPathCurrentServer,
   currentIsLatest,
   downloadLatest,
   restartIfNeeded
@@ -32,7 +32,7 @@ describe('update', () => {
     getLatest.mockReset().mockResolvedValue(serverInfo)
     getCurrentVersion.mockReset().mockResolvedValue('version')
     restart.mockReset()
-    pathCurrentServer.mockReset().mockReturnValue(pathCurrent)
+    getPathCurrentServer.mockReset().mockReturnValue(pathCurrent)
     currentIsLatest.mockReset()
     downloadLatest.mockReset().mockResolvedValue(pathLatest)
     notify.mockReset()
@@ -43,7 +43,7 @@ describe('update', () => {
     await update(version, notify)
 
     expect(getLatest).toHaveBeenCalledWith(version)
-    expect(pathCurrentServer).toHaveBeenCalledWith(version, serverInfo)
+    expect(getPathCurrentServer).toHaveBeenCalledWith(version, serverInfo)
     expect(currentIsLatest).toHaveBeenCalledWith(pathCurrent, serverInfo)
     expect(notify).toHaveBeenCalledWith('Updating version')
     expect(notify).toHaveBeenCalledWith('Current version is already latest')
@@ -57,7 +57,7 @@ describe('update', () => {
     await update(version, notify)
 
     expect(getLatest).toHaveBeenCalledWith(version)
-    expect(pathCurrentServer).toHaveBeenCalledWith(version, serverInfo)
+    expect(getPathCurrentServer).toHaveBeenCalledWith(version, serverInfo)
     expect(currentIsLatest).toHaveBeenCalledWith(pathCurrent, serverInfo)
     expect(notify).toHaveBeenCalledWith('Updating version')
     expect(notify).toHaveBeenCalledWith('Downloading version latest')

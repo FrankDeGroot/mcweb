@@ -18,7 +18,7 @@ const { getSha1 } = require('./get_sha1')
 const { pipe } = require('./pipe')
 
 const {
-  pathCurrentServer,
+  getPathCurrentServer,
   currentIsLatest,
   downloadLatest,
   restartIfNeeded
@@ -43,9 +43,9 @@ describe('update steps', () => {
     getStream.mockReset().mockResolvedValue(gottenStream)
     createWriteStream.mockReset().mockReturnValue(writtenStream)
   })
-  describe('pathCurrentServer', () => {
+  describe('getPathCurrentServer', () => {
     it('should return path of current server jar', () => {
-      expect(pathCurrentServer('release', serverInfo)).toBe('versionPath/server.jar')
+      expect(getPathCurrentServer('release', serverInfo)).toBe('versionPath/server.jar')
 
       expect(getVersionPath).toHaveBeenCalledWith('release')
     })

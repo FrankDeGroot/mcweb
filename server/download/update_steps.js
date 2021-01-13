@@ -10,7 +10,7 @@ const { getStream } = require('./get_stream')
 const { getSha1 } = require('./get_sha1')
 const { pipe } = require('./pipe')
 
-exports.pathCurrentServer = (version, serverInfo) => {
+exports.getPathCurrentServer = (version, serverInfo) => {
   return join(getVersionPath(version), 'server.jar')
 }
 
