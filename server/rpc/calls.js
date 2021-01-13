@@ -4,7 +4,7 @@ const get = require('../worlds/read')
 const { change } = require('../worlds/change')
 const { update } = require('../download/update')
 const { create } = require('../worlds/create')
-const { operators } = require('../players/ops')
+const { operators } = require('../players/operators')
 
 exports.current = async () => {
   return {

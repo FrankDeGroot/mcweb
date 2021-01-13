@@ -4,7 +4,7 @@ jest.mock('fs')
 
 const { readFile, writeFile } = require('fs').promises
 
-const { operators, saveOperator } = require('./ops')
+const { operators, saveOperator } = require('./operators')
 
 describe('operators', () => {
   beforeEach(() => {

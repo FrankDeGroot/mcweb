@@ -4,13 +4,13 @@ jest.mock('../worlds/read')
 jest.mock('../worlds/change')
 jest.mock('../download/update')
 jest.mock('../worlds/create')
-jest.mock('../players/ops')
+jest.mock('../players/operators')
 
 const get = require('../worlds/read')
 const { change } = require('../worlds/change')
 const { update } = require('../download/update')
 const { create } = require('../worlds/create')
-const { operators } = require('../players/ops')
+const { operators } = require('../players/operators')
 
 const calls = require('./calls')
 
