@@ -3,7 +3,7 @@
 jest.mock('fs')
 
 const { access, lstat, readdir, readlink } = require('fs').promises
-const { getCurrentVersion, getCurrentWorld, versions, worlds } = require('./read')
+const { getCurrentVersion, getCurrentWorld, getVersions, worlds } = require('./read')
 
 const CURRENT = 'current'
 
@@ -37,7 +37,7 @@ describe('getCurrentWorld', () => {
   })
 })
 
-describe('versions', () => {
+describe('getVersions', () => {
   beforeEach(() => {
     access.mockReset()
     lstat.mockReset()
@@ -46,7 +46,7 @@ describe('versions', () => {
   it('throws on unknown path', async () => {
     readdir.mockRejectedValue({ code: 'ENOENT' })
 
-    await expect(versions).rejects.toStrictEqual(new Error('Unknown path \'../test/server\''))
+    await expect(getVersions).rejects.toStrictEqual(new Error('Unknown path \'../test/server\''))
   })
   it('reads versions', async () => {
     access
@@ -68,7 +68,7 @@ describe('versions', () => {
       })
     readdir.mockResolvedValue(['version1', 'notVersion', 'version2', 'notDirectory'])
 
-    expect(await versions()).toStrictEqual(['version1', 'version2'])
+    expect(await getVersions()).toStrictEqual(['version1', 'version2'])
 
     expect(access.mock.calls[0][0]).toBe('../test/server/version1/server.jar')
     expect(access.mock.calls[1][0]).toBe('../test/server/notVersion/server.jar')

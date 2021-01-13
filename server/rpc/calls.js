@@ -8,7 +8,7 @@ const { operators } = require('../players/ops')
 
 exports.current = async () => {
   return {
-    versions: (await Promise.all((await get.versions()).map(async version => {
+    versions: (await Promise.all((await get.getVersions()).map(async version => {
       return {
         [version]: {
           worlds: await get.worlds(version),
