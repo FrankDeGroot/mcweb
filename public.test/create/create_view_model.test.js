@@ -10,25 +10,26 @@ const changeScheduler = {
   schedule: jest.fn()
 }
 
+const current = {
+  versions: {
+    'version 1': {},
+    'version 2': {}
+  },
+  version: 'version 1'
+}
+
 describe('CreateViewModel', () => {
   let createViewModel
   beforeEach(() => {
     createViewModel = new CreateViewModel(handlers, changeScheduler)
+    handlers.onCreateWorld.mockReset()
     changeScheduler.schedule.mockReset()
   })
   it('should initialize properly', () => {
     expect(createViewModel.versions).toStrictEqual([])
   })
   it('should load version and world', () => {
-    createViewModel.setCurrent({
-      versions: {
-        'version 1': {
-        },
-        'version 2': {
-        }
-      },
-      version: 'version 1'
-    })
+    createViewModel.setCurrent(current)
     expect(createViewModel.versions).toStrictEqual([{
       label: 'version 1 (current)',
       selected: true,
@@ -39,6 +40,29 @@ describe('CreateViewModel', () => {
       value: 'version 2'
     }])
     expect(changeScheduler.schedule).toHaveBeenCalled()
+  })
+  it('should retain selected version when reloading', () => {
+    createViewModel.setCurrent(current)
+    createViewModel.selectVersion('version 2')
+    createViewModel.newWorldName = 'b'
+    createViewModel.seed = 'c'
+    createViewModel.setCurrent(current)
+    createViewModel.createWorld()
+    expect(handlers.onCreateWorld).toHaveBeenCalledWith('version 2', 'b', 'c')
+  })
+  it('should reset selected version when no longer exists after reloading', () => {
+    createViewModel.setCurrent(current)
+    createViewModel.selectVersion('version 2')
+    createViewModel.newWorldName = 'b'
+    createViewModel.seed = 'c'
+    createViewModel.setCurrent({
+      versions: {
+        'version 1': {}
+      },
+      version: 'version 1'
+    })
+    createViewModel.createWorld()
+    expect(handlers.onCreateWorld).toHaveBeenCalledWith('version 1', 'b', 'c')
   })
   it('should create world', () => {
     createViewModel.selectVersion('version 1')

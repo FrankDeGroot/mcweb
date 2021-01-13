@@ -14,7 +14,7 @@ export function CreateViewModel (handlers, changeScheduler) {
 
   Object.defineProperties(this, {
     versions: {
-      get: () => Object.entries(versionsAndWorlds.versions).map(([version]) => {
+      get: () => Object.keys(versionsAndWorlds.versions).map(version => {
         return {
           label: version + (version === versionsAndWorlds.version ? ' (current)' : ''),
           selected: version === selectedVersion,
@@ -29,7 +29,10 @@ export function CreateViewModel (handlers, changeScheduler) {
 
   this.setCurrent = current => {
     versionsAndWorlds = current
-    selectedVersion = versionsAndWorlds.version
+    if (!selectedVersion ||
+        !versionsAndWorlds.versions[selectedVersion]) {
+      selectedVersion = versionsAndWorlds.version
+    }
     changeScheduler.schedule()
   }
 
