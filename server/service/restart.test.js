@@ -32,9 +32,7 @@ describe('restart', () => {
   })
   it('should skip when already restarting', async () => {
     say.mockImplementationOnce(async () => {
-      await expect(() =>
-        restart('some reason 2', notify, reconfigure)
-          .rejects.toStrictEqual(new Error('Already restarting')))
+      await expect(restart('some reason 2', notify, reconfigure)).rejects.toStrictEqual(new Error('Already restarting'))
     })
 
     await restart('some reason 1', notify, reconfigure)
@@ -49,7 +47,7 @@ describe('restart', () => {
       throw ERR
     })
 
-    await expect(() => restart('some reason 1', notify, reconfigure)).rejects.toBe(ERR)
+    await expect(restart('some reason 1', notify, reconfigure)).rejects.toBe(ERR)
     await restart('some reason 2', notify, reconfigure)
   })
 })
