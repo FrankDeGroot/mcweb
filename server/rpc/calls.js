@@ -28,17 +28,14 @@ exports.current = async () => {
   }
 }
 
-exports.change = (notify, changeParameters) => {
-  const { version, world } = changeParameters
+exports.change = (notify, { version, world }) => {
   return change(version, world, notify)
 }
 
-exports.update = (notify, updateParameters) => {
-  const { version } = updateParameters
+exports.update = (notify, { version }) => {
   return update(version, notify)
 }
 
-exports.create = (notify, createParameters) => {
-  const { version, world, seed } = createParameters
+exports.create = (notify, { version, world, seed }) => {
   return create(version, world, seed, notify)
 }
