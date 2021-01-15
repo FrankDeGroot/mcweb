@@ -5,6 +5,7 @@ jest.mock('../worlds/change')
 jest.mock('../download/update')
 jest.mock('../worlds/create')
 jest.mock('../players/operators')
+jest.mock('../utils/busy')
 
 const {
   getCurrentVersion,
@@ -16,6 +17,7 @@ const { change } = require('../worlds/change')
 const { update } = require('../download/update')
 const { create } = require('../worlds/create')
 const { getOperators } = require('../players/operators')
+const { doIfNotBusy } = require('../utils/busy')
 
 const calls = require('./calls')
 
@@ -49,6 +51,7 @@ describe('calls', () => {
     getWorlds.mockReset()
     getCurrentWorld.mockReset()
     getOperators.mockReset()
+    doIfNotBusy.mockReset().mockImplementation(action => action())
   })
   describe('current', () => {
     it('should return versions, current version, worlds and current world for version', async () => {
@@ -89,6 +92,7 @@ describe('calls', () => {
       calls.change(notify, { version, world })
 
       expect(change).toHaveBeenCalledWith(version, world, notify)
+      expect(doIfNotBusy).toHaveBeenCalled()
     })
   })
   describe('update', () => {
@@ -96,6 +100,7 @@ describe('calls', () => {
       calls.update(notify, { version })
 
       expect(update).toHaveBeenCalledWith(version, notify)
+      expect(doIfNotBusy).toHaveBeenCalled()
     })
   })
   describe('create', () => {
@@ -103,6 +108,7 @@ describe('calls', () => {
       calls.create(notify, { version, world, seed })
 
       expect(create).toHaveBeenCalledWith(version, world, seed, notify)
+      expect(doIfNotBusy).toHaveBeenCalled()
     })
   })
 })
