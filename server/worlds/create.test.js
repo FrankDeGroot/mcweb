@@ -25,7 +25,7 @@ describe('create', () => {
       expect(symlink).toHaveBeenCalledWith('world name', 'getCurrentWorldPath')
     })
 
-    await create('version name', 'world name', 'new value', notify)
+    await create({ version: 'version name', world: 'world name', seed: 'new value' }, notify)
 
     expect(writeServerProperties).toHaveBeenCalledWith({ property: 'value', 'level-seed': 'new value' })
     expect(mkdir).toHaveBeenCalledWith('worldPath')

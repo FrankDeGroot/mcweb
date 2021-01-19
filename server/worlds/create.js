@@ -5,7 +5,7 @@ const { readServerProperties, writeServerProperties } = require('./serverpropert
 const { getCurrentWorldPath, getWorldPath } = require('./paths')
 const { restart } = require('../service/restart')
 
-exports.create = async (version, world, seed, notify) => {
+exports.create = async ({ version, world, seed }, notify) => {
   const serverProperties = await readServerProperties()
   serverProperties['level-seed'] = seed
   await writeServerProperties(serverProperties)

@@ -9,7 +9,7 @@ const {
   restartIfNeeded
 } = require('./update_steps')
 
-exports.update = async (version, notify) => {
+exports.update = async ({ version }, notify) => {
   notify(`Updating ${version}`)
   const serverInfo = await getLatest(version)
   const pathCurrent = getPathCurrentServer(version, serverInfo)

@@ -39,7 +39,7 @@ describe('change', () => {
     getCurrentWorldPath.mockReturnValue('getCurrentWorldPath')
     restart.mockImplementation((reason, notify, reconfigure) => reconfigure())
 
-    await change('newVersion', 'newWorld', notify)
+    await change({ version: 'newVersion', world: 'newWorld' }, notify)
 
     expect(unlink).toHaveBeenCalledWith('getCurrentVersionPath')
     expect(symlink).toHaveBeenCalledWith('newVersion', 'getCurrentVersionPath')
@@ -55,7 +55,7 @@ describe('change', () => {
     getCurrentVersion.mockResolvedValue(VERSION)
     getCurrentWorld.mockResolvedValue(WORLD)
 
-    await change(VERSION, WORLD, notify)
+    await change({ version: VERSION, world: WORLD }, notify)
 
     expect(notify).toHaveBeenCalledWith('Already current')
   })

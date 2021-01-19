@@ -40,25 +40,8 @@ test('server', () => {
   serverOnHandlers.connection(socket)
 
   expect(setup).toHaveBeenCalledWith(socket, server, current, {
-    change: expect.any(Function),
-    create: expect.any(Function),
-    update: expect.any(Function)
+    change,
+    create,
+    update
   })
-
-  /* eslint-disable no-unused-vars */
-  const [_socket, _server, _current, {
-    change: _change,
-    create: _create,
-    update: _update
-  }] = setup.mock.calls[0]
-  /* eslint-enable no-unused-vars */
-
-  _change({ version, world }, notify)
-  expect(change).toHaveBeenCalledWith(version, world, notify)
-
-  _create({ version, world, seed }, notify)
-  expect(create).toHaveBeenCalledWith(version, world, seed, notify)
-
-  _update({ version }, notify)
-  expect(update).toHaveBeenCalledWith(version, notify)
 })

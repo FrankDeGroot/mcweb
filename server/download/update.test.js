@@ -40,7 +40,7 @@ describe('update', () => {
   it('should not update when already latest', async () => {
     isCurrentLatest.mockResolvedValue(true)
 
-    await update(version, notify)
+    await update({ version }, notify)
 
     expect(getLatest).toHaveBeenCalledWith(version)
     expect(getPathCurrentServer).toHaveBeenCalledWith(version, serverInfo)
@@ -54,7 +54,7 @@ describe('update', () => {
       await reconfigure()
     })
 
-    await update(version, notify)
+    await update({ version }, notify)
 
     expect(getLatest).toHaveBeenCalledWith(version)
     expect(getPathCurrentServer).toHaveBeenCalledWith(version, serverInfo)

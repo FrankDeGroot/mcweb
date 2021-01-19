@@ -11,7 +11,7 @@ const {
 } = require('./read')
 const { restart } = require('../service/restart')
 
-exports.change = async (version, world, notify) => {
+exports.change = async ({ version, world }, notify) => {
   const currentVersion = await getCurrentVersion()
   const currentWorld = await getCurrentWorld(version)
   if (version === currentVersion && world === currentWorld) {

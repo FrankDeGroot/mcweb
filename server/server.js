@@ -16,13 +16,7 @@ const { create } = require('./worlds/create')
 
 const server = io(port)
 server.on('connection', socket => setup(socket, server, current, {
-  change: async ({ version, world }, notify) => {
-    await change(version, world, notify)
-  },
-  create: async ({ version, world, seed }, notify) => {
-    await create(version, world, seed, notify)
-  },
-  update: async ({ version }, notify) => {
-    await update(version, notify)
-  }
+  change,
+  create,
+  update
 }))
