@@ -9,11 +9,7 @@ import { OperatorsViewModel } from './operators/operators_view_model.js'
 
 export function connectedViewModel (changeScheduler) {
   const socket = io()
-  const busyViewModel = new BusyViewModel({
-    onReady: () => {
-      socket.emit('current')
-    }
-  }, changeScheduler)
+  const busyViewModel = new BusyViewModel(changeScheduler)
   const changeViewModel = new ChangeViewModel({
     onChangeVersionAndWorld: (version, world) => socket.emit('change', {
       version,
@@ -39,7 +35,7 @@ export function connectedViewModel (changeScheduler) {
       changeViewModel.setCurrent(current)
       createViewModel.setCurrent(current)
       operatorsViewModel.setCurrent(current)
-      busyViewModel.busy = current.busy
+      busyViewModel.setCurrent(current)
     })
   return {
     busyViewModel,

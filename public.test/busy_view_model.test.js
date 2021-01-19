@@ -2,10 +2,6 @@
 
 const { BusyViewModel } = require('../public/busy_view_model')
 
-const handlers = {
-  onReady: jest.fn()
-}
-
 const changeScheduler = {
   schedule: jest.fn()
 }
@@ -13,20 +9,15 @@ const changeScheduler = {
 describe('BusyViewModel', () => {
   let busyViewModel
   beforeEach(() => {
-    busyViewModel = new BusyViewModel(handlers, changeScheduler)
+    busyViewModel = new BusyViewModel(changeScheduler)
     changeScheduler.schedule.mockReset()
   })
   it('should initialize properly', () => {
     expect(busyViewModel.busy).toBe(false)
   })
   it('should set busy', () => {
-    busyViewModel.busy = true
-    expect(changeScheduler.schedule).toHaveBeenCalled()
-  })
-  it('should clear busy and raise onReady', () => {
-    busyViewModel.busy = true
-    busyViewModel.busy = false
-    expect(handlers.onReady).toHaveBeenCalled()
+    busyViewModel.setCurrent({ busy: true })
+    expect(busyViewModel.busy).toBe(true)
     expect(changeScheduler.schedule).toHaveBeenCalled()
   })
 })
