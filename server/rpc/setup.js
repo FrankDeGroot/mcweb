@@ -1,15 +1,32 @@
 'use strict'
 
-const { Replier } = require('./replier')
-const {
-  current,
-  change,
-  update,
-  create
-} = require('./calls')
+const { info, log } = require('../utils/log')
+const { doIfNotBusy } = require('../utils/busy')
 
-exports.setup = (socket, server) => new Replier(socket, server)
-  .replyOn('current', current)
-  .longReplyOn('change', 'changing', 'changed', change)
-  .longReplyOn('update', 'updating', 'updated', update)
-  .longReplyOn('create', 'creating', 'created', create)
+exports.setup = async (socket, server, current, actions) => {
+  function notify (message) {
+    info(message)
+    server.emit('message', message)
+  }
+
+  async function emitCurrent (emitter) {
+    try {
+      emitter.emit('current', await current())
+    } catch (error) {
+      log(error.code ? 'error' : 'info', error)
+      server.emit('throw', error.code ? 'An internal error occurred' : error.message)
+    }
+  }
+
+  Object.entries(actions).forEach(([name, action]) => {
+    socket.on(name, async (...args) => {
+      await doIfNotBusy(async () => {
+        await emitCurrent(server)
+        await action(...args, notify)
+      })
+      emitCurrent(server)
+    })
+  })
+
+  await emitCurrent(socket)
+}

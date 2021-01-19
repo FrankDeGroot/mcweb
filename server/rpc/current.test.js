@@ -1,9 +1,6 @@
 'use strict'
 
 jest.mock('../worlds/read')
-jest.mock('../worlds/change')
-jest.mock('../download/update')
-jest.mock('../worlds/create')
 jest.mock('../players/operators')
 jest.mock('../utils/busy')
 
@@ -13,13 +10,9 @@ const {
   getVersions,
   getWorlds
 } = require('../worlds/read')
-const { change } = require('../worlds/change')
-const { update } = require('../download/update')
-const { create } = require('../worlds/create')
 const { getOperators } = require('../players/operators')
-const { doIfNotBusy } = require('../utils/busy')
 
-const calls = require('./calls')
+const calls = require('./current')
 
 describe('calls', () => {
   const versions = [
@@ -35,11 +28,8 @@ describe('calls', () => {
     'world 3',
     'world 4'
   ]
-  const world = 'world'
   const world1 = 'world 1'
   const world2 = 'world 3'
-  const notify = jest.fn()
-  const seed = 'seed'
   const operators = [{
     uuid: '1',
     name: 'player 1'
@@ -51,7 +41,6 @@ describe('calls', () => {
     getWorlds.mockReset()
     getCurrentWorld.mockReset()
     getOperators.mockReset()
-    doIfNotBusy.mockReset().mockImplementation(action => action())
   })
   describe('current', () => {
     it('should return versions, current version, worlds and current world for version', async () => {
@@ -85,30 +74,6 @@ describe('calls', () => {
       expect(getCurrentWorld).toHaveBeenCalledWith('version 2')
       expect(getCurrentVersion).toHaveBeenCalled()
       expect(getOperators).toHaveBeenCalled()
-    })
-  })
-  describe('change', () => {
-    it('should extract parameters and call change', () => {
-      calls.change(notify, { version, world })
-
-      expect(change).toHaveBeenCalledWith(version, world, notify)
-      expect(doIfNotBusy).toHaveBeenCalled()
-    })
-  })
-  describe('update', () => {
-    it('should extract parameters and call update', () => {
-      calls.update(notify, { version })
-
-      expect(update).toHaveBeenCalledWith(version, notify)
-      expect(doIfNotBusy).toHaveBeenCalled()
-    })
-  })
-  describe('create', () => {
-    it('should extract parameters and call create', () => {
-      calls.create(notify, { version, world, seed })
-
-      expect(create).toHaveBeenCalledWith(version, world, seed, notify)
-      expect(doIfNotBusy).toHaveBeenCalled()
     })
   })
 })

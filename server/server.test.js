@@ -3,25 +3,34 @@
 jest.mock('socket.io')
 jest.mock('./utils/log')
 jest.mock('./rpc/setup')
+jest.mock('./rpc/current')
+jest.mock('./worlds/change')
+jest.mock('./download/update')
+jest.mock('./worlds/create')
 
 const io = require('socket.io')
 const { level } = require('./utils/log')
 const { setup } = require('./rpc/setup')
+const { current } = require('./rpc/current')
+const { change } = require('./worlds/change')
+const { update } = require('./download/update')
+const { create } = require('./worlds/create')
 
 const server = {
   on: jest.fn()
 }
-
-io.mockImplementation(() => server)
-
+const notify = jest.fn()
 const serverOnHandlers = {}
 server.on.mockImplementation((name, handler) => {
   serverOnHandlers[name] = handler
 })
-
 const socket = {}
+const version = 'version'
+const world = 'world'
+const seed = 'seed'
 
 test('server', () => {
+  io.mockImplementation(() => server)
   require('./server')
 
   expect(level).toHaveBeenCalledWith('trace')
@@ -30,5 +39,26 @@ test('server', () => {
 
   serverOnHandlers.connection(socket)
 
-  expect(setup).toHaveBeenCalledWith(socket, server)
+  expect(setup).toHaveBeenCalledWith(socket, server, current, {
+    change: expect.any(Function),
+    create: expect.any(Function),
+    update: expect.any(Function)
+  })
+
+  /* eslint-disable no-unused-vars */
+  const [_socket, _server, _current, {
+    change: _change,
+    create: _create,
+    update: _update
+  }] = setup.mock.calls[0]
+  /* eslint-enable no-unused-vars */
+
+  _change({ version, world }, notify)
+  expect(change).toHaveBeenCalledWith(version, world, notify)
+
+  _create({ version, world, seed }, notify)
+  expect(create).toHaveBeenCalledWith(version, world, seed, notify)
+
+  _update({ version }, notify)
+  expect(update).toHaveBeenCalledWith(version, notify)
 })

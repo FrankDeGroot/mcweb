@@ -35,30 +35,12 @@ export function connectedViewModel (changeScheduler) {
   socket
     .on('message', message => messagesViewModel.pushMessage(message))
     .on('throw', message => messagesViewModel.pushError(message))
-    .on('changing', () => {
-      busyViewModel.busy = true
-    })
-    .on('changed', () => {
-      busyViewModel.busy = false
-    })
-    .on('creating', () => {
-      busyViewModel.busy = true
-    })
-    .on('created', () => {
-      busyViewModel.busy = false
-    })
-    .on('updating', () => {
-      busyViewModel.busy = true
-    })
-    .on('updated', () => {
-      busyViewModel.busy = false
-    })
     .on('current', current => {
       changeViewModel.setCurrent(current)
       createViewModel.setCurrent(current)
       operatorsViewModel.setCurrent(current)
+      busyViewModel.busy = current.busy
     })
-    .emit('current')
   return {
     busyViewModel,
     changeViewModel,
