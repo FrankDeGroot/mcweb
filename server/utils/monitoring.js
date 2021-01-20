@@ -1,9 +1,8 @@
 'use strict'
 
-const { enableAppInsights } = require('../config/config')
 const { error } = require('../utils/log')
 
-exports.enableMonitoring = () => {
+exports.enableMonitoring = enableAppInsights => {
   if (enableAppInsights) {
     try {
       const key = require('../../.keys').applicationInsightsInstrumentationKey
