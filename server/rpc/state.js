@@ -9,7 +9,18 @@ const {
 const { getOperators } = require('../players/operators')
 const { isBusy } = require('../utils/busy')
 
-exports.current = async () => {
+exports.getCurrentState = () => getState(isBusy())
+
+exports.getChangedState = async busy => {
+  if (busy) {
+    return {
+      busy: true
+    }
+  }
+  return getState(false)
+}
+
+async function getState (busy) {
   const versions = await getVersions()
   const versionWorlds = await Promise.all(versions.map(async version => {
     return {
@@ -25,6 +36,6 @@ exports.current = async () => {
     }, {}),
     version: await getCurrentVersion(),
     operators: await getOperators(),
-    busy: isBusy()
+    busy
   }
 }

@@ -2,16 +2,17 @@
 
 const { info, log } = require('../utils/log')
 const { doIfNotBusy } = require('../utils/busy')
+const { getCurrentState: getFullState, getChangedState } = require('./state')
 
-exports.setup = async (socket, server, current, actions) => {
+exports.setup = async (socket, server, actions) => {
   function notify (message) {
     info(message)
     server.emit('message', message)
   }
 
-  async function emitCurrent (emitter) {
+  async function safeEmit (emitter, event, getState) {
     try {
-      emitter.emit('current', await current())
+      emitter.emit(event, await getState())
     } catch (error) {
       log(error.code ? 'error' : 'info', error)
       server.emit('throw', error.code ? 'An internal error occurred' : error.message)
@@ -21,12 +22,12 @@ exports.setup = async (socket, server, current, actions) => {
   Object.entries(actions).forEach(([name, action]) => {
     socket.on(name, async (...args) => {
       await doIfNotBusy(async () => {
-        await emitCurrent(server)
+        await safeEmit(server, 'changed', () => getChangedState(true))
         await action(...args, notify)
+        await safeEmit(server, 'changed', () => getChangedState(false))
       })
-      emitCurrent(server)
     })
   })
 
-  await emitCurrent(socket)
+  await safeEmit(socket, 'current', getFullState)
 }

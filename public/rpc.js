@@ -8,6 +8,7 @@ import { MessagesViewModel } from './messages/messages_view_model.js'
 import { OperatorsViewModel } from './operators/operators_view_model.js'
 
 export function connectedViewModel (changeScheduler) {
+  let state = {}
   const socket = io()
   const busyViewModel = new BusyViewModel(changeScheduler)
   const changeViewModel = new ChangeViewModel({
@@ -28,14 +29,22 @@ export function connectedViewModel (changeScheduler) {
   })
   const messagesViewModel = new MessagesViewModel(changeScheduler)
   const operatorsViewModel = new OperatorsViewModel({}, changeScheduler)
+  function setState () {
+    changeViewModel.setCurrent(state)
+    createViewModel.setCurrent(state)
+    operatorsViewModel.setCurrent(state)
+    busyViewModel.setCurrent(state)
+  }
   socket
     .on('message', message => messagesViewModel.pushMessage(message))
     .on('throw', message => messagesViewModel.pushError(message))
     .on('current', current => {
-      changeViewModel.setCurrent(current)
-      createViewModel.setCurrent(current)
-      operatorsViewModel.setCurrent(current)
-      busyViewModel.setCurrent(current)
+      state = current
+      setState()
+    })
+    .on('changed', changed => {
+      state = { ...state, ...changed }
+      setState()
     })
   return {
     busyViewModel,

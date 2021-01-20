@@ -4,7 +4,6 @@ jest.mock('socket.io')
 jest.mock('./utils/log')
 jest.mock('./utils/monitoring')
 jest.mock('./rpc/setup')
-jest.mock('./rpc/current')
 jest.mock('./worlds/change')
 jest.mock('./download/update')
 jest.mock('./worlds/create')
@@ -13,7 +12,6 @@ const { level } = require('./utils/log')
 const { enableMonitoring } = require('./utils/monitoring')
 const io = require('socket.io')
 const { setup } = require('./rpc/setup')
-const { current } = require('./rpc/current')
 const { change } = require('./worlds/change')
 const { update } = require('./download/update')
 const { create } = require('./worlds/create')
@@ -38,7 +36,7 @@ test('server', () => {
 
   serverOnHandlers.connection(socket)
 
-  expect(setup).toHaveBeenCalledWith(socket, server, current, {
+  expect(setup).toHaveBeenCalledWith(socket, server, {
     change,
     create,
     update
