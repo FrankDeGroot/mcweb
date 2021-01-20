@@ -19,15 +19,11 @@ const { create } = require('./worlds/create')
 const server = {
   on: jest.fn()
 }
-const notify = jest.fn()
 const serverOnHandlers = {}
 server.on.mockImplementation((name, handler) => {
   serverOnHandlers[name] = handler
 })
 const socket = {}
-const version = 'version'
-const world = 'world'
-const seed = 'seed'
 
 test('server', () => {
   io.mockImplementation(() => server)
