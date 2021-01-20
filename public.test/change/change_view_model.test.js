@@ -12,7 +12,7 @@ const changeScheduler = {
   schedule: jest.fn()
 }
 
-const versionsAndWorlds = {
+const state = {
   versions: {
     'version 1': {
       worlds: [
@@ -29,7 +29,8 @@ const versionsAndWorlds = {
       world: 'world 3'
     }
   },
-  version: 'version 1'
+  version: 'version 1',
+  busy: false
 }
 
 describe('ChangeViewModel', () => {
@@ -45,7 +46,7 @@ describe('ChangeViewModel', () => {
     expect(changeViewModel.versions).toStrictEqual([])
   })
   it('should load version and world', () => {
-    changeViewModel.setCurrent(versionsAndWorlds)
+    changeViewModel.setCurrent(state)
     expect(changeViewModel.versions).toStrictEqual([{
       label: 'version 1 (current)',
       options: [{
@@ -72,14 +73,14 @@ describe('ChangeViewModel', () => {
     expect(changeScheduler.schedule).toHaveBeenCalled()
   })
   it('should retain selected version and world when previously selected', () => {
-    changeViewModel.setCurrent(versionsAndWorlds)
+    changeViewModel.setCurrent(state)
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 2', world: 'world 4' }))
-    changeViewModel.setCurrent(versionsAndWorlds)
+    changeViewModel.setCurrent(state)
     changeViewModel.changeVersionAndWorld()
     expect(handlers.onChangeVersionAndWorld).toHaveBeenCalledWith('version 2', 'world 4')
   })
   it('should not retain selected version and world when previously selected are gone', () => {
-    changeViewModel.setCurrent(versionsAndWorlds)
+    changeViewModel.setCurrent(state)
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 2', world: 'world 4' }))
     changeViewModel.setCurrent({
       versions: {
@@ -97,7 +98,7 @@ describe('ChangeViewModel', () => {
     expect(handlers.onChangeVersionAndWorld).toHaveBeenCalledWith('version 1', 'world 1')
   })
   it('should not retain selected world when previously selected is gone', () => {
-    changeViewModel.setCurrent(versionsAndWorlds)
+    changeViewModel.setCurrent(state)
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 1', world: 'world 2' }))
     changeViewModel.setCurrent({
       versions: {
@@ -117,5 +118,13 @@ describe('ChangeViewModel', () => {
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 1', world: 'world 1' }))
     changeViewModel.changeVersionAndWorld()
     expect(handlers.onChangeVersionAndWorld).toHaveBeenCalledWith('version 1', 'world 1')
+  })
+  it('should disable select when busy', () => {
+    changeViewModel.setCurrent({ ...state, ...{ busy: true } })
+    expect(changeViewModel.versionAndWorldSelectDisabled).toBe(true)
+  })
+  it('should disable change button when busy', () => {
+    changeViewModel.setCurrent({ ...state, ...{ busy: true } })
+    expect(changeViewModel.changeButtonDisabled).toBe(true)
   })
 })

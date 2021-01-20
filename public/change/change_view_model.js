@@ -1,9 +1,10 @@
 'use strict'
 
 export function ChangeViewModel (handlers, changeScheduler) {
-  let versionsAndWorlds = {
+  let state = {
     versions: [],
-    version: null
+    version: null,
+    busy: false
   }
   let selectedVersion = null
   let selectedWorld = null
@@ -15,9 +16,9 @@ export function ChangeViewModel (handlers, changeScheduler) {
 
   Object.defineProperties(this, {
     versions: {
-      get: () => Object.entries(versionsAndWorlds.versions).map(([version, value]) => {
+      get: () => Object.entries(state.versions).map(([version, value]) => {
         return {
-          label: version + (version === versionsAndWorlds.version ? ' (current)' : ''),
+          label: version + (version === state.version ? ' (current)' : ''),
           options: value.worlds.map(world => {
             return {
               label: version + ' ' + world + (world === value.world ? ' (current)' : ''),
@@ -30,19 +31,25 @@ export function ChangeViewModel (handlers, changeScheduler) {
           })
         }
       })
+    },
+    versionAndWorldSelectDisabled: {
+      get: () => state.busy
+    },
+    changeButtonDisabled: {
+      get: () => state.busy
     }
   })
 
   this.setCurrent = current => {
-    versionsAndWorlds = current
+    state = current
     if (!selectedVersion ||
-        !versionsAndWorlds.versions[selectedVersion]) {
-      selectedVersion = versionsAndWorlds.version
+        !state.versions[selectedVersion]) {
+      selectedVersion = state.version
       selectedWorld = null
     }
     if (!selectedWorld ||
-        !versionsAndWorlds.versions[selectedVersion].worlds.includes(selectedWorld)) {
-      selectedWorld = versionsAndWorlds.versions[selectedVersion].world
+        !state.versions[selectedVersion].worlds.includes(selectedWorld)) {
+      selectedWorld = state.versions[selectedVersion].world
     }
     changeScheduler.schedule()
   }

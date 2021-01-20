@@ -19,7 +19,7 @@ const {
 } = connectedViewModel(changeScheduler)
 
 m.route(document.body, '/update', {
-  '/change': () => Pane(() => m(Changer, { busyViewModel, changeViewModel }), messagesViewModel),
+  '/change': () => Pane(() => m(Changer, { changeViewModel }), messagesViewModel),
   '/create': () => Pane(() => m(Creator, { busyViewModel, createViewModel }), messagesViewModel),
   '/update': () => Pane(() => m(Updater, { busyViewModel, updateViewModel }), messagesViewModel),
   '/operators': () => Pane(() => m(Operators, { busyViewModel, operatorsViewModel }), messagesViewModel)
