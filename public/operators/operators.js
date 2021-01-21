@@ -5,9 +5,9 @@ import { Radio } from '../radio.js'
 
 export function Operators () {
   return {
-    view: ({ attrs: { busyViewModel, operatorsViewModel } }) => [
+    view: ({ attrs: { operatorsViewModel } }) => [
       m('select', {
-        disabled: busyViewModel.busy,
+        disabled: operatorsViewModel.operatorSelectDisabled,
         onchange: e => operatorsViewModel.select(e.target.value)
       }, operatorsViewModel.operators.map(({ label, selected, value }) => m('option', {
         value,
@@ -15,7 +15,7 @@ export function Operators () {
       }, label))),
       m(Checkbox, {
         checked: operatorsViewModel.bypassesPlayerLimit,
-        disabled: false,
+        disabled: operatorsViewModel.bypassesPlayerLimitCheckboxDisabled,
         id: 'bypassesPlayerLimit',
         label: 'Bypasses Player Limit',
         onchange: value => {
@@ -24,6 +24,7 @@ export function Operators () {
       }),
       m(Radio, {
         checked: operatorsViewModel.level,
+        disabled: operatorsViewModel.levelRadioDisabled,
         label: 'Ops Level',
         name: 'level',
         onchange: value => {

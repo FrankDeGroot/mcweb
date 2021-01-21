@@ -10,7 +10,6 @@ import { connectedViewModel } from './rpc.js'
 
 const changeScheduler = new Scheduler(() => m.redraw())
 const {
-  busyViewModel,
   changeViewModel,
   createViewModel,
   updateViewModel,
@@ -22,5 +21,5 @@ m.route(document.body, '/update', {
   '/change': () => Pane(() => m(Changer, { changeViewModel }), messagesViewModel),
   '/create': () => Pane(() => m(Creator, { createViewModel }), messagesViewModel),
   '/update': () => Pane(() => m(Updater, { updateViewModel }), messagesViewModel),
-  '/operators': () => Pane(() => m(Operators, { busyViewModel, operatorsViewModel }), messagesViewModel)
+  '/operators': () => Pane(() => m(Operators, { operatorsViewModel }), messagesViewModel)
 })

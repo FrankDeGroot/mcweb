@@ -112,4 +112,16 @@ describe('OperatorsViewModel', () => {
     expect(operatorsViewModel.level).toBe('3')
     expect(changeScheduler.schedule).toHaveBeenCalled()
   })
+  it('should enable controls when not busy', () => {
+    operatorsViewModel.setCurrent({ operators, busy: false })
+    expect(operatorsViewModel.operatorSelectDisabled).toBe(false)
+    expect(operatorsViewModel.bypassesPlayerLimitCheckboxDisabled).toBe(false)
+    expect(operatorsViewModel.levelRadioDisabled).toBe(false)
+  })
+  it('should disable controls when busy', () => {
+    operatorsViewModel.setCurrent({ operators, busy: true })
+    expect(operatorsViewModel.operatorSelectDisabled).toBe(true)
+    expect(operatorsViewModel.bypassesPlayerLimitCheckboxDisabled).toBe(true)
+    expect(operatorsViewModel.levelRadioDisabled).toBe(true)
+  })
 })

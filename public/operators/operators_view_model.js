@@ -1,11 +1,14 @@
 'use strict'
 
 export function OperatorsViewModel (handlers, changeScheduler) {
-  let operators = []
+  let state = {
+    operators: [],
+    busy: false
+  }
   let selectedOperator = null
   Object.defineProperties(this, {
     operators: {
-      get: () => operators.map(operator => {
+      get: () => state.operators.map(operator => {
         return {
           label: operator.name,
           selected: operator.uuid === selectedOperator.uuid,
@@ -30,6 +33,15 @@ export function OperatorsViewModel (handlers, changeScheduler) {
           changeScheduler.schedule()
         }
       }
+    },
+    operatorSelectDisabled: {
+      get: () => state.busy
+    },
+    bypassesPlayerLimitCheckboxDisabled: {
+      get: () => state.busy
+    },
+    levelRadioDisabled: {
+      get: () => state.busy
     }
   })
   this.select = value => {
@@ -37,14 +49,14 @@ export function OperatorsViewModel (handlers, changeScheduler) {
     changeScheduler.schedule()
   }
   this.setCurrent = response => {
-    operators = response.operators
+    state = response
     if (!selectedOperator ||
         !findOperator(selectedOperator.uuid)) {
-      selectedOperator = operators[0]
+      selectedOperator = state.operators[0]
     }
     changeScheduler.schedule()
   }
   function findOperator (value) {
-    return operators.find(({ uuid }) => uuid === value)
+    return state.operators.find(({ uuid }) => uuid === value)
   }
 }

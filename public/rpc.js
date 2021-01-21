@@ -1,6 +1,5 @@
 'use strict'
 
-import { BusyViewModel } from './busy_view_model.js'
 import { ChangeViewModel } from './change/change_view_model.js'
 import { CreateViewModel } from './create/create_view_model.js'
 import { UpdateViewModel } from './update/update_view_model.js'
@@ -10,7 +9,6 @@ import { OperatorsViewModel } from './operators/operators_view_model.js'
 export function connectedViewModel (changeScheduler) {
   let state = {}
   const socket = io()
-  const busyViewModel = new BusyViewModel(changeScheduler)
   const changeViewModel = new ChangeViewModel({
     onChangeVersionAndWorld: (version, world) => socket.emit('change', {
       version,
@@ -34,7 +32,6 @@ export function connectedViewModel (changeScheduler) {
     createViewModel.setCurrent(state)
     updateViewModel.setCurrent(state)
     operatorsViewModel.setCurrent(state)
-    busyViewModel.setCurrent(state)
   }
   socket
     .on('message', message => messagesViewModel.pushMessage(message))
@@ -48,7 +45,6 @@ export function connectedViewModel (changeScheduler) {
       setState()
     })
   return {
-    busyViewModel,
     changeViewModel,
     createViewModel,
     updateViewModel,
