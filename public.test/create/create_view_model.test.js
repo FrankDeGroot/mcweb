@@ -15,7 +15,8 @@ const current = {
     'version 1': {},
     'version 2': {}
   },
-  version: 'version 1'
+  version: 'version 1',
+  busy: false
 }
 
 describe('CreateViewModel', () => {
@@ -65,11 +66,19 @@ describe('CreateViewModel', () => {
     expect(handlers.onCreateWorld).toHaveBeenCalledWith('version 1', 'b', 'c')
   })
   it('should create world', () => {
+    createViewModel.setCurrent(current)
     createViewModel.selectVersion('version 1')
     createViewModel.newWorldName = 'b'
     createViewModel.seed = 'c'
     createViewModel.createWorld()
     expect(handlers.onCreateWorld).toHaveBeenCalledWith('version 1', 'b', 'c')
     expect(changeScheduler.schedule).toHaveBeenCalled()
+  })
+  it('should disable controls if busy', () => {
+    createViewModel.setCurrent({ ...current, ...{ busy: true } })
+    expect(createViewModel.versionSelectDisabled).toBe(true)
+    expect(createViewModel.nameInputDisabled).toBe(true)
+    expect(createViewModel.seedInputDisabled).toBe(true)
+    expect(createViewModel.createButtonDisabled).toBe(true)
   })
 })

@@ -20,7 +20,7 @@ const {
 
 m.route(document.body, '/update', {
   '/change': () => Pane(() => m(Changer, { changeViewModel }), messagesViewModel),
-  '/create': () => Pane(() => m(Creator, { busyViewModel, createViewModel }), messagesViewModel),
+  '/create': () => Pane(() => m(Creator, { createViewModel }), messagesViewModel),
   '/update': () => Pane(() => m(Updater, { busyViewModel, updateViewModel }), messagesViewModel),
   '/operators': () => Pane(() => m(Operators, { busyViewModel, operatorsViewModel }), messagesViewModel)
 })

@@ -1,9 +1,10 @@
 'use strict'
 
 export function CreateViewModel (handlers, changeScheduler) {
-  let versionsAndWorlds = {
+  let state = {
     versions: [],
-    version: null
+    version: null,
+    busy: false
   }
   let selectedVersion = null
 
@@ -14,13 +15,25 @@ export function CreateViewModel (handlers, changeScheduler) {
 
   Object.defineProperties(this, {
     versions: {
-      get: () => Object.keys(versionsAndWorlds.versions).map(version => {
+      get: () => Object.keys(state.versions).map(version => {
         return {
-          label: version + (version === versionsAndWorlds.version ? ' (current)' : ''),
+          label: version + (version === state.version ? ' (current)' : ''),
           selected: version === selectedVersion,
           value: version
         }
       })
+    },
+    versionSelectDisabled: {
+      get: () => state.busy
+    },
+    nameInputDisabled: {
+      get: () => state.busy
+    },
+    seedInputDisabled: {
+      get: () => state.busy
+    },
+    createButtonDisabled: {
+      get: () => state.busy
     }
   })
 
@@ -28,10 +41,10 @@ export function CreateViewModel (handlers, changeScheduler) {
   this.newWorldName = null
 
   this.setCurrent = current => {
-    versionsAndWorlds = current
+    state = current
     if (!selectedVersion ||
-        !versionsAndWorlds.versions[selectedVersion]) {
-      selectedVersion = versionsAndWorlds.version
+        !state.versions[selectedVersion]) {
+      selectedVersion = state.version
     }
     changeScheduler.schedule()
   }
