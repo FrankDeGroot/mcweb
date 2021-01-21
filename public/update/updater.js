@@ -2,14 +2,14 @@
 
 export function Updater () {
   return {
-    view: vnode => [
+    view: ({ attrs: { updateViewModel } }) => [
       m('button', {
-        disabled: vnode.attrs.busyViewModel.busy,
-        onclick: e => vnode.attrs.updateViewModel.updateVersion('release')
+        disabled: updateViewModel.updateReleaseButtonDisabled,
+        onclick: e => updateViewModel.updateVersion('release')
       }, 'Update Release'),
       m('button', {
-        disabled: vnode.attrs.busyViewModel.busy,
-        onclick: e => vnode.attrs.updateViewModel.updateVersion('snapshot')
+        disabled: updateViewModel.updateSnapshotButtonDisabled,
+        onclick: e => updateViewModel.updateVersion('snapshot')
       }, 'Update Snapshot')
     ]
   }

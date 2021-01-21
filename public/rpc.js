@@ -32,6 +32,7 @@ export function connectedViewModel (changeScheduler) {
   function setState () {
     changeViewModel.setCurrent(state)
     createViewModel.setCurrent(state)
+    updateViewModel.setCurrent(state)
     operatorsViewModel.setCurrent(state)
     busyViewModel.setCurrent(state)
   }
