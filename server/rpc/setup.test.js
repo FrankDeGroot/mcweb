@@ -1,12 +1,12 @@
 'use strict'
 
-jest.mock('../utils/log')
 jest.mock('../utils/busy')
 jest.mock('./state')
+jest.mock('./notifier')
 
-const { info, log } = require('../utils/log')
 const { doIfNotBusy } = require('../utils/busy')
 const { getCurrentState: getFullState, getChangedState } = require('./state')
+const { Notifier } = require('./notifier')
 
 const { setup } = require('./setup')
 
@@ -20,62 +20,60 @@ describe('setup', () => {
     emit: jest.fn()
   }
   const actions = {
-    action1: jest.fn()
+    action: jest.fn()
+  }
+  const notifier = {
+    notify: jest.fn(),
+    notifyThrow: jest.fn()
   }
   const arg = { arg: 'arg' }
   const fullState = { fullState: 'fullState' }
-  const changedState = { changedState: 'changedState' }
-  const message = 'message'
-  const internalErrorMessage = 'internalErrorMessage'
-  const internalError = new Error(internalErrorMessage)
-  const externalError = new Error()
-  externalError.code = 'SOME_CODE'
-  beforeEach(() => {
-    info.mockReset()
-    log.mockReset()
-    doIfNotBusy.mockReset()
-    getChangedState.mockReset().mockResolvedValue(changedState)
-    getFullState.mockReset().mockResolvedValue(fullState)
-    socket.on.mockReset()
-    socket.emit.mockReset()
-    server.emit.mockReset()
-    actions.action1.mockReset()
+  function doIfNotBusyHandler () {
+    return doIfNotBusy.mock.calls[0][0]
+  }
+  function notifyThrowHandler () {
+    return notifier.notifyThrow.mock.calls[0][0]
+  }
+  beforeAll(async () => {
+    Notifier.mockReturnValue(notifier)
+    getFullState.mockResolvedValue(fullState)
     socketHandlers = {}
     socket.on.mockImplementation((event, handler) => {
       socketHandlers[event] = handler
     })
-  })
-  it('should emit full state and set up handlers for actions', async () => {
     await setup(socket, server, actions)
+  })
+  it('should emit full state to connecting socket', async () => {
+    expect(Notifier).toHaveBeenCalledWith(server)
+    expect(notifier.notifyThrow).toHaveBeenCalledWith(expect.any(Function))
+
+    await notifyThrowHandler()()
 
     expect(socket.emit).toHaveBeenCalledWith('current', fullState)
+  })
+  it('should setup action handlers on socket', async () => {
+    expect(socket.on).toHaveBeenCalledTimes(1)
+    expect(socket.on).toHaveBeenCalledWith('action', expect.any(Function))
+  })
+  it('should setup socket action handler to emit error on throw', async () => {
+    notifier.notifyThrow.mockReset()
+    await socketHandlers.action(arg)
+    expect(notifier.notifyThrow).toHaveBeenCalledWith(expect.any(Function))
+  })
+  it('should setup socket action handler to only do if not busy', async () => {
+    await notifyThrowHandler()()
 
-    doIfNotBusy.mockImplementation(async handler => {
-      await handler()
-      expect(getChangedState).toHaveBeenCalledTimes(2)
-      expect(server.emit).toHaveBeenCalledWith('changed', changedState)
-      expect(actions.action1).toHaveBeenCalledWith(arg, expect.any(Function))
-
-      const notify = actions.action1.mock.calls[0][1]
-      notify(message)
-      expect(info).toHaveBeenCalledWith(message)
-      expect(server.emit).toHaveBeenCalledWith('message', message)
-    })
-    await socketHandlers.action1(arg)
     expect(doIfNotBusy).toHaveBeenCalledWith(expect.any(Function))
   })
-  it('should emit "throw" when getFullState rejects with internal error', async () => {
-    getFullState.mockRejectedValue(internalError)
-    await setup(socket, server, actions)
-    expect(socket.emit).not.toHaveBeenCalled()
-    expect(log).toHaveBeenCalledWith('info', internalError)
-    expect(server.emit).toHaveBeenCalledWith('throw', internalErrorMessage)
-  })
-  it('should emit "throw" when getFullState rejects with external error', async () => {
-    getFullState.mockRejectedValue(externalError)
-    await setup(socket, server, actions)
-    expect(socket.emit).not.toHaveBeenCalled()
-    expect(log).toHaveBeenCalledWith('error', externalError)
-    expect(server.emit).toHaveBeenCalledWith('throw', 'An internal error occurred')
+  it('should setup action to do if not busy', async () => {
+    getChangedState.mockImplementation(async busy => {
+      return { busy }
+    })
+
+    await doIfNotBusyHandler()()
+
+    expect(server.emit).toHaveBeenCalledWith('changed', { busy: true })
+    expect(server.emit).toHaveBeenCalledWith('changed', { busy: false })
+    expect(actions.action).toHaveBeenCalledWith(arg, notifier.notify)
   })
 })
