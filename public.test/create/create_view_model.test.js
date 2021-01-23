@@ -65,6 +65,33 @@ describe('CreateViewModel', () => {
     createViewModel.createWorld()
     expect(handlers.onCreateWorld).toHaveBeenCalledWith('version 1', 'b', 'c')
   })
+  it('should not schedule change if world name is not changed', () => {
+    createViewModel.newWorldName = null
+    expect(changeScheduler.schedule).not.toHaveBeenCalled()
+  })
+  it('should schedule change if world name is changed', () => {
+    createViewModel.newWorldName = 'test'
+    expect(changeScheduler.schedule).toHaveBeenCalled()
+  })
+  it('should enable controls except create button if not busy', () => {
+    createViewModel.setCurrent(current)
+    expect(createViewModel.versionSelectDisabled).toBe(false)
+    expect(createViewModel.nameInputDisabled).toBe(false)
+    expect(createViewModel.seedInputDisabled).toBe(false)
+    expect(createViewModel.createButtonDisabled).toBe(true)
+  })
+  it('should disable controls if busy', () => {
+    createViewModel.setCurrent({ ...current, ...{ busy: true } })
+    expect(createViewModel.versionSelectDisabled).toBe(true)
+    expect(createViewModel.nameInputDisabled).toBe(true)
+    expect(createViewModel.seedInputDisabled).toBe(true)
+    expect(createViewModel.createButtonDisabled).toBe(true)
+  })
+  it('should enable create button if not busy and name not empty', () => {
+    createViewModel.setCurrent(current)
+    createViewModel.newWorldName = 'test'
+    expect(createViewModel.createButtonDisabled).toBe(false)
+  })
   it('should create world', () => {
     createViewModel.setCurrent(current)
     createViewModel.selectVersion('version 1')
@@ -73,12 +100,5 @@ describe('CreateViewModel', () => {
     createViewModel.createWorld()
     expect(handlers.onCreateWorld).toHaveBeenCalledWith('version 1', 'b', 'c')
     expect(changeScheduler.schedule).toHaveBeenCalled()
-  })
-  it('should disable controls if busy', () => {
-    createViewModel.setCurrent({ ...current, ...{ busy: true } })
-    expect(createViewModel.versionSelectDisabled).toBe(true)
-    expect(createViewModel.nameInputDisabled).toBe(true)
-    expect(createViewModel.seedInputDisabled).toBe(true)
-    expect(createViewModel.createButtonDisabled).toBe(true)
   })
 })

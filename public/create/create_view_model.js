@@ -7,6 +7,7 @@ export function CreateViewModel (handlers, changeScheduler) {
     busy: false
   }
   let selectedVersion = null
+  let newWorldName = null
 
   handlers = {
     onCreateWorld: () => {},
@@ -23,6 +24,15 @@ export function CreateViewModel (handlers, changeScheduler) {
         }
       })
     },
+    newWorldName: {
+      get: () => newWorldName,
+      set: value => {
+        if (value != newWorldName) {
+          newWorldName = value
+          changeScheduler.schedule()
+        }
+      }
+    },
     versionSelectDisabled: {
       get: () => state.busy
     },
@@ -33,12 +43,11 @@ export function CreateViewModel (handlers, changeScheduler) {
       get: () => state.busy
     },
     createButtonDisabled: {
-      get: () => state.busy
+      get: () => state.busy || !newWorldName
     }
   })
 
   this.seed = null
-  this.newWorldName = null
 
   this.setCurrent = current => {
     state = current
