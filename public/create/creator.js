@@ -12,7 +12,7 @@ export function Creator () {
       }, version.label))),
       m('input', {
         disabled: createViewModel.nameInputDisabled,
-        onchange: e => {
+        onkeyup: e => {
           createViewModel.newWorldName = e.target.value
         },
         type: 'text',

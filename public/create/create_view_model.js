@@ -27,7 +27,7 @@ export function CreateViewModel (handlers, changeScheduler) {
     newWorldName: {
       get: () => newWorldName,
       set: value => {
-        if (value != newWorldName) {
+        if (value !== newWorldName) {
           newWorldName = value
           changeScheduler.schedule()
         }
