@@ -131,4 +131,21 @@ describe('ChangeViewModel', () => {
     changeViewModel.setCurrent({ ...state, ...{ busy: true } })
     expect(changeViewModel.changeButtonDisabled).toBe(true)
   })
+  it('should disable change button when selected is current', () => {
+    changeViewModel.setCurrent(state)
+    expect(changeViewModel.changeButtonDisabled).toBe(true)
+  })
+  it('should enable change button when selected world is not current', () => {
+    changeViewModel.setCurrent(state)
+    changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 1', world: 'world 2' }))
+    expect(changeViewModel.changeButtonDisabled).toBe(false)
+  })
+  it('should enable change button when selected version is not current', () => {
+    changeViewModel.setCurrent(state)
+    changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 2', world: 'world 3' }))
+    expect(changeViewModel.changeButtonDisabled).toBe(false)
+  })
+  it('should disable change button when no versions or worlds loaded', () => {
+    expect(changeViewModel.changeButtonDisabled).toBe(true)
+  })
 })
