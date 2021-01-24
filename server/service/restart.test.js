@@ -1,11 +1,11 @@
 'use strict'
 
 jest.mock('./service')
-jest.mock('./rcon')
+jest.mock('./say')
 jest.mock('../utils/sleep')
 
 const { start, stop } = require('./service')
-const { say } = require('./rcon')
+const { say } = require('./say')
 const { sleep } = require('../utils/sleep')
 const notify = jest.fn()
 const reconfigure = jest.fn()

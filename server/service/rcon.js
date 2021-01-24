@@ -1,18 +1,19 @@
 'use strict'
 
 const Rcon = require('rcon')
-const { info, trace } = require('../utils/log')
-const { sleep } = require('../utils/sleep')
+const { info } = require('../utils/log')
+const { readServerProperties } = require('../worlds/serverproperties')
 
 let serverProperties = null
 
-async function readServerProperties () {
+async function cacheServerProperties () {
   if (!serverProperties) {
-    serverProperties = await require('../worlds/serverproperties').readServerProperties()
+    serverProperties = await readServerProperties()
   }
 }
 
-function send (message) {
+exports.send = async message => {
+  await cacheServerProperties()
   return new Promise((resolve, reject) => {
     let response = null
     const con = new Rcon('localhost', serverProperties['rcon.port'], serverProperties['rcon.password'], {
@@ -31,32 +32,4 @@ function send (message) {
       })
     con.connect()
   })
-}
-
-exports.say = async message => {
-  await readServerProperties()
-  let tries = 0
-  let done = false
-  let response = null
-  info('Saying', message)
-  do {
-    tries++
-    try {
-      trace('Saying', message, 'attempt', tries)
-      response = await send('say ' + message)
-      done = true
-      info('Said', message)
-    } catch (err) {
-      if (err.code === 'ECONNREFUSED') {
-        trace('Failed saying', message, 'attempt', tries)
-        await sleep(1000)
-      } else {
-        throw err
-      }
-    }
-  } while (!done && tries < 120)
-  if (!done) {
-    throw new Error('Server failed to restart')
-  }
-  return response
 }

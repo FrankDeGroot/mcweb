@@ -3,33 +3,31 @@
 jest.mock('rcon')
 
 jest.mock('../utils/log')
-jest.mock('../utils/sleep')
 jest.mock('../worlds/serverproperties')
 
 const Rcon = require('rcon')
-const con = {
-  on: jest.fn(),
-  connect: jest.fn(),
-  disconnect: jest.fn(),
-  send: jest.fn()
-}
-
-const { info, trace } = require('../utils/log')
-const { sleep } = require('../utils/sleep')
+const { info } = require('../utils/log')
 const { readServerProperties } = require('../worlds/serverproperties')
 
-const PORT = 123
-const PASSWORD = 'password'
+const { send } = require('./rcon')
 
-const { say } = require('./rcon')
-
-describe('say', () => {
+describe('send', () => {
+  const port = 123
+  const password = 'password'
+  const message = 'message'
+  const response = 'response'
+  const error = new Error()
   const handlers = {}
-
+  const con = {
+    on: jest.fn(),
+    connect: jest.fn(),
+    disconnect: jest.fn(),
+    send: jest.fn()
+  }
   beforeEach(() => {
     readServerProperties
       .mockReset()
-      .mockResolvedValue({ 'rcon.port': PORT, 'rcon.password': PASSWORD })
+      .mockResolvedValue({ 'rcon.port': port, 'rcon.password': password })
     Rcon
       .mockReset()
       .mockReturnValue(con)
@@ -42,8 +40,6 @@ describe('say', () => {
     con.connect.mockReset()
     con.send.mockReset()
     info.mockReset()
-    trace.mockReset()
-    sleep.mockReset()
   })
   it('should resolve when sent successfully', async () => {
     con.connect.mockImplementation(() => {
@@ -52,51 +48,24 @@ describe('say', () => {
       handlers.end()
     })
 
-    await expect(say('hello')).resolves.toBe('response')
+    await expect(send(message)).resolves.toBe(response)
 
-    expect(Rcon).toHaveBeenCalledWith('localhost', PORT, PASSWORD, {
+    expect(Rcon).toHaveBeenCalledWith('localhost', port, password, {
       tcp: true,
       challenge: false
     })
     expect(con.on).toHaveBeenCalled()
     expect(con.connect).toHaveBeenCalled()
-    expect(con.send).toHaveBeenCalledWith('say hello')
+    expect(con.send).toHaveBeenCalledWith(message)
     expect(con.disconnect).toHaveBeenCalled()
 
     expect(info).toHaveBeenCalledWith('rcon response', 'response')
   })
-  it('should retry when not sent successfully first', async () => {
-    con.connect
-      .mockImplementationOnce(() => {
-        handlers.error({ code: 'ECONNREFUSED' })
-      })
-      .mockImplementationOnce(() => {
-        handlers.auth()
-        handlers.response('response')
-        handlers.end()
-      })
-
-    await say('hello')
-  })
-  it('should reject when not sent successfully repeatedly', async () => {
+  it('should reject when an error event is raised', async () => {
     con.connect.mockImplementation(() => {
-      handlers.error({ code: 'ECONNREFUSED' })
+      handlers.error(error)
     })
 
-    await expect(() => say('hello')).rejects.toEqual(new Error('Server failed to restart'))
-
-    expect(con.connect.mock.calls.length).toBe(120)
-    expect(sleep.mock.calls.length).toBe(120)
-  })
-  it('should reject immediately when another error occurs', async () => {
-    const ERR = {}
-    con.connect.mockImplementation(() => {
-      handlers.error(ERR)
-    })
-
-    await expect(() => say('hello')).rejects.toEqual(ERR)
-
-    expect(con.connect.mock.calls.length).toBe(1)
-    expect(sleep.mock.calls.length).toBe(0)
+    await expect(send(message)).rejects.toBe(error)
   })
 })

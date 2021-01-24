@@ -1,7 +1,7 @@
 'use strict'
 
 const { start, stop } = require('./service')
-const { say } = require('./rcon')
+const { say } = require('./say')
 const { sleep } = require('../utils/sleep')
 
 exports.restart = async (reason, notify, reconfigure) => {
