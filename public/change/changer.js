@@ -5,13 +5,14 @@ export function Changer () {
     view: ({ attrs: { changeViewModel } }) => [
       m('select', {
         disabled: changeViewModel.versionAndWorldSelectDisabled,
-        onchange: e => changeViewModel.selectVersionAndWorld(e.target.value)
+        onchange: e => changeViewModel.selectVersionAndWorld(e.target.value),
+        size: changeViewModel.versionAndWorldSelectSize
       }, changeViewModel.versions.map(group => m('optgroup', {
         label: group.label
-      }, group.options.map(option => m('option', {
-        selected: option.selected,
-        value: option.value
-      }, option.label))))),
+      }, group.options.map(({ label, selected, value }) => m('option', {
+        selected,
+        value
+      }, label))))),
       m('button', {
         disabled: changeViewModel.changeButtonDisabled,
         onclick: e => changeViewModel.changeVersionAndWorld()

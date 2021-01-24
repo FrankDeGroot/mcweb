@@ -72,6 +72,10 @@ describe('ChangeViewModel', () => {
     }])
     expect(changeScheduler.schedule).toHaveBeenCalled()
   })
+  it('should calculate size of the select list items', () => {
+    changeViewModel.setCurrent(state)
+    expect(changeViewModel.versionAndWorldSelectSize).toBe(6)
+  })
   it('should retain selected version and world when previously selected', () => {
     changeViewModel.setCurrent(state)
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 2', world: 'world 4' }))

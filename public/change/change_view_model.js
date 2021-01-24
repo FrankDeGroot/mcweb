@@ -32,6 +32,12 @@ export function ChangeViewModel (handlers, changeScheduler) {
         }
       })
     },
+    versionAndWorldSelectSize: {
+      get: () => {
+        const versions = Object.values(state.versions)
+        return versions.length + versions.map(({ worlds }) => worlds.length).reduce((a, l) => a + l, 0)
+      }
+    },
     versionAndWorldSelectDisabled: {
       get: () => state.busy
     },

@@ -192,3 +192,6 @@ messages {
 select {
   appearance: unset;
 }
+select[size] {
+  overflow-y: hidden
+}
