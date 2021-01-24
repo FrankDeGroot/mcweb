@@ -189,6 +189,11 @@ messages {
   outline: 2px solid black;
   width: calc(100% - 2 * var(--spacing));
 }
+option:checked {
+  background-image: url(images/stone.png);
+  background-size: 64px 64px;
+  text-shadow: none;
+}
 select {
   appearance: unset;
 }
