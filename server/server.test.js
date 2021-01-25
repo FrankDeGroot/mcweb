@@ -13,8 +13,9 @@ const { enableMonitoring } = require('./utils/monitoring')
 const io = require('socket.io')
 const { setup } = require('./rpc/setup')
 const { change } = require('./worlds/change')
-const { update } = require('./download/update')
 const { create } = require('./worlds/create')
+const { setGamerules } = require('./worlds/gamerules')
+const { update } = require('./download/update')
 
 const server = {
   on: jest.fn()
@@ -39,6 +40,7 @@ test('server', () => {
   expect(setup).toHaveBeenCalledWith(socket, server, {
     change,
     create,
+    setGamerules,
     update
   })
 })

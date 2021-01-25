@@ -1,11 +1,20 @@
 'use strict'
 
+const { info } = require('../utils/log')
 const { send } = require('../service/rcon')
 
 exports.getGamerules = async () => {
   return {
     ...(await getGamerule('keepInventory', 'boolean'))
   }
+}
+
+exports.setGamerules = async (value, notify) => {
+  Object.entries(value).forEach(async ([key, value]) => {
+    const response = await send(`gamerule ${key} ${value}`)
+    info(response)
+    notify(response)
+  })
 }
 
 async function getGamerule (gamerule, type) {
