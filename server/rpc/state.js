@@ -6,6 +6,7 @@ const {
   getVersions,
   getWorlds
 } = require('../worlds/read')
+const { getGamerules } = require('../worlds/gamerules')
 const { getOperators } = require('../players/operators')
 const { isBusy } = require('../utils/busy')
 
@@ -36,6 +37,7 @@ async function getState (busy) {
     }, {}),
     version: await getCurrentVersion(),
     operators: await getOperators(),
+    gamerules: await getGamerules(),
     busy
   }
 }

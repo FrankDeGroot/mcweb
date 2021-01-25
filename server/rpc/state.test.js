@@ -1,5 +1,6 @@
 'use strict'
 
+jest.mock('../worlds/gamerules')
 jest.mock('../worlds/read')
 jest.mock('../players/operators')
 jest.mock('../utils/busy')
@@ -10,6 +11,7 @@ const {
   getVersions,
   getWorlds
 } = require('../worlds/read')
+const { getGamerules } = require('../worlds/gamerules')
 const { getOperators } = require('../players/operators')
 const { isBusy } = require('../utils/busy')
 
@@ -31,6 +33,9 @@ describe('calls', () => {
   ]
   const world1 = 'world 1'
   const world2 = 'world 3'
+  const gamerules = {
+    keepInventory: true
+  }
   const operators = [{
     uuid: '1',
     name: 'player 1'
@@ -50,6 +55,9 @@ describe('calls', () => {
       .mockReset()
       .mockResolvedValueOnce(world1)
       .mockResolvedValueOnce(world2)
+    getGamerules
+      .mockReset()
+      .mockResolvedValue(gamerules)
     getOperators
       .mockReset()
       .mockResolvedValue(operators)
@@ -72,6 +80,7 @@ describe('calls', () => {
         },
         version,
         operators,
+        gamerules,
         busy: true
       })
       expect(getVersions).toHaveBeenCalled()
@@ -101,6 +110,7 @@ describe('calls', () => {
         },
         version,
         operators,
+        gamerules,
         busy: false
       })
     })
