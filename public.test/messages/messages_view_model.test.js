@@ -19,7 +19,6 @@ describe('MessagesViewModel', () => {
     })
     changeScheduler.schedule.mockReset()
     messagesViewModel = new MessagesViewModel(socket, changeScheduler)
-    console.log(socketOnHandlers)
   })
   it('starts with empty messages', () => {
     expect(messagesViewModel.messages.length).toBe(2)
