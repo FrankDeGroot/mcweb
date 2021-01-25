@@ -1,6 +1,6 @@
 'use strict'
 
-export function OperatorsViewModel (handlers, changeScheduler) {
+export function OperatorsViewModel (socket, changeScheduler) {
   let state = {
     operators: [],
     busy: false

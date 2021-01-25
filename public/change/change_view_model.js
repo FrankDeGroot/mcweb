@@ -1,6 +1,6 @@
 'use strict'
 
-export function ChangeViewModel (handlers, changeScheduler) {
+export function ChangeViewModel (socket, changeScheduler) {
   let state = {
     versions: [],
     version: null,
@@ -8,11 +8,6 @@ export function ChangeViewModel (handlers, changeScheduler) {
   }
   let selectedVersion = null
   let selectedWorld = null
-
-  handlers = {
-    onChangeVersionAndWorld: () => {},
-    ...handlers
-  }
 
   Object.defineProperties(this, {
     versions: {
@@ -72,6 +67,9 @@ export function ChangeViewModel (handlers, changeScheduler) {
   }
 
   this.changeVersionAndWorld = () => {
-    handlers.onChangeVersionAndWorld(selectedVersion, selectedWorld)
+    socket.emit('change', {
+      version: selectedVersion,
+      world: selectedWorld
+    })
   }
 }

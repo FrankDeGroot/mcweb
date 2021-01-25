@@ -9,33 +9,17 @@ import { OperatorsViewModel } from './operators/operators_view_model.js'
 export function connectedViewModel (changeScheduler) {
   let state = {}
   const socket = io()
-  const changeViewModel = new ChangeViewModel({
-    onChangeVersionAndWorld: (version, world) => socket.emit('change', {
-      version,
-      world
-    })
-  }, changeScheduler)
-  const createViewModel = new CreateViewModel({
-    onCreateWorld: (version, world, seed) => socket.emit('create', {
-      version,
-      world,
-      seed
-    })
-  }, changeScheduler)
-  const updateViewModel = new UpdateViewModel({
-    onUpdateVersion: version => socket.emit('update', { version })
-  })
-  const messagesViewModel = new MessagesViewModel(changeScheduler)
-  const operatorsViewModel = new OperatorsViewModel({}, changeScheduler)
+  const viewModels = {
+    changeViewModel: new ChangeViewModel(socket, changeScheduler),
+    createViewModel: new CreateViewModel(socket, changeScheduler),
+    updateViewModel: new UpdateViewModel(socket, changeScheduler),
+    operatorsViewModel: new OperatorsViewModel(socket, changeScheduler),
+    messagesViewModel: new MessagesViewModel(socket, changeScheduler)
+  }
   function setState () {
-    changeViewModel.setCurrent(state)
-    createViewModel.setCurrent(state)
-    updateViewModel.setCurrent(state)
-    operatorsViewModel.setCurrent(state)
+    Object.values(viewModels).map(viewModel => viewModel.setCurrent(state))
   }
   socket
-    .on('message', message => messagesViewModel.pushMessage(message))
-    .on('throw', message => messagesViewModel.pushError(message))
     .on('current', current => {
       state = current
       setState()
@@ -44,11 +28,5 @@ export function connectedViewModel (changeScheduler) {
       state = { ...state, ...changed }
       setState()
     })
-  return {
-    changeViewModel,
-    createViewModel,
-    updateViewModel,
-    messagesViewModel,
-    operatorsViewModel
-  }
+  return viewModels
 }

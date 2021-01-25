@@ -2,10 +2,8 @@
 
 const { ChangeViewModel } = require('../../public/change/change_view_model')
 
-const handlers = {
-  onChangeVersionAndWorld: jest.fn(),
-  onCreateWorld: jest.fn(),
-  onUpdateVersion: jest.fn()
+const socket = {
+  emit: jest.fn()
 }
 
 const changeScheduler = {
@@ -36,10 +34,8 @@ const state = {
 describe('ChangeViewModel', () => {
   let changeViewModel
   beforeEach(() => {
-    changeViewModel = new ChangeViewModel(handlers, changeScheduler)
-    handlers.onChangeVersionAndWorld.mockReset()
-    handlers.onCreateWorld.mockReset()
-    handlers.onUpdateVersion.mockReset()
+    changeViewModel = new ChangeViewModel(socket, changeScheduler)
+    socket.emit.mockReset()
     changeScheduler.schedule.mockReset()
   })
   it('should initialize properly', () => {
@@ -81,7 +77,7 @@ describe('ChangeViewModel', () => {
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 2', world: 'world 4' }))
     changeViewModel.setCurrent(state)
     changeViewModel.changeVersionAndWorld()
-    expect(handlers.onChangeVersionAndWorld).toHaveBeenCalledWith('version 2', 'world 4')
+    expect(socket.emit).toHaveBeenCalledWith('change', { version: 'version 2', world: 'world 4' })
   })
   it('should not retain selected version and world when previously selected are gone', () => {
     changeViewModel.setCurrent(state)
@@ -99,7 +95,7 @@ describe('ChangeViewModel', () => {
       version: 'version 1'
     })
     changeViewModel.changeVersionAndWorld()
-    expect(handlers.onChangeVersionAndWorld).toHaveBeenCalledWith('version 1', 'world 1')
+    expect(socket.emit).toHaveBeenCalledWith('change', { version: 'version 1', world: 'world 1' })
   })
   it('should not retain selected world when previously selected is gone', () => {
     changeViewModel.setCurrent(state)
@@ -116,12 +112,12 @@ describe('ChangeViewModel', () => {
       version: 'version 1'
     })
     changeViewModel.changeVersionAndWorld()
-    expect(handlers.onChangeVersionAndWorld).toHaveBeenCalledWith('version 1', 'world 1')
+    expect(socket.emit).toHaveBeenCalledWith('change', { version: 'version 1', world: 'world 1' })
   })
   it('should change version and world', () => {
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 1', world: 'world 1' }))
     changeViewModel.changeVersionAndWorld()
-    expect(handlers.onChangeVersionAndWorld).toHaveBeenCalledWith('version 1', 'world 1')
+    expect(socket.emit).toHaveBeenCalledWith('change', { version: 'version 1', world: 'world 1' })
   })
   it('should disable select when busy', () => {
     changeViewModel.setCurrent({ ...state, ...{ busy: true } })

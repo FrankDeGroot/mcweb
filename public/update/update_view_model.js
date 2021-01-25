@@ -1,13 +1,8 @@
 'use strict'
 
-export function UpdateViewModel (handlers) {
+export function UpdateViewModel (socket) {
   let state = {
     busy: false
-  }
-
-  handlers = {
-    onUpdateVersion: () => {},
-    ...handlers
   }
 
   Object.defineProperties(this, {
@@ -24,7 +19,7 @@ export function UpdateViewModel (handlers) {
   }
 
   this.updateVersion = version => {
-    if (canUpdateVersion(version)) handlers.onUpdateVersion(version)
+    if (canUpdateVersion(version)) socket.emit('update', { version })
   }
 
   this.setCurrent = current => {

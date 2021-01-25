@@ -1,6 +1,6 @@
 'use strict'
 
-export function CreateViewModel (handlers, changeScheduler) {
+export function CreateViewModel (socket, changeScheduler) {
   let state = {
     versions: [],
     version: null,
@@ -8,11 +8,6 @@ export function CreateViewModel (handlers, changeScheduler) {
   }
   let selectedVersion = null
   let newWorldName = null
-
-  handlers = {
-    onCreateWorld: () => {},
-    ...handlers
-  }
 
   Object.defineProperties(this, {
     versions: {
@@ -63,7 +58,11 @@ export function CreateViewModel (handlers, changeScheduler) {
   }
 
   this.createWorld = () => {
-    handlers.onCreateWorld(selectedVersion, this.newWorldName, this.seed)
+    socket.emit('create', {
+      version: selectedVersion,
+      world: this.newWorldName,
+      seed: this.seed
+    })
     changeScheduler.schedule()
   }
 }

@@ -2,7 +2,8 @@
 
 const { OperatorsViewModel } = require('../../public/operators/operators_view_model')
 
-const handlers = {
+const socket = {
+  emit: jest.fn()
 }
 
 const changeScheduler = {
@@ -24,7 +25,7 @@ const operators = [{
 describe('OperatorsViewModel', () => {
   let operatorsViewModel
   beforeEach(() => {
-    operatorsViewModel = new OperatorsViewModel(handlers, changeScheduler)
+    operatorsViewModel = new OperatorsViewModel(socket, changeScheduler)
     changeScheduler.schedule.mockReset()
   })
   it('should initialize properly', () => {

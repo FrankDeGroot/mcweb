@@ -2,8 +2,8 @@
 
 const { UpdateViewModel } = require('../../public/update/update_view_model')
 
-const handlers = {
-  onUpdateVersion: jest.fn()
+const socket = {
+  emit: jest.fn()
 }
 
 const state = {
@@ -11,18 +11,19 @@ const state = {
 }
 
 describe('WorldsViewModel', () => {
-  const updateViewModel = new UpdateViewModel(handlers)
+  const updateViewModel = new UpdateViewModel(socket)
   beforeEach(() => {
     updateViewModel.setCurrent(state)
+    socket.emit.mockReset()
   })
   it('should update version', () => {
     updateViewModel.updateVersion('release')
-    expect(handlers.onUpdateVersion).toHaveBeenCalledWith('release')
+    expect(socket.emit).toHaveBeenCalledWith('update', { version: 'release' })
   })
   it('should not update version that cannot be updated', () => {
     updateViewModel.currentVersion = 'a'
     updateViewModel.updateVersion()
-    expect(handlers.onUpdateVersion).not.toHaveBeenCalledWith('a')
+    expect(socket.emit).not.toHaveBeenCalled()
   })
   it('should not disable buttons when not busy', () => {
     expect(updateViewModel.updateReleaseButtonDisabled).toBe(false)

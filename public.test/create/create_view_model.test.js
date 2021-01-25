@@ -2,8 +2,8 @@
 
 const { CreateViewModel } = require('../../public/create/create_view_model')
 
-const handlers = {
-  onCreateWorld: jest.fn()
+const socket = {
+  emit: jest.fn()
 }
 
 const changeScheduler = {
@@ -22,8 +22,8 @@ const current = {
 describe('CreateViewModel', () => {
   let createViewModel
   beforeEach(() => {
-    createViewModel = new CreateViewModel(handlers, changeScheduler)
-    handlers.onCreateWorld.mockReset()
+    createViewModel = new CreateViewModel(socket, changeScheduler)
+    socket.emit.mockReset()
     changeScheduler.schedule.mockReset()
   })
   it('should initialize properly', () => {
@@ -49,7 +49,7 @@ describe('CreateViewModel', () => {
     createViewModel.seed = 'c'
     createViewModel.setCurrent(current)
     createViewModel.createWorld()
-    expect(handlers.onCreateWorld).toHaveBeenCalledWith('version 2', 'b', 'c')
+    expect(socket.emit).toHaveBeenCalledWith('create', { version: 'version 2', world: 'b', seed: 'c' })
   })
   it('should reset selected version when no longer exists after reloading', () => {
     createViewModel.setCurrent(current)
@@ -63,7 +63,7 @@ describe('CreateViewModel', () => {
       version: 'version 1'
     })
     createViewModel.createWorld()
-    expect(handlers.onCreateWorld).toHaveBeenCalledWith('version 1', 'b', 'c')
+    expect(socket.emit).toHaveBeenCalledWith('create', { version: 'version 1', world: 'b', seed: 'c' })
   })
   it('should not schedule change if world name is not changed', () => {
     createViewModel.newWorldName = null
@@ -98,7 +98,7 @@ describe('CreateViewModel', () => {
     createViewModel.newWorldName = 'b'
     createViewModel.seed = 'c'
     createViewModel.createWorld()
-    expect(handlers.onCreateWorld).toHaveBeenCalledWith('version 1', 'b', 'c')
+    expect(socket.emit).toHaveBeenCalledWith('create', { version: 'version 1', world: 'b', seed: 'c' })
     expect(changeScheduler.schedule).toHaveBeenCalled()
   })
 })
