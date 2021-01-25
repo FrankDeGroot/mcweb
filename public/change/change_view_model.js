@@ -42,10 +42,12 @@ export function ChangeViewModel (handlers, changeScheduler) {
       get: () => state.busy
     },
     changeButtonDisabled: {
-      get: () => state.busy ||
-          !selectedVersion && !selectedWorld ||
-          selectedVersion === state.version &&
-          selectedWorld === state.versions[selectedVersion].world
+      get: () => state.busy || (
+        !selectedVersion && !selectedWorld
+      ) || (
+        selectedVersion === state.version &&
+            selectedWorld === state.versions[selectedVersion].world
+      )
     }
   })
 
