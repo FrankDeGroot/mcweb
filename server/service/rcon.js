@@ -1,29 +1,49 @@
 'use strict'
 
 const Rcon = require('rcon')
-const { info } = require('../utils/log')
 const { readServerProperties } = require('../worlds/serverproperties')
 
-exports.send = async message => {
+let connection = null
+
+function evictConnection () {
+  connection = null
+}
+
+async function ensureConnection () {
+  return !connection ? createConnection() : Promise.resolve(connection)
+}
+
+async function createConnection () {
   const serverProperties = await readServerProperties()
   return new Promise((resolve, reject) => {
-    let response = null
-    const con = new Rcon('localhost',
+    connection = new Rcon('localhost',
       serverProperties['rcon.port'],
       serverProperties['rcon.password'], {
         tcp: true,
         challenge: false
       })
-      .on('auth', () => con.send(message))
-      .on('end', () => resolve(response))
-      .on('error', err => reject(err))
-      .on('response', res => {
-        if (res) {
-          response = res
-          info('rcon response', res)
-        }
-        con.disconnect()
+      .on('auth', () => {
+        resolve(connection)
       })
-    con.connect()
+      .on('error', error => {
+        evictConnection()
+        reject(error)
+      })
+    connection.connect()
+  })
+}
+
+exports.send = async message => {
+  const connection = await ensureConnection()
+  return new Promise((resolve, reject) => {
+    connection
+      .on('error', error => {
+        evictConnection()
+        reject(error)
+      })
+      .on('response', response => {
+        resolve(response)
+      })
+      .send(message)
   })
 }

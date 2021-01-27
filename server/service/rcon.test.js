@@ -1,12 +1,9 @@
 'use strict'
 
 jest.mock('rcon')
-
-jest.mock('../utils/log')
 jest.mock('../worlds/serverproperties')
 
 const Rcon = require('rcon')
-const { info } = require('../utils/log')
 const { readServerProperties } = require('../worlds/serverproperties')
 
 const { send } = require('./rcon')
@@ -18,10 +15,9 @@ describe('send', () => {
   const response = 'response'
   const error = new Error()
   const handlers = {}
-  const con = {
-    on: jest.fn(),
+  const connection = {
     connect: jest.fn(),
-    disconnect: jest.fn(),
+    on: jest.fn(),
     send: jest.fn()
   }
   beforeEach(() => {
@@ -30,22 +26,20 @@ describe('send', () => {
       .mockResolvedValue({ 'rcon.port': port, 'rcon.password': password })
     Rcon
       .mockReset()
-      .mockReturnValue(con)
-    con.on
+      .mockReturnValue(connection)
+    connection.on
       .mockReset()
       .mockImplementation((event, handler) => {
         handlers[event] = handler
-        return con
+        return connection
       })
-    con.connect.mockReset()
-    con.send.mockReset()
-    info.mockReset()
+    connection.connect.mockReset()
+    connection.send.mockReset()
   })
   it('should resolve when sent successfully', async () => {
-    con.connect.mockImplementation(() => {
+    connection.connect.mockImplementation(() => {
       handlers.auth()
-      handlers.response('response')
-      handlers.end()
+      setTimeout(() => handlers.response('response'), 0)
     })
 
     await expect(send(message)).resolves.toBe(response)
@@ -54,16 +48,13 @@ describe('send', () => {
       tcp: true,
       challenge: false
     })
-    expect(con.on).toHaveBeenCalled()
-    expect(con.connect).toHaveBeenCalled()
-    expect(con.send).toHaveBeenCalledWith(message)
-    expect(con.disconnect).toHaveBeenCalled()
-
-    expect(info).toHaveBeenCalledWith('rcon response', 'response')
+    expect(connection.on).toHaveBeenCalled()
+    expect(connection.connect).toHaveBeenCalled()
+    expect(connection.send).toHaveBeenCalledWith(message)
   })
   it('should reject when an error event is raised', async () => {
-    con.connect.mockImplementation(() => {
-      handlers.error(error)
+    connection.send.mockImplementation(() => {
+      setTimeout(() => handlers.error(error), 0)
     })
 
     await expect(send(message)).rejects.toBe(error)
