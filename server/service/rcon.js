@@ -22,10 +22,11 @@ async function createConnection () {
         tcp: true,
         challenge: false
       })
-      .on('auth', () => {
+      .setMaxListeners(0)
+      .once('auth', () => {
         resolve(connection)
       })
-      .on('error', error => {
+      .once('error', error => {
         evictConnection()
         reject(error)
       })
@@ -37,11 +38,11 @@ exports.send = async message => {
   const connection = await ensureConnection()
   return new Promise((resolve, reject) => {
     connection
-      .on('error', error => {
+      .once('error', error => {
         evictConnection()
         reject(error)
       })
-      .on('response', response => {
+      .once('response', response => {
         resolve(response)
       })
       .send(message)

@@ -17,8 +17,9 @@ describe('send', () => {
   const handlers = {}
   const connection = {
     connect: jest.fn(),
-    on: jest.fn(),
-    send: jest.fn()
+    once: jest.fn(),
+    send: jest.fn(),
+    setMaxListeners: jest.fn()
   }
   beforeEach(() => {
     readServerProperties
@@ -27,12 +28,13 @@ describe('send', () => {
     Rcon
       .mockReset()
       .mockReturnValue(connection)
-    connection.on
+    connection.once
       .mockReset()
       .mockImplementation((event, handler) => {
         handlers[event] = handler
         return connection
       })
+    connection.setMaxListeners.mockImplementation(() => connection)
     connection.connect.mockReset()
     connection.send.mockReset()
   })
@@ -48,7 +50,7 @@ describe('send', () => {
       tcp: true,
       challenge: false
     })
-    expect(connection.on).toHaveBeenCalled()
+    expect(connection.once).toHaveBeenCalled()
     expect(connection.connect).toHaveBeenCalled()
     expect(connection.send).toHaveBeenCalledWith(message)
   })
