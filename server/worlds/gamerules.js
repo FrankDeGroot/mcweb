@@ -1,30 +1,33 @@
 'use strict'
 
 const { send } = require('../service/rcon')
+const { getGamerulesDefinitions } = require('./list_gamerules')
 
 exports.getGamerules = async () => {
-  return {
-    ...(await getGamerule('keepInventory', 'boolean'))
-  }
+  const pendingValues = Object.entries(getGamerulesDefinitions()).map(async ([key, definition]) => await getGamerule(key, definition))
+  const fulfilledValues = await Promise.all(pendingValues)
+  return fulfilledValues.reduce((gamerules, gamerule) => ({ ...gamerules, ...gamerule }), {})
 }
 
-exports.setGamerules = async (value, notify) => {
-  Object.entries(value).forEach(async ([key, value]) => {
-    const response = await send(`gamerule ${key} ${value}`)
-    notify(response)
-  })
+exports.setGamerules = async (gamerules, notify) => {
+  await Promise.all(Object.entries(gamerules).map(async ([key, { value }]) => {
+    notify(await send(`gamerule ${key} ${value}`))
+  }))
 }
 
-async function getGamerule (gamerule, type) {
+async function getGamerule (gamerule, definition) {
   const response = await send('gamerule ' + gamerule)
-  const value = parse(response.substring(response.indexOf(': ') + 2), type)
+  const value = parse(response.substring(response.indexOf(': ') + 2), definition.type)
+  definition.value = value
   return {
-    [gamerule]: value
+    [gamerule]: definition
   }
 }
 
 function parse (value, type) {
   switch (type) {
     case 'boolean': return JSON.parse(value)
+    case 'integer': return parseInt(value, 10)
+    default: throw new Error(`Unknown gamerule type '${type}'.`)
   }
 }

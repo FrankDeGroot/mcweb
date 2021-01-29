@@ -17,18 +17,51 @@ describe('GamerulesViewModel', () => {
     gamerulesViewModel = new GamerulesViewModel(socket, changeScheduler)
   })
   it('should initialize properly', () => {
-    expect(gamerulesViewModel.keepInventory).toBe(false)
+    expect(gamerulesViewModel.gamerules).toStrictEqual({})
   })
   it('should load state', () => {
     gamerulesViewModel.setCurrent({
       gamerules: {
-        keepInventory: true
+        keepInventory: {
+          type: 'boolean',
+          value: true
+        }
       }
     })
-    expect(gamerulesViewModel.keepInventory).toBe(true)
+    expect(gamerulesViewModel.gamerules).toStrictEqual({
+      keepInventory: {
+        type: 'boolean',
+        value: true
+      }
+    })
+  })
+  it('should not emit for unchanged gamerule', () => {
+    gamerulesViewModel.setCurrent({
+      gamerules: {
+        keepInventory: {
+          type: 'boolean',
+          value: true
+        }
+      }
+    })
+    gamerulesViewModel.setGamerule('keepInventory', true)
+    expect(socket.emit).not.toHaveBeenCalled()
   })
   it('should emit for changed gamerule', () => {
-    gamerulesViewModel.keepInventory = true
-    expect(socket.emit).toHaveBeenCalledWith('setGamerules', { keepInventory: true })
+    gamerulesViewModel.setCurrent({
+      gamerules: {
+        keepInventory: {
+          type: 'boolean',
+          value: true
+        }
+      }
+    })
+    gamerulesViewModel.setGamerule('keepInventory', false)
+    expect(socket.emit).toHaveBeenCalledWith('setGamerules', {
+      keepInventory: {
+        type: 'boolean',
+        value: false
+      }
+    })
   })
 })

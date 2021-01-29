@@ -23,18 +23,14 @@ exports.getChangedState = async busy => {
 
 async function getState (busy) {
   const versions = await getVersions()
-  const versionWorlds = await Promise.all(versions.map(async version => {
-    return {
-      [version]: {
-        worlds: await getWorlds(version),
-        world: await getCurrentWorld(version)
-      }
+  const versionWorlds = await Promise.all(versions.map(async version => ({
+    [version]: {
+      worlds: await getWorlds(version),
+      world: await getCurrentWorld(version)
     }
-  }))
+  })))
   return {
-    versions: versionWorlds.reduce((acc, version) => {
-      return { ...acc, ...version }
-    }, {}),
+    versions: versionWorlds.reduce((acc, version) => ({ ...acc, ...version }), {}),
     version: await getCurrentVersion(),
     operators: await getOperators(),
     gamerules: await getGamerules(),

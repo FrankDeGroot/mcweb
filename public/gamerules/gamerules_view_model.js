@@ -3,22 +3,21 @@
 export function GamerulesViewModel (socket, changeScheduler) {
   let state = {
     gamerules: {
-      keepInventory: false
     },
     busy: false
   }
   Object.defineProperties(this, {
-    keepInventory: {
-      get: () => state.gamerules.keepInventory,
-      set: value => {
-        if (value !== state.gamerules.keepInventory) {
-          state.gamerules.keepInventory = value
-          socket.emit('setGamerules', { keepInventory: value })
-        }
-      }
+    gamerules: {
+      get: () => state.gamerules
     }
   })
   this.setCurrent = current => {
     state = current
+  }
+  this.setGamerule = (key, value) => {
+    if (value !== state.gamerules[key].value) {
+      state.gamerules[key].value = value
+      socket.emit('setGamerules', { [key]: state.gamerules[key] })
+    }
   }
 }

@@ -89,7 +89,7 @@ input[type=radio]:checked::before {
 combo {
   display: flex;
 }
-input[type=checkbox], input[type=radio], input[type=text], select {
+input[type=checkbox], input[type=radio], input[type=number], input[type=text], select {
   background-image: url(images/blackstone.png);
   background-size: 64px 64px;
   border-bottom: 2px solid var(--light-border);
