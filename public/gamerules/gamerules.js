@@ -22,6 +22,7 @@ export function Gamerules () {
                 value
               })
             ])
+            default: return m('div', `Unknown gamerule type '${type}'.`)
           }
         })
   }
