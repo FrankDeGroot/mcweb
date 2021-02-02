@@ -64,6 +64,9 @@ button:disabled {
   color: grey;
   text-shadow: -2px -2px black;
 }
+combo {
+  display: flex;
+}
 input[type=checkbox], input[type=radio] {
   appearance: none;
   height: 28px;
@@ -81,13 +84,14 @@ input[type=checkbox]:indeterminate::before {
   position: relative;
   top: -12px;
 }
+input[type=number] {
+  text-align: right;
+  width: 5em;
+}
 input[type=radio]:checked::before {
   content: 'o';
   position: relative;
   top: -15px;
-}
-combo {
-  display: flex;
 }
 input[type=checkbox], input[type=radio], input[type=number], input[type=text], select {
   background-image: url(images/blackstone.png);
