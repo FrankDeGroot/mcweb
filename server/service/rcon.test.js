@@ -1,64 +1,54 @@
 'use strict'
 
-jest.mock('rcon')
+jest.mock('rcon-client')
 jest.mock('../worlds/serverproperties')
+jest.mock('../utils/cache')
 
-const Rcon = require('rcon')
+const { Rcon: { connect: rconConnect } } = require('rcon-client')
 const { readServerProperties } = require('../worlds/serverproperties')
+const { getCachedItem, setCachedItem } = require('../utils/cache')
 
-const { send } = require('./rcon')
+const { connect, send } = require('./rcon')
 
 describe('send', () => {
   const port = 123
   const password = 'password'
   const message = 'message'
   const response = 'response'
-  const error = new Error()
-  const handlers = {}
   const connection = {
-    connect: jest.fn(),
-    once: jest.fn(),
-    send: jest.fn(),
-    setMaxListeners: jest.fn()
+    send: jest.fn()
   }
   beforeEach(() => {
-    readServerProperties
-      .mockReset()
-      .mockResolvedValue({ 'rcon.port': port, 'rcon.password': password })
-    Rcon
-      .mockReset()
-      .mockReturnValue(connection)
-    connection.once
-      .mockReset()
-      .mockImplementation((event, handler) => {
-        handlers[event] = handler
-        return connection
-      })
-    connection.setMaxListeners.mockImplementation(() => connection)
-    connection.connect.mockReset()
+    getCachedItem.mockReset()
+    setCachedItem.mockReset()
+    readServerProperties.mockReset()
+    rconConnect.mockReset()
     connection.send.mockReset()
   })
-  it('should resolve when sent successfully', async () => {
-    connection.connect.mockImplementation(() => {
-      handlers.auth()
-      setTimeout(() => handlers.response('response'), 0)
-    })
+  it('should cache connection on connect', async () => {
+    readServerProperties
+      .mockResolvedValue({ 'rcon.port': port, 'rcon.password': password })
+    rconConnect.mockReturnValue(connection)
+
+    await connect()
+
+    expect(rconConnect).toHaveBeenCalledWith({ host: 'localhost', port, password })
+    expect(setCachedItem).toHaveBeenCalledWith('connection', connection)
+  })
+  it('should not connect again', async () => {
+    getCachedItem.mockReturnValue(connection)
+
+    await connect()
+
+    expect(readServerProperties).not.toHaveBeenCalled()
+    expect(rconConnect).not.toHaveBeenCalled()
+  })
+  it('should send on cached connection', async () => {
+    getCachedItem.mockReturnValue(connection)
+    connection.send.mockResolvedValue(response)
 
     await expect(send(message)).resolves.toBe(response)
 
-    expect(Rcon).toHaveBeenCalledWith('localhost', port, password, {
-      tcp: true,
-      challenge: false
-    })
-    expect(connection.once).toHaveBeenCalled()
-    expect(connection.connect).toHaveBeenCalled()
     expect(connection.send).toHaveBeenCalledWith(message)
-  })
-  it('should reject when an error event is raised', async () => {
-    connection.send.mockImplementation(() => {
-      setTimeout(() => handlers.error(error), 0)
-    })
-
-    await expect(send(message)).rejects.toBe(error)
   })
 })

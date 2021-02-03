@@ -15,7 +15,7 @@
     "applicationinsights": "^1.8.8",
     "applicationinsights-native-metrics": "^0.0.5",
     "nodemon": "^2.0.7",
-    "rcon": "^1.0.3",
+    "rcon-client": "^4.2.3",
     "socket.io": "^3.1.0"
   },
   "devDependencies": {

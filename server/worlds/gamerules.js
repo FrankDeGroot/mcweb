@@ -1,9 +1,10 @@
 'use strict'
 
-const { send } = require('../service/rcon')
+const { connect, send } = require('../service/rcon')
 const { getGamerulesDefinitions } = require('./list_gamerules')
 
 exports.getGamerules = async () => {
+  await connect()
   const pendingValues = Object.entries(getGamerulesDefinitions()).map(async ([key, definition]) => await getGamerule(key, definition))
   const fulfilledValues = await Promise.all(pendingValues)
   return fulfilledValues.reduce((gamerules, gamerule) => ({ ...gamerules, ...gamerule }), {})

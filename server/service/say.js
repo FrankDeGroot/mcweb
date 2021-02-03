@@ -1,6 +1,6 @@
 'use strict'
 
-const { send } = require('./rcon')
+const { connect, send, sendErrorCode } = require('./rcon')
 const { info, trace } = require('../utils/log')
 const { sleep } = require('../utils/sleep')
 
@@ -13,15 +13,16 @@ exports.say = async message => {
     tries++
     try {
       trace('Saying', message, 'attempt', tries)
+      await connect()
       response = await send('say ' + message)
       done = true
       info('Said', message)
-    } catch (err) {
-      if (err.code === 'ECONNREFUSED') {
+    } catch (error) {
+      if (error.code === 'ECONNREFUSED' || error.message === 'Not connected') {
         trace('Failed saying', message, 'attempt', tries)
         await sleep(1000)
       } else {
-        throw err
+        throw error
       }
     }
   } while (!done && tries < 120)

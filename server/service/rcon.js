@@ -1,50 +1,26 @@
 'use strict'
 
-const Rcon = require('rcon')
+const { Rcon: { connect } } = require('rcon-client')
 const { readServerProperties } = require('../worlds/serverproperties')
+const { deleteCachedItem, getCachedItem, setCachedItem } = require('../utils/cache')
 
-let connection = null
+const connection = 'connection'
 
-function evictConnection () {
-  connection = null
+exports.connect = async () => {
+  if (!getCachedItem(connection)) {
+    const { 'rcon.port': port, 'rcon.password': password } = await readServerProperties()
+    setCachedItem(connection, await connect({ host: 'localhost', port, password }))
+  }
 }
 
-async function ensureConnection () {
-  return !connection ? createConnection() : Promise.resolve(connection)
-}
-
-async function createConnection () {
-  const serverProperties = await readServerProperties()
-  return new Promise((resolve, reject) => {
-    connection = new Rcon('localhost',
-      serverProperties['rcon.port'],
-      serverProperties['rcon.password'], {
-        tcp: true,
-        challenge: false
-      })
-      .setMaxListeners(0)
-      .once('auth', () => {
-        resolve(connection)
-      })
-      .once('error', error => {
-        evictConnection()
-        reject(error)
-      })
-    connection.connect()
-  })
-}
-
-exports.send = async message => {
-  const connection = await ensureConnection()
-  return new Promise((resolve, reject) => {
-    connection
-      .once('error', error => {
-        evictConnection()
-        reject(error)
-      })
-      .once('response', response => {
-        resolve(response)
-      })
-      .send(message)
-  })
+exports.send = async request => {
+  if (!getCachedItem(connection)) {
+    throw new Error('Not connected')
+  }
+  try {
+    return await getCachedItem(connection).send(request)
+  } catch (error) {
+    deleteCachedItem(connection)
+    throw error
+  }
 }
