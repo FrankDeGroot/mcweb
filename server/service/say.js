@@ -1,6 +1,6 @@
 'use strict'
 
-const { connect, send, sendErrorCode } = require('./rcon')
+const { connect, send } = require('./rcon')
 const { info, trace } = require('../utils/log')
 const { sleep } = require('../utils/sleep')
 

@@ -17,23 +17,44 @@ describe('GamerulesViewModel', () => {
     gamerulesViewModel = new GamerulesViewModel(socket, changeScheduler)
   })
   it('should initialize properly', () => {
-    expect(gamerulesViewModel.gamerules).toStrictEqual({})
+    expect(gamerulesViewModel.gamerules).toStrictEqual([])
   })
-  it('should load state', () => {
+  it('should sort list gamerules by type and then label', () => {
     gamerulesViewModel.setCurrent({
       gamerules: {
-        keepInventory: {
+        a: {
+          label: 'b',
+          type: 'integer',
+          value: '1'
+        },
+        b: {
+          label: 'a',
+          type: 'integer',
+          value: '2'
+        },
+        c: {
+          label: 'c',
           type: 'boolean',
-          value: true
+          value: '3'
         }
       }
     })
-    expect(gamerulesViewModel.gamerules).toStrictEqual({
-      keepInventory: {
-        type: 'boolean',
-        value: true
-      }
-    })
+    expect(gamerulesViewModel.gamerules).toStrictEqual([{
+      gamerule: 'c',
+      label: 'c',
+      type: 'boolean',
+      value: '3'
+    }, {
+      gamerule: 'b',
+      label: 'a',
+      type: 'integer',
+      value: '2'
+    }, {
+      gamerule: 'a',
+      label: 'b',
+      type: 'integer',
+      value: '1'
+    }])
   })
   it('should not emit for unchanged gamerule', () => {
     gamerulesViewModel.setCurrent({
