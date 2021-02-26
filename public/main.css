@@ -67,6 +67,9 @@ button:disabled {
 combo {
   display: flex;
 }
+html {
+  background-color: grey;
+}
 input[type=checkbox], input[type=radio] {
   appearance: none;
   height: 28px;
