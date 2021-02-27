@@ -37,19 +37,23 @@ describe('GamerulesViewModel', () => {
           type: 'boolean',
           value: '3'
         }
-      }
+      },
+      busy: false
     })
     expect(gamerulesViewModel.gamerules).toStrictEqual([{
+      disabled: false,
       gamerule: 'c',
       label: 'c',
       type: 'boolean',
       value: '3'
     }, {
+      disabled: false,
       gamerule: 'b',
       label: 'a',
       type: 'integer',
       value: '2'
     }, {
+      disabled: false,
       gamerule: 'a',
       label: 'b',
       type: 'integer',
@@ -63,7 +67,8 @@ describe('GamerulesViewModel', () => {
           type: 'boolean',
           value: true
         }
-      }
+      },
+      busy: false
     })
     gamerulesViewModel.setGamerule('keepInventory', true)
     expect(socket.emit).not.toHaveBeenCalled()
@@ -75,7 +80,8 @@ describe('GamerulesViewModel', () => {
           type: 'boolean',
           value: true
         }
-      }
+      },
+      busy: false
     })
     gamerulesViewModel.setGamerule('keepInventory', false)
     expect(socket.emit).toHaveBeenCalledWith('setGamerules', {
@@ -84,5 +90,24 @@ describe('GamerulesViewModel', () => {
         value: false
       }
     })
+  })
+  it('should disable gamerule controls when busy', () => {
+    gamerulesViewModel.setCurrent({
+      gamerules: {
+        keepInventory: {
+          label: 'Keep Inventory',
+          type: 'boolean',
+          value: true
+        }
+      },
+      busy: true
+    })
+    expect(gamerulesViewModel.gamerules).toStrictEqual([{
+      disabled: true,
+      gamerule: 'keepInventory',
+      label: 'Keep Inventory',
+      type: 'boolean',
+      value: true
+    }])
   })
 })
