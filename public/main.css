@@ -70,6 +70,9 @@ combo {
 html {
   background-color: grey;
 }
+input:disabled {
+  opacity: .7;
+}
 input[type=checkbox], input[type=radio] {
   appearance: none;
   height: 28px;
