@@ -24,4 +24,24 @@ describe('getGameRules', () => {
       }
     })
   })
+  it('skips unknown gamerules', async () => {
+    getGamerulesDefinitions.mockReturnValue({
+      known: {
+        type: 'boolean'
+      },
+      unknown: {
+        type: 'boolean'
+      }
+    })
+    send
+      .mockResolvedValueOnce('The value of gamerule known is: true')
+      .mockResolvedValueOnce('Incorrect argument for commandgamerule unknown true<--[HERE]')
+
+    await expect(getGamerules()).resolves.toStrictEqual({
+      known: {
+        type: 'boolean',
+        value: true
+      }
+    })
+  })
 })
