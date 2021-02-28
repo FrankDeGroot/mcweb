@@ -10,7 +10,7 @@ export function GamerulesViewModel (socket, changeScheduler) {
     gamerules: {
       get: () => Object.entries(state.gamerules)
         .sort(([g1, { label: label1, type: type1 }], [g2, { label: label2, type: type2 }]) => type1 < type2 ? -1 : type1 > type2 ? 1 : label1 < label2 ? -1 : label1 > label2 ? 1 : 0)
-        .map(([gamerule, { label, type, value }]) => ({ gamerule, label, type, value }))
+        .map(([gamerule, { label, type, value }]) => ({ disabled: state.busy, gamerule, label, type, value }))
     }
   })
   this.setCurrent = current => {
