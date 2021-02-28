@@ -70,6 +70,9 @@ combo {
 html {
   background-color: grey;
 }
+input, select {
+  transition: opacity .2s linear .1s;
+}
 input:disabled {
   opacity: .7;
 }
