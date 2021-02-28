@@ -16,6 +16,9 @@ export function OperatorsViewModel (socket, changeScheduler) {
         }
       })
     },
+    operatorsSize: {
+      get: () => state.operators.length
+    },
     bypassesPlayerLimit: {
       get: () => selectedOperator && selectedOperator.bypassesPlayerLimit,
       set: value => {

@@ -8,7 +8,8 @@ export function Operators () {
     view: ({ attrs: { operatorsViewModel } }) => [
       m('select', {
         disabled: operatorsViewModel.operatorSelectDisabled,
-        onchange: e => operatorsViewModel.select(e.target.value)
+        onchange: e => operatorsViewModel.select(e.target.value),
+        size: operatorsViewModel.operatorsSize
       }, operatorsViewModel.operators.map(({ label, selected, value }) => m('option', {
         value,
         selected

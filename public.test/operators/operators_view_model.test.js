@@ -47,6 +47,7 @@ describe('OperatorsViewModel', () => {
       selected: false,
       value: '2'
     }])
+    expect(operatorsViewModel.operatorsSize).toBe(2)
     expect(operatorsViewModel.bypassesPlayerLimit).toBe(false)
   })
   it('should retain selected operator after reload', () => {
