@@ -31,6 +31,8 @@ export function GamerulesViewModel (socket, changeScheduler) {
                 type,
                 value
               }
+            default:
+              return {}
           }
         })
     }
