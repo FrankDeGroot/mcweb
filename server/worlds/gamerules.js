@@ -22,11 +22,10 @@ exports.setGamerules = async (gamerules, notify) => {
 async function getGamerule (gamerule, definition) {
   const response = await send('gamerule ' + gamerule)
   const separatorIndex = response.indexOf(': ')
-  if (separatorIndex === -1) {
-    return null
+  if (separatorIndex !== -1) {
+    const value = parse(response.substring(separatorIndex + 2), definition.type)
+    definition.value = value
   }
-  const value = parse(response.substring(separatorIndex + 2), definition.type)
-  definition.value = value
   return {
     [gamerule]: definition
   }

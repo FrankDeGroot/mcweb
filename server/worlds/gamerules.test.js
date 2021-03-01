@@ -41,6 +41,9 @@ describe('getGameRules', () => {
       known: {
         type: 'boolean',
         value: true
+      },
+      unknown: {
+        type: 'boolean'
       }
     })
   })

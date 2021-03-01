@@ -35,17 +35,18 @@ describe('GamerulesViewModel', () => {
         c: {
           label: 'c',
           type: 'boolean',
-          value: '3'
+          value: true
         }
       },
       busy: false
     })
     expect(gamerulesViewModel.gamerules).toStrictEqual([{
+      checked: true,
       disabled: false,
       gamerule: 'c',
+      indeterminate: false,
       label: 'c',
-      type: 'boolean',
-      value: '3'
+      type: 'boolean'
     }, {
       disabled: false,
       gamerule: 'b',
@@ -64,6 +65,7 @@ describe('GamerulesViewModel', () => {
     gamerulesViewModel.setCurrent({
       gamerules: {
         keepInventory: {
+          label: 'Keep Inventory',
           type: 'boolean',
           value: true
         }
@@ -77,6 +79,7 @@ describe('GamerulesViewModel', () => {
     gamerulesViewModel.setCurrent({
       gamerules: {
         keepInventory: {
+          label: 'Keep Inventory',
           type: 'boolean',
           value: true
         }
@@ -86,10 +89,29 @@ describe('GamerulesViewModel', () => {
     gamerulesViewModel.setGamerule('keepInventory', false)
     expect(socket.emit).toHaveBeenCalledWith('setGamerules', {
       keepInventory: {
-        type: 'boolean',
         value: false
       }
     })
+  })
+  it('should set indeterminate when gamerule value null or undefined', () => {
+    gamerulesViewModel.setCurrent({
+      gamerules: {
+        keepInventory: {
+          label: 'Keep Inventory',
+          type: 'boolean',
+          value: undefined
+        }
+      },
+      busy: false
+    })
+    expect(gamerulesViewModel.gamerules).toStrictEqual([{
+      checked: false,
+      disabled: true,
+      gamerule: 'keepInventory',
+      label: 'Keep Inventory',
+      indeterminate: true,
+      type: 'boolean'
+    }])
   })
   it('should disable gamerule controls when busy', () => {
     gamerulesViewModel.setCurrent({
@@ -103,11 +125,12 @@ describe('GamerulesViewModel', () => {
       busy: true
     })
     expect(gamerulesViewModel.gamerules).toStrictEqual([{
+      checked: true,
       disabled: true,
       gamerule: 'keepInventory',
+      indeterminate: false,
       label: 'Keep Inventory',
-      type: 'boolean',
-      value: true
+      type: 'boolean'
     }])
   })
 })
