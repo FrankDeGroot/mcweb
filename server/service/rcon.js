@@ -2,25 +2,25 @@
 
 const { Rcon: { connect } } = require('rcon-client')
 const { readServerProperties } = require('../worlds/serverproperties')
-const { deleteCachedItem, getCachedItem, setCachedItem } = require('../utils/cache')
+const { cache } = require('../utils/cache')
 
-const connection = 'connection'
+const connectionCache = cache()
 
 exports.connect = async () => {
-  if (!getCachedItem(connection)) {
+  await connectionCache.store(async () => {
     const { 'rcon.port': port, 'rcon.password': password } = await readServerProperties()
-    setCachedItem(connection, await connect({ host: 'localhost', port, password }))
-  }
+    return await connect({ host: 'localhost', port, password })
+  })
 }
 
 exports.send = async request => {
-  if (!getCachedItem(connection)) {
+  const connection = connectionCache.read(() => {
     throw new Error('Not connected')
-  }
+  })
   try {
-    return await getCachedItem(connection).send(request)
+    return await connection.send(request)
   } catch (error) {
-    deleteCachedItem(connection)
+    connectionCache.evict()
     throw error
   }
 }

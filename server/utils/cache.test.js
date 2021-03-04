@@ -1,19 +1,31 @@
 'use strict'
 
-const { deleteCachedItem, getCachedItem, setCachedItem } = require('./cache')
+const { cache } = require('./cache')
 
 describe('cache', () => {
-  const key = 'item'
-  const value = 'value'
-  it('should cache', () => {
-    expect(getCachedItem(key)).toBe(undefined)
+  it('should store, read and evict', async () => {
+    const myCache = cache()
+    const value = 'value'
 
-    expect(setCachedItem(key, value)).toBe(value)
+    const create = jest.fn()
+    create.mockResolvedValue(value)
+    await expect(myCache.store(create)).resolves.toBe(value)
+    await expect(myCache.store(create)).resolves.toBe(value)
 
-    expect(getCachedItem(key)).toBe(value)
+    expect(create).toHaveBeenCalledTimes(1)
 
-    deleteCachedItem(key)
+    const otherwise = jest.fn()
+    expect(myCache.read(otherwise)).toBe(value)
 
-    expect(getCachedItem(key)).toBe(undefined)
+    myCache.evict()
+
+    otherwise.mockImplementation(() => {
+      throw new Error('no value')
+    })
+    expect(() => myCache.read(otherwise)).toThrow(new Error('no value'))
+
+    await expect(myCache.store(create)).resolves.toBe(value)
+
+    expect(create).toHaveBeenCalledTimes(2)
   })
 })

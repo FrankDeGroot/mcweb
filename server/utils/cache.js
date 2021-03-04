@@ -1,10 +1,14 @@
 'use strict'
 
-const cache = {}
-
-exports.getCachedItem = key => cache[key]
-exports.setCachedItem = (key, value) => {
-  cache[key] = value
-  return value
+exports.cache = () => {
+  let storage = null
+  return {
+    store: async create => {
+      return storage || (storage = await create())
+    },
+    read: otherwise => storage || otherwise(),
+    evict: () => {
+      storage = null
+    }
+  }
 }
-exports.deleteCachedItem = key => delete cache[key]
