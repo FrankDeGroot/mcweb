@@ -2,15 +2,12 @@
 
 jest.mock('../worlds/gamerules')
 jest.mock('../worlds/read')
+jest.mock('../worlds/versions_worlds')
 jest.mock('../players/operators')
 jest.mock('../utils/busy')
 
-const {
-  getCurrentVersion,
-  getCurrentWorld,
-  getVersions,
-  getWorlds
-} = require('../worlds/read')
+const { getCurrentVersion } = require('../worlds/read')
+const { getVersionsWorlds } = require('../worlds/versions_worlds')
 const { getGamerules } = require('../worlds/gamerules')
 const { getOperators } = require('../players/operators')
 const { isBusy } = require('../utils/busy')
@@ -18,21 +15,16 @@ const { isBusy } = require('../utils/busy')
 const { getCurrentState, getChangedState } = require('./state')
 
 describe('calls', () => {
-  const versions = [
-    'version 1',
-    'version 2'
-  ]
   const version = 'version 1'
-  const worlds1 = [
-    'world 1',
-    'world 2'
-  ]
-  const worlds2 = [
-    'world 3',
-    'world 4'
-  ]
-  const world1 = 'world 1'
-  const world2 = 'world 3'
+  const versionsWorlds = {
+    'version 1': {
+      worlds: [
+        'world 1',
+        'world 2'
+      ],
+      world: 'world 1'
+    }
+  }
   const gamerules = {
     keepInventory: true
   }
@@ -41,20 +33,12 @@ describe('calls', () => {
     name: 'player 1'
   }]
   beforeEach(() => {
-    getVersions
-      .mockReset()
-      .mockResolvedValue(versions)
     getCurrentVersion
       .mockReset()
       .mockResolvedValue(version)
-    getWorlds
+    getVersionsWorlds
       .mockReset()
-      .mockResolvedValueOnce(worlds1)
-      .mockResolvedValueOnce(worlds2)
-    getCurrentWorld
-      .mockReset()
-      .mockResolvedValueOnce(world1)
-      .mockResolvedValueOnce(world2)
+      .mockResolvedValue(versionsWorlds)
     getGamerules
       .mockReset()
       .mockResolvedValue(gamerules)
@@ -70,12 +54,11 @@ describe('calls', () => {
       await expect(getCurrentState()).resolves.toStrictEqual({
         versions: {
           'version 1': {
-            worlds: worlds1,
-            world: world1
-          },
-          'version 2': {
-            worlds: worlds2,
-            world: world2
+            worlds: [
+              'world 1',
+              'world 2'
+            ],
+            world: 'world 1'
           }
         },
         version,
@@ -83,12 +66,8 @@ describe('calls', () => {
         gamerules,
         busy: true
       })
-      expect(getVersions).toHaveBeenCalled()
-      expect(getWorlds).toHaveBeenCalledWith(version)
-      expect(getWorlds).toHaveBeenCalledWith('version 2')
-      expect(getCurrentWorld).toHaveBeenCalledWith(version)
-      expect(getCurrentWorld).toHaveBeenCalledWith('version 2')
       expect(getCurrentVersion).toHaveBeenCalled()
+      expect(getVersionsWorlds).toHaveBeenCalled()
       expect(getOperators).toHaveBeenCalled()
     })
   })
@@ -100,12 +79,11 @@ describe('calls', () => {
       await expect(getChangedState(false)).resolves.toStrictEqual({
         versions: {
           'version 1': {
-            worlds: worlds1,
-            world: world1
-          },
-          'version 2': {
-            worlds: worlds2,
-            world: world2
+            worlds: [
+              'world 1',
+              'world 2'
+            ],
+            world: 'world 1'
           }
         },
         version,

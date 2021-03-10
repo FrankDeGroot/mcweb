@@ -1,11 +1,7 @@
 'use strict'
 
-const {
-  getCurrentVersion,
-  getCurrentWorld,
-  getVersions,
-  getWorlds
-} = require('../worlds/read')
+const { getVersionsWorlds } = require('../worlds/versions_worlds')
+const { getCurrentVersion } = require('../worlds/read')
 const { getGamerules } = require('../worlds/gamerules')
 const { getOperators } = require('../players/operators')
 const { isBusy } = require('../utils/busy')
@@ -22,15 +18,8 @@ exports.getChangedState = async busy => {
 }
 
 async function getState (busy) {
-  const versions = await getVersions()
-  const versionWorlds = await Promise.all(versions.map(async version => ({
-    [version]: {
-      worlds: await getWorlds(version),
-      world: await getCurrentWorld(version)
-    }
-  })))
   return {
-    versions: versionWorlds.reduce((acc, version) => ({ ...acc, ...version }), {}),
+    versions: await getVersionsWorlds(),
     version: await getCurrentVersion(),
     operators: await getOperators(),
     gamerules: await getGamerules(),
