@@ -1,0 +1,27 @@
+{
+	"author": "https://github.com/FrankDeGroot",
+	"bugs": {
+		"url": "https://github.com/FrankDeGroot/mcweb/issues"
+	},
+	"description": "Minecraft Web Console",
+	"homepage": "https://github.com/FrankDeGroot/mcweb#readme",
+	"keywords": [
+		"minecraft"
+	],
+	"license": "MIT",
+	"name": "mcweb",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/FrankDeGroot/mcweb.git"
+	},
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"start": "node ."
+	},
+	"devDependencies": {},
+	"dependencies": {
+		"chokidar": "^3.5.1",
+		"socket.io": "^4.1.2"
+	}
+}
