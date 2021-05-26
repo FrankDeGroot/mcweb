@@ -1,14 +1,15 @@
 import { EventEmitter } from 'events'
-import { inherits } from 'util'
 
-const State = function () {
-	this.current = {}
-	this.update = delta => {
-		this.current = { ...this.current, ...delta }
+export const state = new class extends EventEmitter {
+	#state = {}
+	reset() {
+		this.state = {}
+	}
+	get current() {
+		return this.state
+	}
+	update(delta) {
+		this.state = { ...this.state, ...delta }
 		this.emit('update', delta)
 	}
 }
-
-inherits(State, EventEmitter)
-
-export let state = new State()
