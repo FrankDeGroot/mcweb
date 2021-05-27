@@ -29,7 +29,7 @@ function run() {
 			} else {
 				log('API Process exited with', code)
 				if (code) {
-					log ('Waiting for error te be fixed before restarting')
+					log ('Waiting for error to be fixed before restarting')
 					return
 				}
 			}
