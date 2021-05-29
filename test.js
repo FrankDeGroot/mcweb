@@ -1,7 +1,7 @@
 import { readdir, stat } from 'fs/promises'
 import { join } from 'path'
 
-const { log } = console
+const { error, log } = console
 
 async function enumerate(dir) {
 	return (await Promise.all((await readdir(dir))
@@ -16,48 +16,66 @@ async function enumerate(dir) {
 async function runAll() {
 	const paths = await enumerate(join(process.cwd(), 'test'))
 	const modules = await Promise.all(paths.map(path => import(path)))
-	const failures = sum(modules.flatMap(module => {
+	const succeeded = and(modules.flatMap(module => {
 		return Object.getOwnPropertyNames(module)
 			.map(name => module[name])
 			.filter(testClass => testClass)
 	})
 	.flatMap(testClass => {
-		const ifHas = method => testClass[method] || (() => {})
+		const { before, after } = getBeforeAfter(testClass)
 		try {
-			ifHas('before')()
+			before()
 			return runClass(testClass)
+		} catch(exception) {
+			error(testClass.name, exception.stack)
 		} finally {
-			ifHas('after')()
+			try {
+				after()
+			} catch(exception) {
+				error(testClass.name, exception.stack)
+			}
 		}
 	}))
-	if (failures) log(failures, 'failed')
+	if(succeeded) log('All tests succeeded')
 }
 
 function runClass(testClass) {
 	const classProto = testClass.prototype
 	const instanceMethods = Object.getOwnPropertyNames(classProto)
-	const ifHas = method => classProto[method] || (() => {})
-	const beforeEach = ifHas('before')
-	const afterEach = ifHas('after')
-	return sum(instanceMethods
+	const { before, after } = getBeforeAfter(classProto)
+	return and(instanceMethods
 		.filter(method => !['constructor', 'before', 'after'].includes(method))
 		.map(method => {
-			const instance = new testClass
+			let instance
 			try {
-				beforeEach.apply(instance)
+				instance = new testClass
+				before.apply(instance)
 				classProto[method].apply(instance)
-				return 0
-			} catch (exception) {
-				log(testClass.name, method, exception.message)
-				return 1
+				return true
+			} catch(exception) {
+				error(testClass.name, method, exception.stack)
 			} finally {
-				afterEach.apply(instance)
+				if(instance)
+					try {
+						after.apply(instance)
+					} catch(exception) {
+						error(testClass.name, method, exception.stack)
+					}
 			}
+			return false
 		}))
 }
 
-function sum(array) {
-	return array.reduce((acc, val) => acc + val)
+function getBeforeAfter(methods) {
+	const ifHas = method => methods[method] || (() => {})
+	return {
+		before: ifHas('before'),
+		after: ifHas('after')
+	}
+}
+
+function and(array) {
+	return array.reduce((acc, val) => acc && val, true)
 }
 
 runAll()

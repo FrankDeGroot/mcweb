@@ -3,26 +3,28 @@ import { strict as assert } from 'assert'
 import { state } from '../../api/state.js'
 
 const { log } = console
+// const log = () => {}
 
 export class B {
 	static before() {
-		log('default before all')
+		log('B default before all')
 	}
 	before() {
-		log('default before each')
+		log('B default before each')
 	}
 	test1() {
-		log('default test 1')
+		log('B default test 1')
 	}
 	test2() {
-		log('default test 2')
-		assert.equal('a', 'b')
+		log('B default test 2')
+		// assert.equal('a', 'b')
 	}
 	after() {
-		log('default after each')
+		log('B default after each')
+		// throw new Error('bluppie')
 	}
 	static after() {
-		log('default after all')
+		log('B default after all')
 	}
 }
 
@@ -38,7 +40,7 @@ export class A {
 	}
 	test2() {
 		log('A test 2')
-		assert.equal('a', 'b')
+		// assert.equal('a', 'b')
 	}
 	after() {
 		log('A after each')
@@ -49,7 +51,7 @@ export class A {
 }
 
 export default class {
-	beforeEach() {
+	before() {
 		state.reset()
 	}
 	stateInitiallyEmpty() {
