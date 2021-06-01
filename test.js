@@ -16,16 +16,16 @@ async function enumerate(dir) {
 async function runAll() {
 	const paths = await enumerate(join(process.cwd(), 'test'))
 	const modules = await Promise.all(paths.map(path => import(path)))
-	const succeeded = and(modules.flatMap(module => {
+	const succeeded = modules.flatMap(module => {
 		return Object.getOwnPropertyNames(module)
 			.map(name => module[name])
 			.filter(testClass => testClass)
 	})
-	.flatMap(testClass => {
+	.reduce((succeeded, testClass) => {
 		const { before, after } = getBeforeAfter(testClass)
 		try {
 			before()
-			return runClass(testClass)
+			return succeeded && runClass(testClass)
 		} catch(exception) {
 			error(testClass.name, exception.stack)
 		} finally {
@@ -35,7 +35,8 @@ async function runAll() {
 				error(testClass.name, exception.stack)
 			}
 		}
-	}))
+		return false
+	}, true)
 	if(succeeded) log('All tests succeeded')
 }
 
@@ -43,15 +44,15 @@ function runClass(testClass) {
 	const classProto = testClass.prototype
 	const instanceMethods = Object.getOwnPropertyNames(classProto)
 	const { before, after } = getBeforeAfter(classProto)
-	return and(instanceMethods
+	return instanceMethods
 		.filter(method => !['constructor', 'before', 'after'].includes(method))
-		.map(method => {
+		.reduce((succeeded, method) => {
 			let instance
 			try {
 				instance = new testClass
 				before.apply(instance)
 				classProto[method].apply(instance)
-				return true
+				return succeeded && true
 			} catch(exception) {
 				error(testClass.name, method, exception.stack)
 			} finally {
@@ -63,7 +64,7 @@ function runClass(testClass) {
 					}
 			}
 			return false
-		}))
+		}, true)
 }
 
 function getBeforeAfter(methods) {
@@ -72,10 +73,6 @@ function getBeforeAfter(methods) {
 		before: ifHas('before'),
 		after: ifHas('after')
 	}
-}
-
-function and(array) {
-	return array.reduce((acc, val) => acc && val, true)
 }
 
 runAll()
