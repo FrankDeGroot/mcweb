@@ -1,6 +1,6 @@
 'use strict'
 
-jest.useFakeTimers()
+jest.useFakeTimers('legacy')
 
 const { Scheduler } = require('../public/scheduler')
 

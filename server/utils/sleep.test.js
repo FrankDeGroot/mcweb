@@ -4,7 +4,7 @@ const { sleep } = require('./sleep')
 
 describe('sleep', () => {
   beforeEach(() => {
-    jest.useFakeTimers()
+    jest.useFakeTimers('legacy')
   })
   it('should return Promise that resolves after timeout', () => {
     sleep(1000)
