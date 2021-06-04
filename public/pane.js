@@ -1,5 +1,3 @@
-'use strict'
-
 import { Nav } from './nav.js'
 import { Messages } from './messages/messages.js'
 

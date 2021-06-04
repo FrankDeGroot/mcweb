@@ -1,5 +1,3 @@
-'use strict'
-
 export function Creator () {
   return {
     view: ({ attrs: { createViewModel } }) => [

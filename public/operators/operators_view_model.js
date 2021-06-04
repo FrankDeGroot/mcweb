@@ -1,5 +1,3 @@
-'use strict'
-
 export function OperatorsViewModel (socket, changeScheduler) {
   let state = {
     operators: [],

@@ -1,5 +1,3 @@
-'use strict'
-
 import { Checkbox } from '../checkbox.js'
 
 export function Gamerules () {

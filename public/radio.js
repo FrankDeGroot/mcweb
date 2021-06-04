@@ -1,5 +1,3 @@
-'use strict'
-
 export function Radio () {
   return {
     view: ({ attrs: { checked, disabled, label, name, onchange, options } }) => [

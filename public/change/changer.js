@@ -1,5 +1,3 @@
-'use strict'
-
 export function Changer () {
   return {
     view: ({ attrs: { changeViewModel } }) => [

@@ -1,5 +1,3 @@
-'use strict'
-
 export function Messages () {
   return {
     view: vnode => [

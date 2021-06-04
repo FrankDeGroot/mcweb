@@ -1,5 +1,3 @@
-'use strict'
-
 export function setupState (socket, viewModels) {
   let state = {}
 

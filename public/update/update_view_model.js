@@ -1,5 +1,3 @@
-'use strict'
-
 export function UpdateViewModel (socket) {
   let state = {
     busy: false

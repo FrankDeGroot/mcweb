@@ -1,5 +1,3 @@
-'use strict'
-
 export function Checkbox () {
   return {
     view: ({ attrs: { checked, disabled, id, indeterminate, label, onchange } }) => m('combo', [

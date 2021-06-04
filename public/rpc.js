@@ -1,5 +1,3 @@
-'use strict'
-
 import { ChangeViewModel } from './change/change_view_model.js'
 import { CreateViewModel } from './create/create_view_model.js'
 import { GamerulesViewModel } from './gamerules/gamerules_view_model.js'

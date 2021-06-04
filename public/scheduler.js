@@ -1,5 +1,3 @@
-'use strict'
-
 export function Scheduler (handler) {
   let scheduled = false
   this.schedule = () => {

@@ -1,5 +1,3 @@
-'use strict'
-
 export function MessagesViewModel (socket, changeScheduler) {
   const nonBreakingSpace = '\xa0'
   const emptyMessages = Array(2).fill(nonBreakingSpace)

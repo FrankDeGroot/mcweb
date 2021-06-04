@@ -1,5 +1,3 @@
-'use strict'
-
 export function Updater () {
   return {
     view: ({ attrs: { updateViewModel } }) => [

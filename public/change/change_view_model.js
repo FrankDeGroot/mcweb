@@ -1,5 +1,3 @@
-'use strict'
-
 export function ChangeViewModel (socket, changeScheduler) {
   let state = {
     versions: [],

@@ -1,5 +1,3 @@
-'use strict'
-
 export function GamerulesViewModel (socket, changeScheduler) {
   let state = {
     gamerules: {

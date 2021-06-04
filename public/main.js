@@ -1,5 +1,3 @@
-'use strict'
-
 import { Changer } from './change/changer.js'
 import { Creator } from './create/creator.js'
 import { Gamerules } from './gamerules/gamerules.js'
