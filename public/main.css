@@ -86,7 +86,7 @@ input[type=checkbox], input[type=radio] {
 input[type=checkbox]:checked::before {
   content: 'x';
   position: relative;
-  top: -15px;
+  top: -11px;
 }
 input[type=checkbox]:indeterminate::before {
   content: '-';
@@ -100,7 +100,7 @@ input[type=number] {
 input[type=radio]:checked::before {
   content: 'o';
   position: relative;
-  top: -15px;
+  top: -12px;
 }
 input[type=checkbox], input[type=radio], input[type=number], input[type=text], select {
   background-image: url(images/blackstone.png);
