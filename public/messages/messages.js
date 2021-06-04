@@ -1,12 +1,5 @@
-export function Messages () {
-  return {
-    view: vnode => [
-      m('label', 'Messages'),
-      m('messages', vnode.attrs.messagesViewModel.messages.map(message => m('message', message))),
-      m('button', {
-        disabled: vnode.attrs.messagesViewModel.noMessages(),
-        onclick: e => vnode.attrs.messagesViewModel.clearMessages()
-      }, 'Clear')
-    ]
-  }
+export function messages (messagesViewModel) {
+  return _`<label>Messages</label>
+  <messages>${messagesViewModel.messages.map(message => _`<message>${message}</message>`)}</messages>
+  <button ?disabled=${messagesViewModel.noMessages()} onclick=${() => messagesViewModel.clearMessages()}>Clear</button>`
 }

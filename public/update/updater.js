@@ -1,14 +1,4 @@
-export function Updater () {
-  return {
-    view: ({ attrs: { updateViewModel } }) => [
-      m('button', {
-        disabled: updateViewModel.updateReleaseButtonDisabled,
-        onclick: e => updateViewModel.updateVersion('release')
-      }, 'Update Release'),
-      m('button', {
-        disabled: updateViewModel.updateSnapshotButtonDisabled,
-        onclick: e => updateViewModel.updateVersion('snapshot')
-      }, 'Update Snapshot')
-    ]
-  }
+export function updater (updateViewModel) {
+  return _`<button ?disabled=${updateViewModel.updateReleaseButtonDisabled} onclick=${() => updateViewModel.updateVersion('release')}>Update Release</button>
+  <button ?disabled=${updateViewModel.updateSnapshotButtonDisabled} onclick=${() => updateViewModel.updateVersion('snapshot')}>Update Snapshot</button>`
 }

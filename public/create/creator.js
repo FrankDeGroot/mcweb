@@ -1,33 +1,8 @@
-export function Creator () {
-  return {
-    view: ({ attrs: { createViewModel } }) => [
-      m('select', {
-        disabled: createViewModel.versionSelectDisabled,
-        onchange: e => createViewModel.selectVersion(e.target.value)
-      }, createViewModel.versions.map(version => m('option', {
-        selected: version.selected,
-        value: version.value
-      }, version.label))),
-      m('input', {
-        disabled: createViewModel.nameInputDisabled,
-        onkeyup: e => {
-          createViewModel.newWorldName = e.target.value
-        },
-        type: 'text',
-        placeholder: 'Name'
-      }),
-      m('input', {
-        disabled: createViewModel.seedInputDisabled,
-        onchange: e => {
-          createViewModel.seed = e.target.value
-        },
-        type: 'text',
-        placeholder: 'Seed'
-      }),
-      m('button', {
-        disabled: createViewModel.createButtonDisabled,
-        onclick: e => createViewModel.createWorld()
-      }, 'Create')
-    ]
-  }
+export function creator (createViewModel) {
+  return _`<select ?disabled=${createViewModel.versionSelectDisabled} onchange=${e => createViewModel.selectVersion(e.target.value)} size=${createViewModel.versions.length}>
+    ${createViewModel.versions.map(({ label, selected, value }) => _`<option ?selected=${selected} value=${value}>${label}</option>`)}
+  </select>
+  <input ?disabled=${createViewModel.nameInputDisabled} onkeyup=${e => { createViewModel.newWorldName = e.target.value }} type=text placeholder=Name>
+  <input ?disabled=${createViewModel.seedInputDisabled} onkeyup=${e => { createViewModel.seed = e.target.value }} type=text placeholder=Seed>
+  <button ?disabled=${createViewModel.createButtonDisabled} onclick=${() => createViewModel.createWorld()}>Create</button>`
 }

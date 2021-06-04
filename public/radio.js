@@ -1,22 +1,7 @@
-export function Radio () {
-  return {
-    view: ({ attrs: { checked, disabled, label, name, onchange, options } }) => [
-      m('label', label),
-      options.map(({ id, label }) => [
-        m('combo', [
-          m('input', {
-            id,
-            checked: id === checked,
-            disabled,
-            name,
-            onchange: e => onchange(e.target.id),
-            type: 'radio'
-          }),
-          m('label', {
-            for: id
-          }, label)
-        ])
-      ])
-    ]
-  }
+export function radio ({ checked, disabled, label, name, onchange, options }) {
+  return _`<label>${label}</label>
+    ${options.map(({ id, label }) => _`<combo>
+      <input id=${id} ?checked=${checked} ?disabled=${disabled} name=${name} onchange=${e => onchange(e.target.id)} type=radio>
+      <label for=${id}>${label}</label>
+    </combo>`)}`
 }

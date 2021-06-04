@@ -14,10 +14,22 @@ module.exports = {
   },
   overrides: [
     {
+      files: ['public/main.js'],
+      globals: {
+        self: 'readonly',
+        uhtml: 'readonly'
+      }
+    },
+    {
+      files: ['public/rpc.js'],
+      globals: {
+        io: 'readonly'
+      }
+    },
+    {
       files: ['public/**/*'],
       globals: {
-        io: 'readonly',
-        m: 'readonly'
+        _: 'readonly'
       }
     }
   ]

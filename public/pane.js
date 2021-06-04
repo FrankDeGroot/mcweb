@@ -1,14 +1,5 @@
-import { Nav } from './nav.js'
-import { Messages } from './messages/messages.js'
+import { nav } from './nav.js'
 
-export function Pane (content, messagesViewModel) {
-  return {
-    view: vnode => [
-      m(Nav),
-      m('main', [
-        content(),
-        m(Messages, { messagesViewModel })
-      ])
-    ]
-  }
+export function pane (content, messages) {
+  return _`${nav()}<main>${content}${messages}</main>`
 }

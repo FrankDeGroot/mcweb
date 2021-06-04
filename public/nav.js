@@ -1,21 +1,17 @@
-export function Nav () {
-  return {
-    view: vnode => [
-      m('nav', [
-        item('#!/update', 'Update Server'),
-        item('#!/change', 'Change World'),
-        item('#!/create', 'Create World'),
-        item('#!/gamerules', 'Gamerules'),
-        item('#!/operators', 'Set Operators')
-      ])
-    ]
-  }
+const menu = [
+  { hash: '#!/update', name: 'Update Server' },
+  { hash: '#!/change', name: 'Change World' },
+  { hash: '#!/create', name: 'Create World' },
+  { hash: '#!/gamerules', name: 'Gamerules' },
+  { hash: '#!/operators', name: 'Set Operators' }
+]
+
+export function nav () {
+  return _`<nav>${menu.map(item)}</nav>`
 }
 
-function item (hash, name) {
+function item ({ hash, name }) {
   return window.location.hash === hash
-    ? m('div', name)
-    : m('a', {
-      href: hash
-    }, name)
+    ? _`<div>${name}</div>`
+    : _`<a href=${hash}>${name}</a>`
 }

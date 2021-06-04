@@ -62,6 +62,7 @@ export function ChangeViewModel (socket, changeScheduler) {
     const { version, world } = JSON.parse(value)
     selectedVersion = version
     selectedWorld = world
+    changeScheduler.schedule()
   }
 
   this.changeVersionAndWorld = () => {
