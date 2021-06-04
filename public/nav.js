@@ -13,7 +13,9 @@ export function Nav () {
 }
 
 function item (hash, name) {
-  return m(window.location.hash === hash ? 'div' : 'a', {
-    href: hash
-  }, name)
+  return window.location.hash === hash
+    ? m('div', name)
+    : m('a', {
+      href: hash
+    }, name)
 }

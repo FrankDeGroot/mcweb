@@ -7,7 +7,7 @@ import { Scheduler } from './scheduler.js'
 import { Updater } from './update/updater.js'
 import { connectedViewModel } from './rpc.js'
 
-const changeScheduler = new Scheduler(() => m.redraw())
+const changeScheduler = new Scheduler(redraw)
 const {
   changeViewModel,
   createViewModel,
@@ -17,10 +17,18 @@ const {
   updateViewModel
 } = connectedViewModel(changeScheduler)
 
-m.route(document.body, '/update', {
-  '/change': () => Pane(() => m(Changer, { changeViewModel }), messagesViewModel),
-  '/create': () => Pane(() => m(Creator, { createViewModel }), messagesViewModel),
-  '/gamerules': () => Pane(() => m(Gamerules, { gamerulesViewModel }), messagesViewModel),
-  '/operators': () => Pane(() => m(Operators, { operatorsViewModel }), messagesViewModel),
-  '/update': () => Pane(() => m(Updater, { updateViewModel }), messagesViewModel)
-})
+window.onhashchange = redraw
+
+function redraw () {
+  m.mount(document.body, Pane(getView(), messagesViewModel))
+}
+
+function getView () {
+  switch (window.location.hash) {
+    case '#!/change': return () => m(Changer, { changeViewModel })
+    case '#!/create': return () => m(Creator, { createViewModel })
+    case '#!/gamerules': return () => m(Gamerules, { gamerulesViewModel })
+    case '#!/operators': return () => m(Operators, { operatorsViewModel })
+    case '#!/update': return () => m(Updater, { updateViewModel })
+  }
+}
