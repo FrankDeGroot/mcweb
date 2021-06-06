@@ -1,0 +1,7 @@
+#!/bin/sh
+
+./clean
+javac Server.java
+mkdir -p ../../mc/fake
+jar cfm ../../mc/fake/server.jar MANIFEST.MF Server.class
+rm -f Server.class

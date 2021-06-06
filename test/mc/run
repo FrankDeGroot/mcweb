@@ -1,0 +1,3 @@
+#!/bin/sh
+
+java -jar ../../mc/fake/server.jar

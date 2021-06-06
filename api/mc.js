@@ -14,7 +14,7 @@ export function start() {
 		error('Already started')
 	}
 	childProcess = spawn('java', ['-jar', 'server.jar'], {
-		cwd: 'mc/release',
+		cwd: 'mc/fake',
 		stdio: ['pipe', 'pipe', 'inherit']
 	})
 	childProcess.on('close', (code, signal) => {
