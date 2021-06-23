@@ -34,7 +34,7 @@ async function directoryFilter (path, filter) {
 }
 
 async function isVersion (path) {
-  return hasFile(path, 'server.jar')
+  return hasFile(path, 'run.jar')
 }
 
 async function isWorld (path) {

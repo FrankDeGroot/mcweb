@@ -70,9 +70,9 @@ describe('getVersions', () => {
 
     await expect(getVersions()).resolves.toStrictEqual(['version1', 'version2'])
 
-    expect(access.mock.calls[0][0]).toBe('../test/server/version1/server.jar')
-    expect(access.mock.calls[1][0]).toBe('../test/server/notVersion/server.jar')
-    expect(access.mock.calls[2][0]).toBe('../test/server/version2/server.jar')
+    expect(access.mock.calls[0][0]).toBe('../test/server/version1/run.jar')
+    expect(access.mock.calls[1][0]).toBe('../test/server/notVersion/run.jar')
+    expect(access.mock.calls[2][0]).toBe('../test/server/version2/run.jar')
 
     expect(lstat.mock.calls[0][0]).toBe('../test/server/version1')
     expect(lstat.mock.calls[1][0]).toBe('../test/server/notVersion')
