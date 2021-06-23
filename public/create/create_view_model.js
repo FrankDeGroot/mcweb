@@ -1,66 +1,65 @@
-export function CreateViewModel (socket, changeScheduler) {
-  let state = {
+export class CreateViewModel {
+  #state = {
     versions: [],
     version: null,
     busy: false
   }
-  let selectedVersion = null
-  let newWorldName = null
-
-  Object.defineProperties(this, {
-    versions: {
-      get: () => Object.keys(state.versions).map(version => {
-        return {
-          label: version + (version === state.version ? ' (current)' : ''),
-          selected: version === selectedVersion,
-          value: version
-        }
-      })
-    },
-    newWorldName: {
-      get: () => newWorldName,
-      set: value => {
-        if (value !== newWorldName) {
-          newWorldName = value
-          changeScheduler.schedule()
-        }
+  #selectedVersion = null
+  #newWorldName = null
+  #socket
+  #changeScheduler
+  constructor(socket, changeScheduler) {
+    this.#socket = socket
+    this.#changeScheduler = changeScheduler
+  }
+  seed = null
+  get versions() {
+    return Object.keys(this.#state.versions).map(version => {
+      return {
+        label: version + (version === this.#state.version ? ' (current)' : ''),
+        selected: version === this.#selectedVersion,
+        value: version
       }
-    },
-    versionSelectDisabled: {
-      get: () => state.busy
-    },
-    nameInputDisabled: {
-      get: () => state.busy
-    },
-    seedInputDisabled: {
-      get: () => state.busy
-    },
-    createButtonDisabled: {
-      get: () => state.busy || !newWorldName
-    }
-  })
-
-  this.seed = null
-
-  this.setCurrent = current => {
-    state = current
-    if (!selectedVersion ||
-        !state.versions[selectedVersion]) {
-      selectedVersion = state.version
-    }
-    changeScheduler.schedule()
+    })
   }
-
-  this.selectVersion = version => {
-    selectedVersion = version
+  get newWorldName() {
+    return this.#newWorldName
   }
-
-  this.createWorld = () => {
-    socket.emit('create', {
-      version: selectedVersion,
-      world: this.newWorldName,
+  set newWorldName(value) {
+    if (value !== this.#newWorldName) {
+      this.#newWorldName = value
+      this.#changeScheduler.schedule()
+    }
+  }
+  get versionSelectDisabled() {
+    return this.#state.busy
+  }
+  get nameInputDisabled() {
+    return this.#state.busy
+  }
+  get seedInputDisabled() {
+    return this.#state.busy
+  }
+  get createButtonDisabled() {
+    return this.#state.busy || !this.#newWorldName
+  }
+  setCurrent(current) {
+    this.#state = current
+    if (!this.#selectedVersion ||
+      !this.#state.versions[this.#selectedVersion]) {
+      this.#selectedVersion = this.#state.version
+    }
+    this.#changeScheduler.schedule()
+  }
+  selectVersion(version) {
+    this.#selectedVersion = version
+  }
+  createWorld() {
+    this.#socket.emit('create', {
+      version: this.#selectedVersion,
+      world: this.#newWorldName,
       seed: this.seed
     })
-    changeScheduler.schedule()
+    this.#changeScheduler.schedule()
   }
 }

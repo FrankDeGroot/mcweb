@@ -1,4 +1,4 @@
-export function creator (createViewModel) {
+export function createView(createViewModel) {
   return _`<select ?disabled=${createViewModel.versionSelectDisabled} onchange=${e => createViewModel.selectVersion(e.target.value)} size=${createViewModel.versions.length}>
     ${createViewModel.versions.map(({ label, selected, value }) => _`<option ?selected=${selected} value=${value}>${label}</option>`)}
   </select>

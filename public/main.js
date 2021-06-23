@@ -1,5 +1,5 @@
 import { changer } from './change/changer.js'
-import { creator } from './create/creator.js'
+import { createView } from './create/create_view.js'
 import { gamerules } from './gamerules/gamerules.js'
 import { messagesView } from './messages/messages_view.js'
 import { operatorsView } from './operators/operators_view.js'
@@ -22,14 +22,14 @@ const {
 
 window.onhashchange = redraw
 
-function redraw () {
+function redraw() {
   uhtml.render(document.body, pane(getView(), messagesView(messagesViewModel)))
 }
 
-function getView () {
+function getView() {
   switch (window.location.hash) {
     case '#!/change': return changer(changeViewModel)
-    case '#!/create': return creator(createViewModel)
+    case '#!/create': return createView(createViewModel)
     case '#!/gamerules': return gamerules(gamerulesViewModel)
     case '#!/operators': return operatorsView(operatorsViewModel)
     case '#!/update': return updateView(updateViewModel)
