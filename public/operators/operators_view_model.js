@@ -51,8 +51,8 @@ export class OperatorsViewModel {
     this.#selectedOperator = this.#findOperator(value)
     this.#changeScheduler.schedule()
   }
-  setCurrent(response) {
-    this.#state = response
+  set state(state) {
+    this.#state = state
     if (!this.#selectedOperator ||
       !this.#findOperator(this.#selectedOperator.uuid)) {
       this.#selectedOperator = this.#state.operators[0]

@@ -44,8 +44,8 @@ export class ChangeViewModel {
         this.#selectedWorld === this.#state.versions[this.#selectedVersion].world
       )
   }
-  setCurrent(current) {
-    this.#state = current
+  set state(state) {
+    this.#state = state
     if (!this.#selectedVersion ||
       !this.#state.versions[this.#selectedVersion]) {
       this.#selectedVersion = this.#state.version

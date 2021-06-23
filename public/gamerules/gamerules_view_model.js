@@ -39,8 +39,8 @@ export class GamerulesViewModel {
         }
       })
   }
-  setCurrent(current) {
-    this.#state = current
+  set state(state) {
+    this.#state = state
   }
   setGamerule(key, value) {
     if (value !== this.#state.gamerules[key].value) {

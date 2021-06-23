@@ -18,7 +18,7 @@ export class UpdateViewModel {
   updateVersion(version) {
     if (this.#canUpdateVersion(version)) this.#socket.emit('update', { version })
   }
-  setCurrent(current) {
-    this.#state = current
+  set state(state) {
+    this.#state = state
   }
 }

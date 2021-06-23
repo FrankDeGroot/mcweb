@@ -34,9 +34,9 @@ describe('OperatorsViewModel', () => {
     expect(operatorsViewModel.level).toBe(null)
   })
   it('should load operators and select the first as default', () => {
-    operatorsViewModel.setCurrent({
+    operatorsViewModel.state = {
       operators
-    })
+    }
     expect(changeScheduler.schedule).toHaveBeenCalled()
     expect(operatorsViewModel.operators).toStrictEqual([{
       label: 'ops 1',
@@ -51,13 +51,13 @@ describe('OperatorsViewModel', () => {
     expect(operatorsViewModel.bypassesPlayerLimit).toBe(false)
   })
   it('should retain selected operator after reload', () => {
-    operatorsViewModel.setCurrent({
+    operatorsViewModel.state = {
       operators
-    })
+    }
     operatorsViewModel.select('2')
-    operatorsViewModel.setCurrent({
+    operatorsViewModel.state = {
       operators
-    })
+    }
     expect(operatorsViewModel.operators).toStrictEqual([{
       label: 'ops 1',
       selected: false,
@@ -69,18 +69,18 @@ describe('OperatorsViewModel', () => {
     }])
   })
   it('should not retain selected operator when removed after reload', () => {
-    operatorsViewModel.setCurrent({
+    operatorsViewModel.state = {
       operators
-    })
+    }
     operatorsViewModel.select('2')
-    operatorsViewModel.setCurrent({
+    operatorsViewModel.state = {
       operators: [{
         uuid: '1',
         name: 'ops 1',
         level: 0,
         bypassesPlayerLimit: false
       }]
-    })
+    }
     expect(operatorsViewModel.operators).toStrictEqual([{
       label: 'ops 1',
       selected: true,
@@ -88,40 +88,40 @@ describe('OperatorsViewModel', () => {
     }])
   })
   it('should select operator and expose its properties', () => {
-    operatorsViewModel.setCurrent({
+    operatorsViewModel.state = {
       operators
-    })
+    }
     operatorsViewModel.select('1')
     expect(changeScheduler.schedule).toHaveBeenCalled()
     expect(operatorsViewModel.bypassesPlayerLimit).toBe(false)
     expect(operatorsViewModel.level).toBe('0')
   })
   it('should update operator property `Bypasses Player Limit`', () => {
-    operatorsViewModel.setCurrent({
+    operatorsViewModel.state = {
       operators
-    })
+    }
     operatorsViewModel.select('1')
     operatorsViewModel.bypassesPlayerLimit = true
     expect(operatorsViewModel.bypassesPlayerLimit).toBe(true)
     expect(changeScheduler.schedule).toHaveBeenCalled()
   })
   it('should update operator property `Level`', () => {
-    operatorsViewModel.setCurrent({
+    operatorsViewModel.state = {
       operators
-    })
+    }
     operatorsViewModel.select('1')
     operatorsViewModel.level = 3
     expect(operatorsViewModel.level).toBe('3')
     expect(changeScheduler.schedule).toHaveBeenCalled()
   })
   it('should enable controls when not busy', () => {
-    operatorsViewModel.setCurrent({ operators, busy: false })
+    operatorsViewModel.state = { operators, busy: false }
     expect(operatorsViewModel.operatorSelectDisabled).toBe(false)
     expect(operatorsViewModel.bypassesPlayerLimitCheckboxDisabled).toBe(false)
     expect(operatorsViewModel.levelRadioDisabled).toBe(false)
   })
   it('should disable controls when busy', () => {
-    operatorsViewModel.setCurrent({ operators, busy: true })
+    operatorsViewModel.state = { operators, busy: true }
     expect(operatorsViewModel.operatorSelectDisabled).toBe(true)
     expect(operatorsViewModel.bypassesPlayerLimitCheckboxDisabled).toBe(true)
     expect(operatorsViewModel.levelRadioDisabled).toBe(true)

@@ -42,7 +42,7 @@ describe('ChangeViewModel', () => {
     expect(changeViewModel.versions).toStrictEqual([])
   })
   it('should load version and world', () => {
-    changeViewModel.setCurrent(state)
+    changeViewModel.state = state
     expect(changeViewModel.versions).toStrictEqual([{
       label: 'version 1 (current)',
       options: [{
@@ -69,20 +69,20 @@ describe('ChangeViewModel', () => {
     expect(changeScheduler.schedule).toHaveBeenCalled()
   })
   it('should calculate size of the select list items', () => {
-    changeViewModel.setCurrent(state)
+    changeViewModel.state = state
     expect(changeViewModel.versionAndWorldSelectSize).toBe(6)
   })
   it('should retain selected version and world when previously selected', () => {
-    changeViewModel.setCurrent(state)
+    changeViewModel.state = state
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 2', world: 'world 4' }))
-    changeViewModel.setCurrent(state)
+    changeViewModel.state = state
     changeViewModel.changeVersionAndWorld()
     expect(socket.emit).toHaveBeenCalledWith('change', { version: 'version 2', world: 'world 4' })
   })
   it('should not retain selected version and world when previously selected are gone', () => {
-    changeViewModel.setCurrent(state)
+    changeViewModel.state = state
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 2', world: 'world 4' }))
-    changeViewModel.setCurrent({
+    changeViewModel.state = {
       versions: {
         'version 1': {
           worlds: [
@@ -93,14 +93,14 @@ describe('ChangeViewModel', () => {
         }
       },
       version: 'version 1'
-    })
+    }
     changeViewModel.changeVersionAndWorld()
     expect(socket.emit).toHaveBeenCalledWith('change', { version: 'version 1', world: 'world 1' })
   })
   it('should not retain selected world when previously selected is gone', () => {
-    changeViewModel.setCurrent(state)
+    changeViewModel.state = state
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 1', world: 'world 2' }))
-    changeViewModel.setCurrent({
+    changeViewModel.state = {
       versions: {
         'version 1': {
           worlds: [
@@ -110,7 +110,7 @@ describe('ChangeViewModel', () => {
         }
       },
       version: 'version 1'
-    })
+    }
     changeViewModel.changeVersionAndWorld()
     expect(socket.emit).toHaveBeenCalledWith('change', { version: 'version 1', world: 'world 1' })
   })
@@ -120,24 +120,24 @@ describe('ChangeViewModel', () => {
     expect(socket.emit).toHaveBeenCalledWith('change', { version: 'version 1', world: 'world 1' })
   })
   it('should disable select when busy', () => {
-    changeViewModel.setCurrent({ ...state, ...{ busy: true } })
+    changeViewModel.state = { ...state, ...{ busy: true } }
     expect(changeViewModel.versionAndWorldSelectDisabled).toBe(true)
   })
   it('should disable change button when busy', () => {
-    changeViewModel.setCurrent({ ...state, ...{ busy: true } })
+    changeViewModel.state = { ...state, ...{ busy: true } }
     expect(changeViewModel.changeButtonDisabled).toBe(true)
   })
   it('should disable change button when selected is current', () => {
-    changeViewModel.setCurrent(state)
+    changeViewModel.state = state
     expect(changeViewModel.changeButtonDisabled).toBe(true)
   })
   it('should enable change button when selected world is not current', () => {
-    changeViewModel.setCurrent(state)
+    changeViewModel.state = state
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 1', world: 'world 2' }))
     expect(changeViewModel.changeButtonDisabled).toBe(false)
   })
   it('should enable change button when selected version is not current', () => {
-    changeViewModel.setCurrent(state)
+    changeViewModel.state = state
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 2', world: 'world 3' }))
     expect(changeViewModel.changeButtonDisabled).toBe(false)
   })

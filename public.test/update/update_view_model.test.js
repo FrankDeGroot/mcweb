@@ -13,7 +13,7 @@ const state = {
 describe('WorldsViewModel', () => {
   const updateViewModel = new UpdateViewModel(socket)
   beforeEach(() => {
-    updateViewModel.setCurrent(state)
+    updateViewModel.state = state
     socket.emit.mockReset()
   })
   it('should update version', () => {
@@ -30,7 +30,7 @@ describe('WorldsViewModel', () => {
     expect(updateViewModel.updateSnapshotButtonDisabled).toBe(false)
   })
   it('should disable buttons when busy', () => {
-    updateViewModel.setCurrent({ busy: true })
+    updateViewModel.state = { busy: true }
     expect(updateViewModel.updateReleaseButtonDisabled).toBe(true)
     expect(updateViewModel.updateSnapshotButtonDisabled).toBe(true)
   })

@@ -28,6 +28,6 @@ export class MessagesViewModel {
   noMessages() {
     return this.#messages.every(message => message === nonBreakingSpace)
   }
-  setCurrent() {
+  set state(state) {
   }
 }

@@ -43,8 +43,8 @@ export class CreateViewModel {
   get createButtonDisabled() {
     return this.#state.busy || !this.#newWorldName
   }
-  setCurrent(current) {
-    this.#state = current
+  set state(state) {
+    this.#state = state
     if (!this.#selectedVersion ||
       !this.#state.versions[this.#selectedVersion]) {
       this.#selectedVersion = this.#state.version

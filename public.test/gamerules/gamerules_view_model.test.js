@@ -20,7 +20,7 @@ describe('GamerulesViewModel', () => {
     expect(gamerulesViewModel.gamerules).toStrictEqual([])
   })
   it('should sort list gamerules by type and then label', () => {
-    gamerulesViewModel.setCurrent({
+    gamerulesViewModel.state = {
       gamerules: {
         a: {
           label: 'b',
@@ -39,7 +39,7 @@ describe('GamerulesViewModel', () => {
         }
       },
       busy: false
-    })
+    }
     expect(gamerulesViewModel.gamerules).toStrictEqual([{
       checked: true,
       disabled: false,
@@ -62,7 +62,7 @@ describe('GamerulesViewModel', () => {
     }])
   })
   it('should not emit for unchanged gamerule', () => {
-    gamerulesViewModel.setCurrent({
+    gamerulesViewModel.state = {
       gamerules: {
         keepInventory: {
           label: 'Keep Inventory',
@@ -71,12 +71,12 @@ describe('GamerulesViewModel', () => {
         }
       },
       busy: false
-    })
+    }
     gamerulesViewModel.setGamerule('keepInventory', true)
     expect(socket.emit).not.toHaveBeenCalled()
   })
   it('should emit for changed gamerule', () => {
-    gamerulesViewModel.setCurrent({
+    gamerulesViewModel.state = {
       gamerules: {
         keepInventory: {
           label: 'Keep Inventory',
@@ -85,7 +85,7 @@ describe('GamerulesViewModel', () => {
         }
       },
       busy: false
-    })
+    }
     gamerulesViewModel.setGamerule('keepInventory', false)
     expect(socket.emit).toHaveBeenCalledWith('setGamerules', {
       keepInventory: {
@@ -94,7 +94,7 @@ describe('GamerulesViewModel', () => {
     })
   })
   it('should set indeterminate when gamerule value null or undefined', () => {
-    gamerulesViewModel.setCurrent({
+    gamerulesViewModel.state = {
       gamerules: {
         keepInventory: {
           label: 'Keep Inventory',
@@ -103,7 +103,7 @@ describe('GamerulesViewModel', () => {
         }
       },
       busy: false
-    })
+    }
     expect(gamerulesViewModel.gamerules).toStrictEqual([{
       checked: false,
       disabled: true,
@@ -114,7 +114,7 @@ describe('GamerulesViewModel', () => {
     }])
   })
   it('should disable gamerule controls when busy', () => {
-    gamerulesViewModel.setCurrent({
+    gamerulesViewModel.state = {
       gamerules: {
         keepInventory: {
           label: 'Keep Inventory',
@@ -123,7 +123,7 @@ describe('GamerulesViewModel', () => {
         }
       },
       busy: true
-    })
+    }
     expect(gamerulesViewModel.gamerules).toStrictEqual([{
       checked: true,
       disabled: true,
