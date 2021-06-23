@@ -1,7 +1,7 @@
 import { checkbox } from '../checkbox.js'
 import { radio } from '../radio.js'
 
-export function operators (operatorsViewModel) {
+export function operatorsView (operatorsViewModel) {
   return _`<select ?disabled=${operatorsViewModel.operatorSelectDisabled} onchange=${e => operatorsViewModel.select(e.target.value)} size=${operatorsViewModel.operatorsSize}>
     ${operatorsViewModel.operators.map(({ label, selected, value }) => _`<option ?selected=${selected} value=${value}>${label}</option>`)}
   </select>

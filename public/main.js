@@ -2,7 +2,7 @@ import { changer } from './change/changer.js'
 import { creator } from './create/creator.js'
 import { gamerules } from './gamerules/gamerules.js'
 import { messagesView } from './messages/messages_view.js'
-import { operators } from './operators/operators.js'
+import { operatorsView } from './operators/operators_view.js'
 import { pane } from './pane.js'
 import { Scheduler } from './scheduler.js'
 import { updateView } from './update/update_view.js'
@@ -31,7 +31,7 @@ function getView () {
     case '#!/change': return changer(changeViewModel)
     case '#!/create': return creator(createViewModel)
     case '#!/gamerules': return gamerules(gamerulesViewModel)
-    case '#!/operators': return operators(operatorsViewModel)
+    case '#!/operators': return operatorsView(operatorsViewModel)
     case '#!/update': return updateView(updateViewModel)
   }
 }

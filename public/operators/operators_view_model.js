@@ -1,63 +1,65 @@
-export function OperatorsViewModel (socket, changeScheduler) {
-  let state = {
+export class OperatorsViewModel {
+  #state = {
     operators: [],
     busy: false
   }
-  let selectedOperator = null
-  Object.defineProperties(this, {
-    operators: {
-      get: () => state.operators.map(operator => {
-        return {
-          label: operator.name,
-          selected: operator.uuid === selectedOperator.uuid,
-          value: operator.uuid
-        }
-      })
-    },
-    operatorsSize: {
-      get: () => state.operators.length
-    },
-    bypassesPlayerLimit: {
-      get: () => selectedOperator && selectedOperator.bypassesPlayerLimit,
-      set: value => {
-        if (selectedOperator && value !== selectedOperator.bypassesPlayerLimit) {
-          selectedOperator.bypassesPlayerLimit = value
-          changeScheduler.schedule()
-        }
-      }
-    },
-    level: {
-      get: () => selectedOperator && selectedOperator.level.toString(),
-      set: value => {
-        if (selectedOperator && value !== selectedOperator.level) {
-          selectedOperator.level = +value
-          changeScheduler.schedule()
-        }
-      }
-    },
-    operatorSelectDisabled: {
-      get: () => state.busy
-    },
-    bypassesPlayerLimitCheckboxDisabled: {
-      get: () => state.busy
-    },
-    levelRadioDisabled: {
-      get: () => state.busy
-    }
-  })
-  this.select = value => {
-    selectedOperator = findOperator(value)
-    changeScheduler.schedule()
+  #selectedOperator = null
+  #changeScheduler
+  constructor(socket, changeScheduler) {
+    this.#changeScheduler = changeScheduler
   }
-  this.setCurrent = response => {
-    state = response
-    if (!selectedOperator ||
-        !findOperator(selectedOperator.uuid)) {
-      selectedOperator = state.operators[0]
-    }
-    changeScheduler.schedule()
+  get operators() {
+    return this.#state.operators.map(operator => {
+      return {
+        label: operator.name,
+        selected: operator.uuid === this.#selectedOperator.uuid,
+        value: operator.uuid
+      }
+    })
   }
-  function findOperator (value) {
-    return state.operators.find(({ uuid }) => uuid === value)
+  get operatorsSize() {
+    return this.#state.operators.length
+  }
+  get bypassesPlayerLimit() {
+    return this.#selectedOperator && this.#selectedOperator.bypassesPlayerLimit
+  }
+  set bypassesPlayerLimit(value) {
+    if (this.#selectedOperator && value !== this.#selectedOperator.bypassesPlayerLimit) {
+      this.#selectedOperator.bypassesPlayerLimit = value
+      this.#changeScheduler.schedule()
+    }
+  }
+  get level() {
+    return this.#selectedOperator && this.#selectedOperator.level.toString()
+  }
+  set level(value) {
+    if (this.#selectedOperator && value !== this.#selectedOperator.level) {
+      this.#selectedOperator.level = +value
+      this.#changeScheduler.schedule()
+    }
+  }
+  get operatorSelectDisabled() {
+    return this.#state.busy
+  }
+  get bypassesPlayerLimitCheckboxDisabled() {
+    return this.#state.busy
+  }
+  get levelRadioDisabled() {
+    return this.#state.busy
+  }
+  select(value) {
+    this.#selectedOperator = this.#findOperator(value)
+    this.#changeScheduler.schedule()
+  }
+  setCurrent(response) {
+    this.#state = response
+    if (!this.#selectedOperator ||
+      !this.#findOperator(this.#selectedOperator.uuid)) {
+      this.#selectedOperator = this.#state.operators[0]
+    }
+    this.#changeScheduler.schedule()
+  }
+  #findOperator(value) {
+    return this.#state.operators.find(({ uuid }) => uuid === value)
   }
 }
