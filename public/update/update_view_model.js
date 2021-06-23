@@ -1,26 +1,24 @@
-export function UpdateViewModel (socket) {
-  let state = {
+export class UpdateViewModel {
+  #state = {
     busy: false
   }
-
-  Object.defineProperties(this, {
-    updateReleaseButtonDisabled: {
-      get: () => state.busy
-    },
-    updateSnapshotButtonDisabled: {
-      get: () => state.busy
-    }
-  })
-
-  function canUpdateVersion (version) {
+  #socket
+  constructor(socket) {
+    this.#socket = socket
+  }
+  get updateReleaseButtonDisabled() {
+    return this.#state.busy
+  }
+  get updateSnapshotButtonDisabled() {
+    return this.#state.busy
+  }
+  #canUpdateVersion(version) {
     return ['release', 'snapshot'].indexOf(version) !== -1
   }
-
-  this.updateVersion = version => {
-    if (canUpdateVersion(version)) socket.emit('update', { version })
+  updateVersion(version) {
+    if (this.#canUpdateVersion(version)) this.#socket.emit('update', { version })
   }
-
-  this.setCurrent = current => {
-    state = current
+  setCurrent(current) {
+    this.#state = current
   }
 }

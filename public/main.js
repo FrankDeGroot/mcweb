@@ -5,7 +5,7 @@ import { messages } from './messages/messages.js'
 import { operators } from './operators/operators.js'
 import { pane } from './pane.js'
 import { Scheduler } from './scheduler.js'
-import { updater } from './update/updater.js'
+import { updateView } from './update/update_view.js'
 import { connectedViewModel } from './rpc.js'
 
 self._ = uhtml.html
@@ -32,6 +32,6 @@ function getView () {
     case '#!/create': return creator(createViewModel)
     case '#!/gamerules': return gamerules(gamerulesViewModel)
     case '#!/operators': return operators(operatorsViewModel)
-    case '#!/update': return updater(updateViewModel)
+    case '#!/update': return updateView(updateViewModel)
   }
 }
