@@ -1,34 +1,33 @@
-export function MessagesViewModel (socket, changeScheduler) {
-  const nonBreakingSpace = '\xa0'
-  const emptyMessages = Array(2).fill(nonBreakingSpace)
-  let messages = [...emptyMessages]
+const nonBreakingSpace = '\xa0'
+const emptyMessages = Array(2).fill(nonBreakingSpace)
 
-  socket
-    .on('message', message => pushMessage(message))
-    .on('throw', message => pushError(message))
-
-  Object.defineProperties(this, {
-    messages: {
-      get: () => messages
-    }
-  })
-
-  function pushMessage (message) {
-    messages.unshift(message)
-    messages.splice(emptyMessages.length)
-    changeScheduler.schedule()
+export class MessagesViewModel {
+  #changeScheduler
+  #messages = [...emptyMessages]
+  constructor(socket, changeScheduler) {
+    this.#changeScheduler = changeScheduler
+    socket
+      .on('message', message => this.#pushMessage(message))
+      .on('throw', message => this.#pushError(message))
   }
-
-  function pushError (error) {
-    pushMessage(`Error: ${error}`)
+  get messages() {
+    return this.#messages
   }
-
-  this.clearMessages = () => {
-    messages = [...emptyMessages]
-    changeScheduler.schedule()
+  #pushMessage(message) {
+    this.#messages.unshift(message)
+    this.#messages.splice(emptyMessages.length)
+    this.#changeScheduler.schedule()
   }
-
-  this.noMessages = () => messages.every(message => message === nonBreakingSpace)
-
-  this.setCurrent = () => {}
+  #pushError(error) {
+    this.#pushMessage(`Error: ${error}`)
+  }
+  clearMessages() {
+    this.#messages = [...emptyMessages]
+    this.#changeScheduler.schedule()
+  }
+  noMessages() {
+    return this.#messages.every(message => message === nonBreakingSpace)
+  }
+  setCurrent() {
+  }
 }

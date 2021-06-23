@@ -1,7 +1,7 @@
 import { changer } from './change/changer.js'
 import { creator } from './create/creator.js'
 import { gamerules } from './gamerules/gamerules.js'
-import { messages } from './messages/messages.js'
+import { messagesView } from './messages/messages_view.js'
 import { operators } from './operators/operators.js'
 import { pane } from './pane.js'
 import { Scheduler } from './scheduler.js'
@@ -23,7 +23,7 @@ const {
 window.onhashchange = redraw
 
 function redraw () {
-  uhtml.render(document.body, pane(getView(), messages(messagesViewModel)))
+  uhtml.render(document.body, pane(getView(), messagesView(messagesViewModel)))
 }
 
 function getView () {
