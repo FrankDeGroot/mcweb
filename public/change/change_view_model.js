@@ -1,74 +1,72 @@
-export function ChangeViewModel (socket, changeScheduler) {
-  let state = {
+export class ChangeViewModel {
+  #state = {
     versions: [],
     version: null,
     busy: false
   }
-  let selectedVersion = null
-  let selectedWorld = null
-
-  Object.defineProperties(this, {
-    versions: {
-      get: () => Object.entries(state.versions).map(([version, value]) => {
-        return {
-          label: version + (version === state.version ? ' (current)' : ''),
-          options: value.worlds.map(world => {
-            return {
-              label: version + ' ' + world + (world === value.world ? ' (current)' : ''),
-              selected: world === selectedWorld,
-              value: JSON.stringify({
-                version: version,
-                world: world
-              })
-            }
-          })
-        }
-      })
-    },
-    versionAndWorldSelectSize: {
-      get: () => {
-        const versions = Object.values(state.versions)
-        return versions.length + versions.map(({ worlds }) => worlds.length).reduce((a, l) => a + l, 0)
+  #selectedVersion = null
+  #selectedWorld = null
+  #socket
+  #changeScheduler
+  constructor(socket, changeScheduler) {
+    this.#socket = socket
+    this.#changeScheduler = changeScheduler
+  }
+  get versions() {
+    return Object.entries(this.#state.versions).map(([version, value]) => {
+      return {
+        label: version + (version === this.#state.version ? ' (current)' : ''),
+        options: value.worlds.map(world => {
+          return {
+            label: version + ' ' + world + (world === value.world ? ' (current)' : ''),
+            selected: world === this.#selectedWorld,
+            value: JSON.stringify({
+              version: version,
+              world: world
+            })
+          }
+        })
       }
-    },
-    versionAndWorldSelectDisabled: {
-      get: () => state.busy
-    },
-    changeButtonDisabled: {
-      get: () => state.busy || (
-        !selectedVersion && !selectedWorld
-      ) || (
-        selectedVersion === state.version &&
-            selectedWorld === state.versions[selectedVersion].world
+    })
+  }
+  get versionAndWorldSelectSize() {
+    const versions = Object.values(this.#state.versions)
+    return versions.length + versions.map(({ worlds }) => worlds.length).reduce((a, l) => a + l, 0)
+  }
+  get versionAndWorldSelectDisabled() {
+    return this.#state.busy
+  }
+  get changeButtonDisabled() {
+    return this.#state.busy || (
+      !this.#selectedVersion && !this.#selectedWorld
+    ) || (
+        this.#selectedVersion === this.#state.version &&
+        this.#selectedWorld === this.#state.versions[this.#selectedVersion].world
       )
-    }
-  })
-
-  this.setCurrent = current => {
-    state = current
-    if (!selectedVersion ||
-        !state.versions[selectedVersion]) {
-      selectedVersion = state.version
-      selectedWorld = null
-    }
-    if (!selectedWorld ||
-        !state.versions[selectedVersion].worlds.includes(selectedWorld)) {
-      selectedWorld = state.versions[selectedVersion].world
-    }
-    changeScheduler.schedule()
   }
-
-  this.selectVersionAndWorld = value => {
+  setCurrent(current) {
+    this.#state = current
+    if (!this.#selectedVersion ||
+      !this.#state.versions[this.#selectedVersion]) {
+      this.#selectedVersion = this.#state.version
+      this.#selectedWorld = null
+    }
+    if (!this.#selectedWorld ||
+      !this.#state.versions[this.#selectedVersion].worlds.includes(this.#selectedWorld)) {
+      this.#selectedWorld = this.#state.versions[this.#selectedVersion].world
+    }
+    this.#changeScheduler.schedule()
+  }
+  selectVersionAndWorld(value) {
     const { version, world } = JSON.parse(value)
-    selectedVersion = version
-    selectedWorld = world
-    changeScheduler.schedule()
+    this.#selectedVersion = version
+    this.#selectedWorld = world
+    this.#changeScheduler.schedule()
   }
-
-  this.changeVersionAndWorld = () => {
-    socket.emit('change', {
-      version: selectedVersion,
-      world: selectedWorld
+  changeVersionAndWorld() {
+    this.#socket.emit('change', {
+      version: this.#selectedVersion,
+      world: this.#selectedWorld
     })
   }
 }

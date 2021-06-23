@@ -1,4 +1,4 @@
-import { changer } from './change/changer.js'
+import { changeView } from './change/change_view.js'
 import { createView } from './create/create_view.js'
 import { gamerules } from './gamerules/gamerules.js'
 import { messagesView } from './messages/messages_view.js'
@@ -28,7 +28,7 @@ function redraw() {
 
 function getView() {
   switch (window.location.hash) {
-    case '#!/change': return changer(changeViewModel)
+    case '#!/change': return changeView(changeViewModel)
     case '#!/create': return createView(createViewModel)
     case '#!/gamerules': return gamerules(gamerulesViewModel)
     case '#!/operators': return operatorsView(operatorsViewModel)
