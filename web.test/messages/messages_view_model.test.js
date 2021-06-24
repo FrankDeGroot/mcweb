@@ -1,6 +1,6 @@
 'use strict'
 
-const { MessagesViewModel } = require('../../public/messages/messages_view_model')
+const { MessagesViewModel } = require('../../web/messages/messages_view_model')
 
 const socket = {
   on: jest.fn()

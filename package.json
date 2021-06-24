@@ -4,7 +4,7 @@
   "description": "Rudimentary web interface for minecraft server",
   "main": "server/server.js",
   "scripts": {
-    "start": "node_modules/nodemon/bin/nodemon.js --ignore '*.test.js' --ignore '__mocks__/*' --ignore 'public/*' --ignore 'public.test/*' --unhandled-rejections=strict",
+    "start": "node_modules/nodemon/bin/nodemon.js --ignore '*.test.js' --ignore '__mocks__/*' --ignore 'web/*' --ignore 'web.test/*' --unhandled-rejections=strict",
     "test": "node_modules/nodemon/bin/nodemon.js --exec node_modules/jest/bin/jest.js --config=jest.config.js",
     "lint": "node_modules/nodemon/bin/nodemon.js --exec node_modules/eslint/bin/eslint.js --fix ."
   },

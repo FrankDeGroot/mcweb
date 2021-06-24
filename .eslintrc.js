@@ -14,20 +14,20 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['public/main.js'],
+      files: ['web/main.js'],
       globals: {
         self: 'readonly',
         uhtml: 'readonly'
       }
     },
     {
-      files: ['public/rpc.js'],
+      files: ['web/rpc.js'],
       globals: {
         io: 'readonly'
       }
     },
     {
-      files: ['public/**/*'],
+      files: ['web/**/*'],
       globals: {
         _: 'readonly'
       }

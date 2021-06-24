@@ -2,6 +2,6 @@
 
 module.exports = {
   transform: {
-    '.*/public(\\.test)?/.*\\.js': 'babel-jest'
+    '.*/web(\\.test)?/.*\\.js': 'babel-jest'
   }
 }

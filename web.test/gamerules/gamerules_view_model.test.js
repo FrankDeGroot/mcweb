@@ -1,6 +1,6 @@
 'use strict'
 
-const { GamerulesViewModel } = require('../../public/gamerules/gamerules_view_model.js')
+const { GamerulesViewModel } = require('../../web/gamerules/gamerules_view_model.js')
 
 const socket = {
   emit: jest.fn()

@@ -1,6 +1,6 @@
 'use strict'
 
-const { ChangeViewModel } = require('../../public/change/change_view_model')
+const { ChangeViewModel } = require('../../web/change/change_view_model')
 
 const socket = {
   emit: jest.fn()

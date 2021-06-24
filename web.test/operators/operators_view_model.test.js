@@ -1,6 +1,6 @@
 'use strict'
 
-const { OperatorsViewModel } = require('../../public/operators/operators_view_model')
+const { OperatorsViewModel } = require('../../web/operators/operators_view_model')
 
 const socket = {
   emit: jest.fn()

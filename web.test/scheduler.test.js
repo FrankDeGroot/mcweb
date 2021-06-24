@@ -2,7 +2,7 @@
 
 jest.useFakeTimers('legacy')
 
-const { Scheduler } = require('../public/scheduler')
+const { Scheduler } = require('../web/scheduler')
 
 const handler = jest.fn()
 

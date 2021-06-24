@@ -1,6 +1,6 @@
 'use strict'
 
-const { CreateViewModel } = require('../../public/create/create_view_model')
+const { CreateViewModel } = require('../../web/create/create_view_model')
 
 const socket = {
   emit: jest.fn()
