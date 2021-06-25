@@ -1,6 +1,6 @@
 'use strict'
 
-const { level } = require('./utils/log')
+const { level, info } = require('./utils/log')
 const { enableAppInsights, logLevel, port } = require('./config/config')
 
 level(logLevel)
@@ -21,3 +21,10 @@ server.on('connection', socket => setup(socket, server, {
   setGamerules,
   update
 }))
+
+process.stdin.on('data', data => {
+  info('Received', data)
+  if (data.toString() === 'r\n') {
+    server.emit('reload')
+  }
+})

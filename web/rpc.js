@@ -6,8 +6,9 @@ import { OperatorsViewModel } from './operators/operators_view_model.js'
 import { UpdateViewModel } from './update/update_view_model.js'
 import { setupState } from './state.js'
 
-export function connectedViewModel (changeScheduler) {
+export function connectedViewModel(changeScheduler) {
   const socket = io()
+  socket.on('reload', () => window.location.reload(true))
   const viewModels = {
     changeViewModel: new ChangeViewModel(socket, changeScheduler),
     createViewModel: new CreateViewModel(socket, changeScheduler),
