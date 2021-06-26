@@ -1,4 +1,4 @@
-import { checkbox } from '../checkbox.js'
+import { checkbox } from '../utils/checkbox.js'
 
 export function gamerulesView(gamerulesViewModel) {
   return _`${gamerulesViewModel.gamerules.map(({ checked, disabled, gamerule, indeterminate, label, type, value }) => {
