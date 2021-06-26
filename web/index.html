@@ -7,13 +7,15 @@
   <title>Minecraft Web Console</title>
   <link rel=icon href=favicon.ico>
   <link href=main.css rel=stylesheet>
+  <script>
+    window.onerror = (message, source, line, column, error) => {
+      document.body.innerHTML = `<main>${message} ${source}:${line}:${column}<main>`
+      return true
+    }
+  </script>
   <script src=//cdn.socket.io/4.1.2/socket.io.min.js></script>
   <script src=//unpkg.com/uhtml@2.7.5/min.js></script>
   <script src=main.js type=module></script>
 </head>
-
-<body>
-  Please enable JavaScript!
-</body>
 
 </html>
