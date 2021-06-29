@@ -1,8 +1,8 @@
-export function setupState(socket, viewModels) {
+export function setupStateHandling(socket, viewModels) {
   let state = {}
 
   function setState() {
-    Object.values(viewModels).map(viewModel => {
+    viewModels.forEach(viewModel => {
       viewModel.state = state
     })
   }
