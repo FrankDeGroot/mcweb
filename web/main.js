@@ -1,42 +1,36 @@
-import { createViewModels } from './utils/view_models.js'
-// import { pane } from './pane_view.js'
+import { ViewModelFactory } from './utils/view_model_factory.js'
 
-import { changeView } from './change/change_view.js'
-import { createView } from './create/create_view.js'
-import { gamerulesView } from './gamerules/gamerules_view.js'
-import { messagesView } from './messages/messages_view.js'
-import { operatorsView } from './operators/operators_view.js'
-import { updateView } from './update/update_view.js'
+import { ChangeView } from './change/change_view.js'
+import { CreateView } from './create/create_view.js'
+import { GamerulesView } from './gamerules/gamerules_view.js'
+import { MessagesView } from './messages/messages_view.js'
+import { OperatorsView } from './operators/operators_view.js'
+import { UpdateView } from './update/update_view.js'
 
 self._ = uhtml.html
-
-function redraw() {
-  uhtml.render(document.body, pane(views[currentHash()](), messagesView(messagesViewModel)))
-}
-
-const {
-  changeViewModel,
-  createViewModel,
-  gamerulesViewModel,
-  messagesViewModel,
-  operatorsViewModel,
-  updateViewModel
-} = createViewModels(redraw)
+const socket = io()
+socket.on('reload', () => window.location.reload(true))
+const viewModelFactory = new ViewModelFactory(socket, redraw)
 const items = [
-  { hash: '#!/update', name: 'Update Server', view: () => updateView(updateViewModel) },
-  { hash: '#!/change', name: 'Change World', view: () => changeView(changeViewModel) },
-  { hash: '#!/create', name: 'Create World', view: () => createView(createViewModel) },
-  { hash: '#!/gamerules', name: 'Gamerules', view: () => gamerulesView(gamerulesViewModel) },
-  { hash: '#!/operators', name: 'Set Operators', view: () => operatorsView(operatorsViewModel) }
+  UpdateView,
+  ChangeView,
+  CreateView,
+  GamerulesView,
+  OperatorsView
 ]
+const messagesView = new MessagesView(viewModelFactory.createViewModel(MessagesView.ViewModel))
 const menu = items.map(({ hash, name }) => {
   return { hash, name }
 })
-const views = items.reduce((v, { hash, view }) => {
-  v[hash] = view
-  return v
+const views = items.reduce((views, View) => {
+  views[View.hash] = new View(viewModelFactory.createViewModel(View.ViewModel))
+  return views
 }, {})
 window.onhashchange = redraw
+
+function redraw() {
+  uhtml.render(document.body, pane(views[currentHash()].render(), messagesView.render()))
+}
 
 function pane(content, messages) {
   return _`${nav()}<main>${content}${messages}</main>`
