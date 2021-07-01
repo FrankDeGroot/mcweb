@@ -72,6 +72,40 @@ describe('ChangeViewModel', () => {
     changeViewModel.state = state
     expect(changeViewModel.versionAndWorldSelectSize).toBe(6)
   })
+  it('should select the current world across duplicates between versions', () => {
+    changeViewModel.state = {
+      versions: {
+        'version 1': {
+          worlds: [
+            'world'
+          ],
+          world: 'world'
+        },
+        'version 2': {
+          worlds: [
+            'world'
+          ],
+          world: 'world'
+        }
+      },
+      version: 'version 1'
+    }
+    expect(changeViewModel.versions).toStrictEqual([{
+      label: 'version 1 (current)',
+      options: [{
+        label: 'version 1 world (current)',
+        selected: true,
+        value: JSON.stringify({ version: 'version 1', world: 'world' })
+      }]
+    }, {
+      label: 'version 2',
+      options: [{
+        label: 'version 2 world (current)',
+        selected: false,
+        value: JSON.stringify({ version: 'version 2', world: 'world' })
+      }]
+    }])
+  })
   it('should retain selected version and world when previously selected', () => {
     changeViewModel.state = state
     changeViewModel.selectVersionAndWorld(JSON.stringify({ version: 'version 2', world: 'world 4' }))
