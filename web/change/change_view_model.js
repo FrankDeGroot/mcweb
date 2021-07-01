@@ -46,18 +46,15 @@ export class ChangeViewModel {
   }
   set state(state) {
     this.#state = state
-    console.log(this.#selectedVersion, this.#selectedWorld)
     if (!this.#selectedVersion ||
       !this.#state.versions[this.#selectedVersion]) {
       this.#selectedVersion = this.#state.version
       this.#selectedWorld = null
     }
-    console.log(this.#selectedVersion, this.#selectedWorld)
     if (!this.#selectedWorld ||
       !this.#state.versions[this.#selectedVersion].worlds.includes(this.#selectedWorld)) {
       this.#selectedWorld = this.#state.versions[this.#selectedVersion].world
     }
-    console.log(this.#selectedVersion, this.#selectedWorld)
     this.#changeScheduler.schedule()
   }
   selectVersionAndWorld(value) {
