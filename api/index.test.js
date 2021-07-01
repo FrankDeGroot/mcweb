@@ -17,6 +17,12 @@ const { create } = require('./worlds/create')
 const { setGamerules } = require('./worlds/gamerules')
 const { update } = require('./download/update')
 
+const stdin = {
+  on: jest.fn()
+}
+global.process = {
+  stdin: stdin
+}
 const server = {
   on: jest.fn()
 }
@@ -28,7 +34,7 @@ const socket = {}
 
 test('server', () => {
   io.mockImplementation(() => server)
-  require('./server')
+  require('./index')
 
   expect(level).toHaveBeenCalledWith('trace')
   expect(enableMonitoring).toHaveBeenCalledWith(false)
@@ -43,4 +49,6 @@ test('server', () => {
     setGamerules,
     update
   })
+
+  expect(stdin.on).toHaveBeenCalledWith('data', expect.any(Function))
 })
