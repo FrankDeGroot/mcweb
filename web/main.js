@@ -7,7 +7,6 @@ import { MessagesView } from './messages/messages_view.js'
 import { OperatorsView } from './operators/operators_view.js'
 import { UpdateView } from './update/update_view.js'
 
-self._ = uhtml.html
 const socket = io()
 socket.on('reload', () => window.location.reload(true))
 const viewModelFactory = new ViewModelFactory(socket, redraw)
@@ -33,17 +32,17 @@ function redraw() {
 }
 
 function pane(content, messages) {
-  return _`${nav()}<main>${content}${messages}</main>`
+  return uhtml.html`${nav()}<main>${content}${messages}</main>`
 }
 
 function nav() {
-  return _`<nav>${menu.map(item)}</nav>`
+  return uhtml.html`<nav>${menu.map(item)}</nav>`
 }
 
 function item({ hash, name }) {
   return currentHash() === hash
-    ? _`<div>${name}</div>`
-    : _`<a href=${hash}>${name}</a>`
+    ? uhtml.html`<div>${name}</div>`
+    : uhtml.html`<a href=${hash}>${name}</a>`
 }
 
 function currentHash() {

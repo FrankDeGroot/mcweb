@@ -13,7 +13,7 @@ export class UpdateView {
       updateReleaseButtonDisabled,
       updateSnapshotButtonDisabled
     } = this.#viewModel
-    return _`<button ?disabled=${updateReleaseButtonDisabled} onclick=${() => this.#viewModel.updateVersion('release')}>Update Release</button>
+    return uhtml.html`<button ?disabled=${updateReleaseButtonDisabled} onclick=${() => this.#viewModel.updateVersion('release')}>Update Release</button>
     <button ?disabled=${updateSnapshotButtonDisabled} onclick=${() => this.#viewModel.updateVersion('snapshot')}>Update Snapshot</button>`
   }
 }

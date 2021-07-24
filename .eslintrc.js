@@ -29,7 +29,7 @@ module.exports = {
     {
       files: ['web/**/*'],
       globals: {
-        _: 'readonly'
+        uhtml: 'readonly'
       }
     }
   ]

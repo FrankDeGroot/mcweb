@@ -15,9 +15,9 @@ export class ChangeView {
       versions,
       changeButtonDisabled
     } = this.#viewModel
-    return _`<select ?disabled=${versionAndWorldSelectDisabled} onchange=${e => this.#viewModel.selectVersionAndWorld(e.target.value)} size=${versionAndWorldSelectSize}>
-      ${versions.map(group => _`<optgroup label=${group.label}>
-        ${group.options.map(({ label, selected, value }) => _`<option ?selected=${selected} value=${value}>${label}</option>`)}
+    return uhtml.html`<select ?disabled=${versionAndWorldSelectDisabled} onchange=${e => this.#viewModel.selectVersionAndWorld(e.target.value)} size=${versionAndWorldSelectSize}>
+      ${versions.map(group => uhtml.html`<optgroup label=${group.label}>
+        ${group.options.map(({ label, selected, value }) => uhtml.html`<option ?selected=${selected} value=${value}>${label}</option>`)}
       </optgroup>`)}
     </select>
     <button ?disabled=${changeButtonDisabled} onclick=${() => this.#viewModel.changeVersionAndWorld()}>Change</button>`

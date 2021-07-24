@@ -10,7 +10,7 @@ export class GamerulesView {
     this.#viewModel = viewModel
   }
   render() {
-    return _`${this.#viewModel.gamerules.map(({ checked, disabled, gamerule, indeterminate, label, type, value }) => {
+    return uhtml.html`${this.#viewModel.gamerules.map(({ checked, disabled, gamerule, indeterminate, label, type, value }) => {
       switch (type) {
         case 'boolean': return checkbox({
           checked,
@@ -20,11 +20,11 @@ export class GamerulesView {
           label,
           onchange: value => this.#viewModel.setGamerule(gamerule, value)
         })
-        case 'integer': return _`<combo>
+        case 'integer': return uhtml.html`<combo>
               <input id=${gamerule} ?disabled=${disabled} onchange=${e => this.#viewModel.setGamerule(gamerule, e.target.value)} type=number value=${value}>
               <label for=${gamerule}>${label}</label>
             </combo>`
-        default: return _`<div>Unknown gamerule type '${type}'.</div>`
+        default: return uhtml.html`<div>Unknown gamerule type '${type}'.</div>`
       }
     })}`
   }

@@ -20,8 +20,8 @@ export class OperatorsView {
       level,
       levelRadioDisabled
     } = this.#viewModel
-    return _`<select ?disabled=${operatorSelectDisabled} onchange=${e => this.#viewModel.select(e.target.value)} size=${operatorsSize}>
-      ${operators.map(({ label, selected, value }) => _`<option ?selected=${selected} value=${value}>${label}</option>`)}
+    return uhtml.html`<select ?disabled=${operatorSelectDisabled} onchange=${e => this.#viewModel.select(e.target.value)} size=${operatorsSize}>
+      ${operators.map(({ label, selected, value }) => uhtml.html`<option ?selected=${selected} value=${value}>${label}</option>`)}
     </select>
     ${checkbox({
       checked: bypassesPlayerLimit,

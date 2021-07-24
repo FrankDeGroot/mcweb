@@ -7,8 +7,8 @@ export class MessagesView {
     this.#viewModel = viewModel
   }
   render() {
-    return _`<label>Messages</label>
-    <messages>${this.#viewModel.messages.map(message => _`<message>${message}</message>`)}</messages>
+    return uhtml.html`<label>Messages</label>
+    <messages>${this.#viewModel.messages.map(message => uhtml.html`<message>${message}</message>`)}</messages>
     <button ?disabled=${this.#viewModel.noMessages()} onclick=${() => this.#viewModel.clearMessages()}>Clear</button>`
   }
 }

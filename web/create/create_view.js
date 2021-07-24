@@ -16,8 +16,8 @@ export class CreateView {
       seedInputDisabled,
       createButtonDisabled
     } = this.#viewModel
-    return _`<select ?disabled=${versionSelectDisabled} onchange=${e => this.#viewModel.selectVersion(e.target.value)} size=${versions.length}>
-      ${versions.map(({ label, selected, value }) => _`<option ?selected=${selected} value=${value}>${label}</option>`)}
+    return uhtml.html`<select ?disabled=${versionSelectDisabled} onchange=${e => this.#viewModel.selectVersion(e.target.value)} size=${versions.length}>
+      ${versions.map(({ label, selected, value }) => uhtml.html`<option ?selected=${selected} value=${value}>${label}</option>`)}
     </select>
     <input ?disabled=${nameInputDisabled} onkeyup=${e => { this.#viewModel.newWorldName = e.target.value }} type=text placeholder=Name>
     <input ?disabled=${seedInputDisabled} onkeyup=${e => { this.#viewModel.seed = e.target.value }} type=text placeholder=Seed>
