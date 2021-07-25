@@ -2,10 +2,10 @@
 
 global.console.trace = jest.fn()
 global.console.info = jest.fn()
-global.console.warning = jest.fn()
+global.console.warn = jest.fn()
 global.console.error = jest.fn()
 
-const { level, log, trace, info, warning, error } = require('./log')
+const { level, log, trace, info, warn, error } = require('./log')
 
 describe('trace', () => {
   beforeEach(() => {
@@ -43,30 +43,30 @@ describe('info', () => {
     expect(global.console.info.mock.calls.length).toBe(1)
   })
   it('should not log when level set to info', () => {
-    level('warning')
+    level('warn')
     info('test')
     expect(global.console.info.mock.calls.length).toBe(0)
   })
 })
 
-describe('warning', () => {
+describe('warn', () => {
   beforeEach(() => {
-    global.console.warning.mockReset()
+    global.console.warn.mockReset()
   })
   it('should log when level set to trace', () => {
     level('trace')
-    warning('test')
-    expect(global.console.warning.mock.calls.length).toBe(1)
+    warn('test')
+    expect(global.console.warn.mock.calls.length).toBe(1)
   })
   it('should log when level set to trace', () => {
     level('trace')
-    log('warning', 'test')
-    expect(global.console.warning.mock.calls.length).toBe(1)
+    log('warn', 'test')
+    expect(global.console.warn.mock.calls.length).toBe(1)
   })
-  it('should not log when level set to warning', () => {
+  it('should not log when level set to warn', () => {
     level('error')
-    warning('test')
-    expect(global.console.warning.mock.calls.length).toBe(0)
+    warn('test')
+    expect(global.console.warn.mock.calls.length).toBe(0)
   })
 })
 
