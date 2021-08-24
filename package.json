@@ -12,23 +12,23 @@
   "repository": "https://github.com/FrankDeGroot/mcweb",
   "license": "MIT",
   "dependencies": {
-    "nodemon": "^2.0.9",
+    "nodemon": "^2.0.12",
     "rcon-client": "^4",
-    "socket.io": "^4"
+    "socket.io": "^4.1.3"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-env": "^7.15.0",
     "babel-jest": "^27.0.6",
-    "eslint": "^7.29.0",
+    "eslint": "^7.32.0",
     "eslint-config-standard": "^16",
-    "eslint-plugin-import": "^2",
+    "eslint-plugin-import": "^2.24.1",
     "eslint-plugin-node": "^11",
     "eslint-plugin-promise": "^5",
     "eslint-plugin-standard": "^5",
     "jest": "^27.0.6"
   },
   "optionalDependencies": {
-    "applicationinsights": "^2.1.3",
+    "applicationinsights": "^2.1.5",
     "applicationinsights-native-metrics": "^0"
   }
 }

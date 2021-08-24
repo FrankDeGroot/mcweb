@@ -34,7 +34,7 @@ const socket = {}
 
 test('server', () => {
   io.mockImplementation(() => server)
-  require('./index')
+  require('./index.mjs')
 
   expect(level).toHaveBeenCalledWith('trace')
   expect(enableMonitoring).toHaveBeenCalledWith(false)

@@ -16,7 +16,7 @@ function rerun() {
 
 function run() {
   log('Spawning API Process')
-  apiProcess = spawn(process.argv0, ['--unhandled-rejections=strict', 'api'], {
+  apiProcess = spawn(process.argv0, ['--unhandled-rejections=strict', 'api/index.mjs'], {
     stdio: ['pipe', 'inherit', 'inherit']
   })
     .on('error', err => {
