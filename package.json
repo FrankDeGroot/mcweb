@@ -12,8 +12,8 @@
   "repository": "https://github.com/FrankDeGroot/mcweb",
   "license": "MIT",
   "dependencies": {
-    "nodemon": "^2.0.12",
-    "rcon-client": "^4",
+    "nodemon": "^2.0.13",
+    "rcon-client": "^4.2.3",
     "socket.io": "^4.2.0"
   },
   "devDependencies": {
@@ -27,6 +27,6 @@
     "jest": "^27.2.0"
   },
   "optionalDependencies": {
-    "applicationinsights": "^2.1.7"
+    "applicationinsights": "^2.1.8"
   }
 }
