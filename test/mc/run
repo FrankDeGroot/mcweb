@@ -1,0 +1,6 @@
+#!/bin/sh
+d=`realpath $(dirname $0)`
+t=`realpath $d/../../mc/fake`
+cd $t
+java -jar run.jar
+cd - >/dev/null

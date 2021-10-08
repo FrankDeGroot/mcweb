@@ -1,0 +1,20 @@
+#!/bin/sh
+d=`realpath $(dirname $0)`
+t=`realpath $d/../../mc`
+$d/clean
+javac $d/Server.java -d $d
+mkdir -p $t/fake
+cd $d
+jar --create --file $t/fake/server.jar --manifest MANIFEST.MF Server.class
+rm Server.class
+cd - >/dev/null
+cd $t
+rm -f current
+ln -s fake current
+cd - >/dev/null
+cd $t/fake
+ln -s server.jar run.jar
+mkdir -p Fake
+ln -s Fake world
+touch Fake/level.dat
+cd - >/dev/null

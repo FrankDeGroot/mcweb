@@ -1,0 +1,4 @@
+#!/bin/sh
+d=`realpath $(dirname $0)`
+t=`realpath $d/../../mc`
+rm -rf $t/fake $t/current

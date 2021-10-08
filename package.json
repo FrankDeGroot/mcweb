@@ -1,0 +1,36 @@
+{
+	"author": "https://github.com/FrankDeGroot",
+	"bugs": {
+		"url": "https://github.com/FrankDeGroot/mcweb/issues"
+	},
+	"description": "Minecraft Web Console",
+	"homepage": "https://github.com/FrankDeGroot/mcweb#readme",
+	"keywords": [
+		"minecraft"
+	],
+	"license": "MIT",
+	"name": "mcweb",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/FrankDeGroot/mcweb.git"
+	},
+	"type": "module",
+	"version": "0.0.1",
+	"engines": {
+		"node": ">=15.1.0"
+	},
+	"scripts": {
+		"start": "node --unhandled-rejections=strict base",
+		"test": "node --loader=testdouble node_modules/classity/bin/classity.js"
+	},
+	"dependencies": {
+		"chokidar": "^3.5.3",
+		"serialize-error": "^9.1.0",
+		"socket.io": "^4.4.1"
+	},
+	"devDependencies": {
+		"classity": "^0.0.2",
+		"eslint": "^8.11.0",
+		"testdouble": "^3.16.4"
+	}
+}

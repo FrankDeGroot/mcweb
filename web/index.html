@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset=utf-8 />
+	<meta name=viewport content=width=device-width,initial-scale=1 />
+	<title>Minecraft Web Console</title>
+	<link rel=icon href=favicon.ico>
+	<link href=index.css rel=stylesheet>
+	<script>
+		window.onerror = (message, source, line, column, error) => {
+			document.body.innerHTML = `<main>${message} ${source}:${line}:${column}<main>`
+			return true
+		}
+	</script>
+	<script src=//cdn.socket.io/4.4.1/socket.io.min.js></script>
+	<script src=//unpkg.com/uhtml@2.8.0/min.js></script>
+	<script src=index.js type=module></script>
+</head>
+
+</html>
