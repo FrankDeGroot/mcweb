@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "$std/": "https://deno.land/std@0.179.0/",
+    "$lib/": "./lib/",
+    "$api/": "./api/",
+    "$config/": "./api/"
+  }
+}

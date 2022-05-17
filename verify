@@ -1,0 +1,2 @@
+#!/bin/sh
+deno test --allow-net --allow-read --allow-run --allow-write --import-map import_map.test.json $*

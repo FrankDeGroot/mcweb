@@ -1,0 +1,4 @@
+/mc/
+/fake/out/
+site.*
+deno.lock
