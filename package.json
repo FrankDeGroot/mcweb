@@ -12,7 +12,7 @@
   "repository": "https://github.com/FrankDeGroot/mcweb",
   "license": "MIT",
   "dependencies": {
-    "nodemon": "^2.0.13",
+    "nodemon": "^2.0.20",
     "rcon-client": "^4.2.3",
     "socket.io": "^4.2.0"
   },
