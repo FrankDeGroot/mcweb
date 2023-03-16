@@ -1,0 +1,9 @@
+{
+  "name": "mcweb",
+  "module": "index.ts",
+  "devDependencies": {
+    "bun-types": "^0",
+    "@types/node": "^18"
+  },
+  "type": "module"
+}

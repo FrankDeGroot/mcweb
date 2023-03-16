@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Minecraft Web Console</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="main.css">
+  <script type="module" src="main.js"></script>
+</head>
+
+<body>
+  <div data="message"></div>
+  <button onclick="e => socket.send('start')">start</button>
+  <button onclick="e => socket.send('stop')">stop</button>
+</body>
+
+</html>
