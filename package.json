@@ -27,6 +27,6 @@
     "jest": "^27.2.0"
   },
   "optionalDependencies": {
-    "applicationinsights": "^2.1.8"
+    "applicationinsights": "^2.5.1"
   }
 }
